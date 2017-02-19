@@ -1,0 +1,17 @@
+<div class="box_chat">
+    <div class="head_chat_box">
+        <ul class="list-inline">
+            <li class="name_chat_with"></li>
+            <li class="pull-right" style="cursor: pointer;">x</li>
+        </ul>
+    </div>
+        <ul id="messages"></ul>
+        <div class="sendmessage" action="">
+            <input id="m" autocomplete="off" placeholder="enter here" /><button>Send</button>
+        </div>
+</div>
+<input type="hidden" id="nickname" value="<%= user._id %>">
+<input type="hidden" id="chat_with" value="">
+
+<input type="hidden" id="name_chat" value="<%= user.local.name %>">
+<input type="hidden" id="name_chat_with" value="">

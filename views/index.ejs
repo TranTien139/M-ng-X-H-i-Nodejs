@@ -1,0 +1,26 @@
+<% include partical/header.ejs %>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<form action="/add-status" method="POST">
+<textarea class="form-control"
+		  placeholder="Post Waste... then press enter" rows="5" name="content_status">
+        </textarea>
+			<div class="pull-right"><button type="submit" class="btn btn-success">gửi</button></div>
+				<input type="hidden" value="<%= user._id %>" name="user_id">
+				<input type="hidden" value="<%= user.local.email %>" name="user_email">
+				<input type="hidden" value="<%= user.local.name %>" name="user_name">
+				<input type="hidden" value="<%= user.local.image %>" name="user_image">
+			</form>
+			</br>
+			</br>
+			<% if(newfeed.length>0){ for(var i=0;i<newfeed.length; i++){  %>
+				<div><img src="<%= newfeed[i].user.image %>" width="50px" height="50px;" /><span><%= newfeed[i].user.name %></span>&nbsp;&nbsp;<%= new Date(newfeed[i].date).toISOString() %><div><%= newfeed[i].content %></div></div>
+			<%}} %>
+		</div>
+	</div>
+</div>
+<% include partical/box_chat.ejs %>
+<% include partical/list_friend.ejs %>
+<% include partical/footer.ejs %>
+

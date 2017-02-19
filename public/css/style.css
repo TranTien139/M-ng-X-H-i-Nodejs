@@ -1,0 +1,32 @@
+.page-header {
+    margin: 20px 0px;
+}
+.bg-profile{
+    background: green;
+    height: 300px;
+    position: relative;
+}
+.bg-profile img{
+    position: absolute;
+    top: 30%;
+    left: 43%;
+}
+
+/*box chat*/
+.box_chat{
+    position: fixed;
+    bottom: 0px;
+    right: 20%;
+    height: 300px;
+    border: 1px solid #999;
+    display: none;
+}
+
+#messages{
+    height: 222px;
+}
+
+.box_chat .head_chat_box{
+    padding: 5px;
+    border-bottom: 1px solid #999;
+}

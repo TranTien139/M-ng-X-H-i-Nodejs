@@ -1,0 +1,38 @@
+<% include partical/header.ejs %>
+<div class="container" ng-app ="profileApp">
+    <div class="bg-profile" ng-controller="profileController">
+        <img src="<%= user.local.image %>" width="100" height="100">
+        <% if(user._id.toString().trim() != user_other._id.toString().trim()){ %>
+            <button class="btn btn-warning" style="position: absolute; bottom: 10px; right: 20px;" ng-show="checkIsFollow('<%= user_other._id.toString().trim() %>')" ng-click ="sendAddFriend('<%= user._id.toString().trim() %>','<%= user_other._id.toString().trim() %>')">add friend</button>
+            <!--<button class="btn btn-warning" style="position: absolute; bottom: 10px; right: 20px;" ng-hide="checkIsFollow('<%= user._id.toString().trim() %>','<%= user._id.toString().trim() %>')" >Friend</button>-->
+        <% } %>
+    </div>
+</div>
+
+<div class="container">
+    <% if(user._id.toString().trim() === user_other._id.toString().trim()){ %>
+    <div class="col-sm-6">
+        <form action="/update-profile/<%= user._id %>" method="post">
+        <div class="form-group">
+            <input type="text" class="form-control" value="<%= user.local.name %>" name="name" palaceholder="full name">
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" value="<%= user.local.email %>" name="email" palaceholder="email">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" value="<%= user.local.image %>" name="image" palaceholder="image">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">save</button>
+        </div>
+        </form>
+    </div>
+    <div class="col-sm-6">
+        <% if(timeline.length>0){ for(var i=0;i<timeline.length; i++){  %>
+        <div><img src="<%= timeline[i].user.image %>" width="50px" height="50px;" /><span><%= timeline[i].user.name %></span>&nbsp;&nbsp;<%= new Date(timeline[i].date).toISOString() %><div><%= timeline[i].content %></div></div>
+        <%}} %>
+    </div>
+    <% } %>
+</div>
+
+<% include partical/footer.ejs %>

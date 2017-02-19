@@ -1,0 +1,31 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.css">
+    <style>
+        .page-header {
+            margin: 20px 0px;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-right">
+        <ul class="list-inline">
+            <li>Add friend(0)</li>
+            <li>Message(0)</li>
+            <li>Notification(0)</li>
+            <li class="pull-left btn btn-success"><a href="/home">hone</a></li>
+            <li class="pull-left"><form method="get" action="/search_friend"><input type="text" class="form-control" name="keyword" width="300px"></form></li>
+            <li><img src="<%= user.local.image %>" width="50" height="50"/></li>
+            <li><a href="/profile/<%= user._id %>">Xin chào: <%= user.local.name %> </a></li>
+            <li>
+                <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+            </li>
+        </ul>
+    </div>
+</div>

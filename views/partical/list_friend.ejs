@@ -1,0 +1,11 @@
+<div style="position: absolute; width:240px; height: 100%; right: 0px; top: 100px;" >
+<ul style="list-style: none; line-height: 4;" id="list_friend">
+    <% if(friend.length >0){%>
+    <% for(var i=0; i< friend.length; i++){ %>
+    <li onclick="get_name_chat('<%= friend[i]._id %>','<%= friend[i].local.name %>',this)"><img src="<%= friend[i].local.image %>" width="50" height="50"><%= friend[i].local.name %></li>
+    <% } %>
+    <% }else{ %>
+
+    <% } %>
+</ul>
+</div>
