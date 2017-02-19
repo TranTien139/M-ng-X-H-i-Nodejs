@@ -48,7 +48,7 @@ module.exports = function(app, passport,server) {
         if(req.isAuthenticated()){
             res.redirect('/home');
         }else {
-            res.render('signup.ejs', {message: req.flash('signupMessage')});
+            res.render('login.ejs', {message: req.flash('signupMessage')});
         }
 	});
 
@@ -114,7 +114,8 @@ module.exports = function(app, passport,server) {
                     res.render('profile.ejs', {
                         user_other: users,
                         user: req.user,
-                        timeline: data
+                        timeline: data,
+                        friend: '',
                     });
                 });
 
@@ -198,6 +199,10 @@ module.exports = function(app, passport,server) {
         status.userId = req.body.user_id;
         status.save();
         res.redirect('/home');
+    });
+
+    app.get('/chat', isLoggedIn, function(req, res) {
+            res.render('chat.ejs',{user: req.user});
     });
 
 

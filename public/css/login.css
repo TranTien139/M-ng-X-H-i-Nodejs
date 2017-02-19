@@ -1,0 +1,23 @@
+.wrap_login{
+	background: url('../images/bg.png');
+	width: 100%;
+	height: 640px;
+}
+
+.btn-azure, .btn-azure:focus {
+    background-color: #2dc3e8 !important;
+    border-color: #2dc3e8;
+    color: #fff;
+}
+.wrap_login .box_login{
+	background: #fff;
+	margin-top: 10%;
+}
+.box_login .card-left{
+	padding-bottom: 40px;
+    padding-top: 10px;
+    border-right:1px solid #eee;
+}
+.box_login .card_right{
+	padding-top: 10px;
+}
