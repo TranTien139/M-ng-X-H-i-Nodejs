@@ -1,30 +1,6 @@
 <% include partical/header.ejs %>
-<div class="row page-content">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="cover profile">
-                    <div class="wrapper">
-                        <div class="image">
-                            <img src="img/Cover/profile-cover.jpg" class="show-in-modal" alt="people">
-                        </div>
-                    </div>
-                    <div class="cover-info">
-                        <div class="avatar">
-                            <img src="<%= user.local.image %>" alt="people">
-                        </div>
-                        <div class="name"><a href="#">John Breakgrow jr.</a></div>
-                        <ul class="cover-nav">
-                            <li class="active"><a href="profile.html"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
-                            <li><a href="about.html"><i class="fa fa-fw fa-user"></i> About</a></li>
-                            <li><a href="friends.html"><i class="fa fa-fw fa-users"></i> Friends</a></li>
-                            <li><a href="photos1.html"><i class="fa fa-fw fa-image"></i> Photos</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
+<% include partical/bar_profile.ejs  %>
+
 
             <div class="col-md-5">
                 <div class="widget">
@@ -68,17 +44,6 @@
                 </div>
 
                 <div class="widget widget-friends">
-                    <div class="row col-md-22 hidden">
-                        <form action="" method="POST" autocomplete="off">
-                            <input type="text" id="short" name="" placeholder="Username or email">
-                            <input type="password" id="short" name="" placeholder="Password">
-                            <!--<input type="checkbox" name="remember" value="1">-->
-                            <a type="submit" href="profile.html" name="login" class="btn btn-danger">Login</a>
-                            <span class="forgot-password-link">
-                  <a href="#">Forgot your password?</a><br>
-                </span>
-                        </form>
-                    </div>
                     <div class="widget-header">
                         <h3 class="widget-caption">Friends</h3>
                     </div>
@@ -1430,267 +1395,60 @@
                                     </div>
                                 </div><!-- end post state form -->
 
+                                <% if(timeline.length>0){ for(var i=0;i<timeline.length; i++){  %>
                                 <!--   posts -->
                                 <div class="box box-widget">
                                     <div class="box-header with-border">
                                         <div class="user-block">
-                                            <img class="img-circle" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <span class="username"><a href="#">John Breakgrow jr.</a></span>
-                                            <span class="description">Shared publicly - 7:30 PM Today</span>
+                                            <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
+                                            <span class="username"><a href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
+                                            <span class="description"><%= new Date(timeline[i].date).toISOString() %></span>
                                         </div>
                                     </div>
 
                                     <div class="box-body" style="display: block;">
-                                        <img class="img-responsive show-in-modal"
-                                             src="img/Post/young-couple-in-love.jpg" alt="Photo">
-                                        <p>I took this photo this morning. What do you guys think?</p>
-                                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
-                                            Share
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-xs"><i
-                                                    class="fa fa-thumbs-o-up"></i> Like
-                                        </button>
-                                        <span class="pull-right text-muted">127 likes - 3 comments</span>
-                                    </div>
-                                    <div class="box-footer box-comments" style="display: block;">
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-2.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Maria Gonzales
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Luna Stark
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer" style="display: block;">
-                                        <form action="#" method="post">
-                                            <img class="img-responsive img-circle img-sm" src="img/Friends/guy-3.jpg"
-                                                 alt="Alt Text">
-                                            <div class="img-push">
-                                                <input type="text" class="form-control input-sm"
-                                                       placeholder="Press enter to post comment">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div><!--  end posts-->
-
-
-                                <!-- post -->
-                                <div class="box box-widget">
-                                    <div class="box-header with-border">
-                                        <div class="user-block">
-                                            <img class="img-circle" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <span class="username"><a href="#">Jonathan Burke Jr.</a></span>
-                                            <span class="description">Shared publicly - 7:30 PM Today</span>
-                                        </div>
-                                    </div>
-                                    <div class="box-body">
-                                        <p>Far far away, behind the word mountains, far from the
-                                            countries Vokalia and Consonantia, there live the blind
-                                            texts. Separated they live in Bookmarksgrove right at</p>
-
-                                        <p>the coast of the Semantics, a large language ocean.
-                                            A small river named Duden flows by their place and supplies
-                                            it with the necessary regelialia. It is a paradisematic
-                                            country, in which roasted parts of sentences fly into
-                                            your mouth.</p>
-
-                                        <div class="attachment-block clearfix">
-                                            <img class="attachment-img show-in-modal" src="img/Photos/2.jpg"
-                                                 alt="Attachment Image">
-                                            <div class="attachment-pushed">
-                                                <h4 class="attachment-heading"><a href="http://www.bootdey.com/">Lorem
-                                                        ipsum text generator</a></h4>
-                                                <div class="attachment-text">
-                                                    Description about the attachment can be placed here.
-                                                    Lorem Ipsum is simply dummy text of the printing and typesetting
-                                                    industry... <a href="#">more</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
-                                            Share
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-xs"><i
-                                                    class="fa fa-thumbs-o-up"></i> Like
-                                        </button>
-                                        <span class="pull-right text-muted">45 likes - 2 comments</span>
-                                    </div>
-                                    <div class="box-footer box-comments">
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-5.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Maria Gonzales
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-6.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Nora Havisham
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                The point of using Lorem Ipsum is that it has a more-or-less
-                                                normal distribution of letters, as opposed to using
-                                                'Content here, content here', making it look like readable English.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer">
-                                        <form action="#" method="post">
-                                            <img class="img-responsive img-circle img-sm" src="img/Friends/guy-3.jpg"
-                                                 alt="Alt Text">
-                                            <div class="img-push">
-                                                <input type="text" class="form-control input-sm"
-                                                       placeholder="Press enter to post comment">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div><!-- end post -->
-
-                                <!--  posts -->
-                                <div class="box box-widget">
-                                    <div class="box-header with-border">
-                                        <div class="user-block">
-                                            <img class="img-circle" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <span class="username"><a href="#">John Breakgrow jr.</a></span>
-                                            <span class="description">Shared publicly - 7:30 PM Today</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box-body" style="display: block;">
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ac iaculis
-                                            ligula, eget efficitur nisi. In vel rutrum orci. Etiam ut orci volutpat,
-                                            maximus quam vel, euismod orci. Nunc in urna non lectus malesuada aliquet.
-                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur
-                                            ridiculus mus. Nam dignissim mi ac metus consequat, a pharetra neque
-                                            molestie. Maecenas condimentum lorem quis vulputate volutpat. Etiam sapien
-                                            diam
+                                        <p><%= timeline[i].content %>
                                         </p>
+
                                         <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
                                             Share
                                         </button>
                                         <button type="button" class="btn btn-default btn-xs"><i
                                                     class="fa fa-thumbs-o-up"></i> Like
                                         </button>
-                                        <span class="pull-right text-muted">127 likes - 3 comments</span>
+                                        <span class="pull-right text-muted"><%= timeline[i].like %> likes - <%= timeline[i].comment.length %> comments</span>
                                     </div>
                                     <div class="box-footer box-comments" style="display: block;">
+                                        <% if( timeline[i].comment.length>0){ for(var k=0 ; k< timeline[i].comment.length ; k++){%>
                                         <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-2.jpg" alt="User Image">
-                                            <div class="comment-text">
+                                            <a href="/profile/<%= timeline[i].comment[k].id %>">
+                                                <img class="img-circle img-sm" src="<%= timeline[i].comment[k].image %>"
+                                                     alt="User Image">
+                                                <div class="comment-text">
                           <span class="username">
-                          Maria Gonzales
-                          <span class="text-muted pull-right">8:03 PM Today</span>
+                          <%= timeline[i].comment[k].name %>
+                              <span class="text-muted pull-right"><%= new Date(timeline[i].comment[k].date).toISOString() %></span>
                           </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
+                                            </a>
+                                            <%= timeline[i].comment[k].content %>
                                         </div>
+                                    </div>
+                                    <% }}%>
+                                </div>
+                                <div class="box-footer" style="display: block;">
+                                    <form action="/post-comment/<%= timeline[i]._id %>" method="post">
+                                        <img class="img-responsive img-circle img-sm"
+                                             src="<%= user.local.image %>" alt="Alt Text">
+                                        <div class="img-push">
+                                            <input type="text" name="content_comment" class="form-control input-sm"
+                                                   placeholder="Press enter to post comment">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div><!--  end posts-->
+                            <%}} %>
 
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Luna Stark
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer" style="display: block;">
-                                        <form action="#" method="post">
-                                            <img class="img-responsive img-circle img-sm" src="img/Friends/guy-3.jpg"
-                                                 alt="Alt Text">
-                                            <div class="img-push">
-                                                <input type="text" class="form-control input-sm"
-                                                       placeholder="Press enter to post comment">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div><!--  end posts -->
 
-                                <!--   posts -->
-                                <div class="box box-widget">
-                                    <div class="box-header with-border">
-                                        <div class="user-block">
-                                            <img class="img-circle" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <span class="username"><a href="#">John Breakgrow jr.</a></span>
-                                            <span class="description">Shared publicly - 7:30 PM Today</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box-body" style="display: block;">
-                                        <img class="img-responsive pad show-in-modal" src="img/Photos/3.jpg"
-                                             alt="Photo">
-                                        <p>I took this photo this morning. What do you guys think?</p>
-                                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
-                                            Share
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-xs"><i
-                                                    class="fa fa-thumbs-o-up"></i> Like
-                                        </button>
-                                        <span class="pull-right text-muted">127 likes - 3 comments</span>
-                                    </div>
-                                    <div class="box-footer box-comments" style="display: block;">
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-2.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Maria Gonzales
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-
-                                        <div class="box-comment">
-                                            <img class="img-circle img-sm" src="img/Friends/guy-3.jpg" alt="User Image">
-                                            <div class="comment-text">
-                          <span class="username">
-                          Luna Stark
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                                                It is a long established fact that a reader will be distracted
-                                                by the readable content of a page when looking at its layout.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer" style="display: block;">
-                                        <form action="#" method="post">
-                                            <img class="img-responsive img-circle img-sm" src="img/Friends/guy-3.jpg"
-                                                 alt="Alt Text">
-                                            <div class="img-push">
-                                                <input type="text" class="form-control input-sm"
-                                                       placeholder="Press enter to post comment">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div><!--  end posts -->
                             </div>
                         </div>
                     </div><!-- end left posts-->

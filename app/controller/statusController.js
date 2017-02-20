@@ -3,7 +3,7 @@
  */
 var Waste = require('../../app/models/status.js');
 
-function  getNewFeed(follower,callback) {
+function  getNewFeed(id_user,follower,callback) {
 
         var requestedWastes = [];
         if(follower.length>0) {
@@ -11,6 +11,7 @@ function  getNewFeed(follower,callback) {
                 requestedWastes.push({userId: follower[i].userId});
             }
         }
+     requestedWastes.push({userId: id_user});
         Waste.find({$or: requestedWastes})
             .sort({date: -1})
             .exec(function(err, allWastes){
@@ -26,5 +27,14 @@ function  getNewFeedMe(id,callback) {
         });
 }
 
+function  getStatusPost(id,callback) {
+    Waste.findOne({"_id":id})
+        .sort({date: -1})
+        .exec(function(err, allWastes){
+            callback(err,allWastes);
+        });
+}
+
 module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
+module.exports.getStatusPost = getStatusPost;

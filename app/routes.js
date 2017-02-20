@@ -77,25 +77,25 @@ module.exports = function(app, passport,server) {
         }
         MyObjectStringify += "]";
         var list = JSON.parse(MyObjectStringify);
-        if (list.length > 0){
+
         User.find({$or: list}, function (err, friend) {
-            var newfeed =  NewFeed.getNewFeed(j,function (err, data) {
-                res.render('index.ejs', {
-                    user: user,
-                    friend: friend,
-                    newfeed:data
-                });
+            var newfeed =  NewFeed.getNewFeed(user._id,j,function (err, data) {
+                if(friend != undefined) {
+                    res.render('index.ejs', {
+                        user: user,
+                        friend: friend,
+                        newfeed: data
+                    });
+                }else {
+                    res.render('index.ejs', {
+                        user: user,
+                        friend: '',
+                        newfeed: data
+                    });
+                }
            });
 
         });
-    }else {
-            res.render('index.ejs', {
-                user: user,
-                friend: '',
-                newfeed:''
-            });
-    }
-
 	});
 
 	// =====================================
@@ -112,6 +112,90 @@ module.exports = function(app, passport,server) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member,function (err, data) {
                     res.render('profile.ejs', {
+                        user_other: users,
+                        user: req.user,
+                        timeline: data,
+                        friend: '',
+                    });
+                });
+
+            } else {
+                res.send(JSON.stringify(err), {
+                    'Content-Type': 'application/json'
+                }, 404);
+            }
+        });
+    });
+
+    app.get('/about/:id_member',isLoggedIn, function (req, res) {
+        var user_member =  req.params.id_member;
+        var user = User.findOne({"_id":user_member},function (err,users) {
+            if (!err) {
+                NewFeed.getNewFeedMe(user_member,function (err, data) {
+                    res.render('about.ejs', {
+                        user_other: users,
+                        user: req.user,
+                        timeline: data,
+                        friend: '',
+                    });
+                });
+
+            } else {
+                res.send(JSON.stringify(err), {
+                    'Content-Type': 'application/json'
+                }, 404);
+            }
+        });
+    });
+
+    app.get('/friends/:id_member',isLoggedIn, function (req, res) {
+        var user_member =  req.params.id_member;
+        var user = User.findOne({"_id":user_member},function (err,users) {
+            if (!err) {
+                NewFeed.getNewFeedMe(user_member,function (err, data) {
+                    res.render('friends.ejs', {
+                        user_other: users,
+                        user: req.user,
+                        timeline: data,
+                        friend: '',
+                    });
+                });
+
+            } else {
+                res.send(JSON.stringify(err), {
+                    'Content-Type': 'application/json'
+                }, 404);
+            }
+        });
+    });
+
+    app.get('/photos/:id_member',isLoggedIn, function (req, res) {
+        var user_member =  req.params.id_member;
+        var user = User.findOne({"_id":user_member},function (err,users) {
+            if (!err) {
+                NewFeed.getNewFeedMe(user_member,function (err, data) {
+                    res.render('photos.ejs', {
+                        user_other: users,
+                        user: req.user,
+                        timeline: data,
+                        friend: '',
+                    });
+                });
+
+            } else {
+                res.send(JSON.stringify(err), {
+                    'Content-Type': 'application/json'
+                }, 404);
+            }
+        });
+    });
+
+    app.get('/edit/profile/:id_member',isLoggedIn, function (req, res) {
+        var user_member =  req.params.id_member;
+        var user = User.findOne({"_id":user_member},function (err,users) {
+            if (!err) {
+                NewFeed.getNewFeedMe(user_member,function (err, data) {
+                    res.render('edit_profile.ejs', {
                         user_other: users,
                         user: req.user,
                         timeline: data,
@@ -204,6 +288,28 @@ module.exports = function(app, passport,server) {
     app.get('/chat', isLoggedIn, function(req, res) {
             res.render('chat.ejs',{user: req.user});
     });
+
+    app.post("/post-comment/:id_status",isLoggedIn, function (req, res) {
+        var id_status =  req.params.id_status;
+        var content = req.body.content_comment;
+        var user = req.user;
+        NewFeed.getStatusPost(id_status,function (err, data1) {
+            if(err) throw  err;
+            var data = {};
+            data.id = user._id;
+            data.name = user.local.name;
+            data.image = user.local.image;
+            data.email = user.local.email;
+            data.content = content;
+            data.date = Date.now();
+            data1.comment.push(data);
+            data1.save(function (err) {
+                if(err) throw  err;
+                res.redirect('/home');
+            });
+        });
+    });
+
 
 
     // =====================================

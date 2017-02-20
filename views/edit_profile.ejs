@@ -1,0 +1,93 @@
+<% include partical/header.ejs %>
+<div class="row page-content">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cover profile">
+                    <div class="wrapper">
+                        <div class="image">
+                            <img src="img/Cover/profile-cover.jpg" class="show-in-modal" alt="people">
+                        </div>
+                        <input type="file" id="myCover" style="display:none;" >
+                        <button type="button" class="btn btn-success" style="position: absolute; bottom: 10px; right: 20px;" onclick="document.getElementById('myCover').click();">Change
+                        </button>
+                    </div>
+                    <div class="cover-info">
+                        <div class="avatar">
+                            <img src="<%= user.local.image %>" alt="people">
+                            <input type="file" id="myAvatar" style="display:none;"/>
+                            <button type="button" class="btn btn-success" style="position: absolute; bottom: 28px; right: 16px;" onclick="document.getElementById('myAvatar').click();">Change
+                            </button>
+
+                        </div>
+                        <div class="name"><a href="#">John Breakgrow jr.</a></div>
+                        <ul class="cover-nav">
+                            <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i>
+                                    Timeline</a></li>
+                            <li><a href="/about/<%= user_other._id %>"><i class="fa fa-fw fa-user"></i> About</a></li>
+                            <li><a href="/friends/<%= user_other._id %>"><i class="fa fa-fw fa-users"></i> Friends</a>
+                            </li>
+                            <li><a href="/photos/<%= user_other._id %>"><i class="fa fa-fw fa-image"></i> Photos</a>
+                            </li>
+                            <li><a title="save"><i class="fa fa-pencil-square-o"
+                                                                                 aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="widget">
+                    <div class="widget-header">
+                        <h3 class="widget-caption">About</h3>
+                    </div>
+                    <div class="widget-body bordered-top bordered-sky">
+                        <ul class="list-unstyled profile-about margin-none">
+                            <li class="padding-v-5">
+                                <div class="row">
+                                    <div class="col-sm-4"><span class="text-muted">Date of Birth</span></div>
+                                    <div class="col-sm-8"><input type="date" class="form-control" name="birthday" placeholder="Date"></div>
+                                </div>
+                            </li>
+                            <li class="padding-v-5">
+                                <div class="row">
+                                    <div class="col-sm-4"><span class="text-muted">Job</span></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="job"></div>
+                                </div>
+                            </li>
+                            <li class="padding-v-5">
+                                <div class="row">
+                                    <div class="col-sm-4"><span class="text-muted">Gender</span></div>
+                                    <div class="col-sm-8"><select class="form-control" name="gender">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="padding-v-5">
+                                <div class="row">
+                                    <div class="col-sm-4"><span class="text-muted">Lives in</span></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="live"></div>
+                                </div>
+                            </li>
+                            <li class="padding-v-5">
+                                <div class="row">
+                                    <div class="col-sm-4"><span class="text-muted">University</span></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="university"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end timeline posts-->
+
+    </div>
+</div>
+</div>
+<% include partical/list_friend.ejs %>
+<% include partical/footer.ejs %>

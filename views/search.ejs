@@ -1,12 +1,11 @@
 <% include partical/header.ejs %>
-<div class="container">
-<div class = "padding60">
+<div class="container page-content ">
     <div class="row">
         <h3>kết quả tìm kiếm với từ khóa: <%= key %></h3>
         <% for(var i=0; i< result.length; i++){ %>
-        <div class="form-group"><a href="/profile/<%=  result[i]._id %>"> <img src="<%=  result[i].local.image  %>" width="80" height="80" ><span><%=  result[i].local.name  %></span> </a></div> <br>
+        <div class="col-sm-3"><a href="/profile/<%=  result[i]._id %>"> <img src="<%=  result[i].local.image  %>" width="80" height="80" ><span><%=  result[i].local.name  %></span> </a></div>
         <% } %>
     </div>
 </div>
-</div>
+
 <% include partical/footer.ejs %>

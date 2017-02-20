@@ -1,32 +1,16 @@
-.page-header {
-    margin: 20px 0px;
-}
-.bg-profile{
-    background: green;
-    height: 300px;
-    position: relative;
-}
-.bg-profile img{
+.search .fa-search {
     position: absolute;
-    top: 30%;
-    left: 43%;
+    top: 10px;
+    font-size: 15px;
+    right: 14px;
+    color: #A5A4A4;
 }
+.search{
+    position: absolute;
+    margin-top: 10px;
+}
+.search input{
+    width: 300px !important;
+}
+li{list-style: none;}
 
-/*box chat*/
-.box_chat{
-    position: fixed;
-    bottom: 0px;
-    right: 20%;
-    height: 300px;
-    border: 1px solid #999;
-    display: none;
-}
-
-#messages{
-    height: 222px;
-}
-
-.box_chat .head_chat_box{
-    padding: 5px;
-    border-bottom: 1px solid #999;
-}

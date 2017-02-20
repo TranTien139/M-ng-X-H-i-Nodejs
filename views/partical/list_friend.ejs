@@ -4,7 +4,7 @@
         <p class="text-center chat-title">Online users</p>
         <% if(friend.length >0){%>
         <% for(var i=0; i< friend.length; i++){ %>
-        <a href="" class="list-group-item">
+        <a href="/chat" class="list-group-item">
             <i class="fa fa-check-circle connected-status"></i>
             <img src="<%= friend[i].local.image %>" class="img-chat img-thumbnail">
             <span class="chat-user-name"><%= friend[i].local.name %></span>
@@ -13,10 +13,5 @@
         <% }else{ %>
 
         <% } %>
-        <a href="/chat" class="list-group-item">
-            <i class="fa fa-times-circle absent-status"></i>
-            <img src="img/Friends/woman-1.jpg" class="img-chat img-thumbnail">
-            <span class="chat-user-name">Dapibus acatar</span>
-        </a>
     </div>
 </div>
