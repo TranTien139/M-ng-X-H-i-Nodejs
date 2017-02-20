@@ -5,7 +5,7 @@ var Status = require('../app/models/status.js');
 var NewFeed = require('../app/controller/statusController.js');
 var mongoose = require('mongoose');
 
-module.exports = function(app, passport,server) {
+module.exports = function(app, passport,server,multer) {
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -211,21 +211,41 @@ module.exports = function(app, passport,server) {
         });
     });
 
-    app.post('/update-profile/:id_member',function (req, res) {
-        var user_member =  req.params.id_member;
-        User.findOne({"_id":user_member},function (err,users) {
-            if (!err) {
-                users.local.name = req.body.name;
-                users.local.email = req.body.email;
-                users.local.image = req.body.image;
-                users.save(function (err) {
-                    backURL=req.header('Referer') || '/';
-                    res.redirect(backURL);
-                });
-            } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, '/uploads')
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.fieldname + '-' + Date.now())
+        }
+    });
+
+    var upload = multer({ storage: storage }).single('myAvatar');
+
+    app.post('/update-profile/:id_member',isLoggedIn,function (req, res) {
+        // var user_member =  req.params.id_member;
+        // User.findOne({"_id":user_member},function (err,users) {
+        //     if (!err) {
+        //         users.local.name = req.body.name;
+        //         users.local.email = req.body.email;
+        //         users.local.image = req.body.image;
+        //         users.save(function (err) {
+        //             backURL=req.header('Referer') || '/';
+        //             res.redirect(backURL);
+        //         });
+        //     } else {
+        //         res.send(JSON.stringify(err), {
+        //             'Content-Type': 'application/json'
+        //         }, 404);
+        //     }
+        // });
+        upload(req, res, function (err) {
+            if (err) {
+                res.end();
+            }else {
+                console.log(req.file);
+                backURL=req.header('Referer') || '/';
+                res.redirect(backURL);
             }
         });
     });
@@ -282,7 +302,8 @@ module.exports = function(app, passport,server) {
         status.user.image = req.body.user_image;
         status.userId = req.body.user_id;
         status.save();
-        res.redirect('/home');
+        backURL=req.header('Referer') || '/';
+        res.redirect(backURL);
     });
 
     app.get('/chat', isLoggedIn, function(req, res) {
@@ -305,7 +326,8 @@ module.exports = function(app, passport,server) {
             data1.comment.push(data);
             data1.save(function (err) {
                 if(err) throw  err;
-                res.redirect('/home');
+                backURL=req.header('Referer') || '/';
+                res.redirect(backURL);
             });
         });
     });

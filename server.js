@@ -5,6 +5,7 @@ var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+var multer  = require('multer');
 
 var server = require('http').createServer(app);
 
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(flash());
 
-require('./app/routes.js')(app, passport,server);
+require('./app/routes.js')(app, passport,server,multer);
 
 // app.listen(port,function () {
 //     console.log('The magic happens on port ' + port);
