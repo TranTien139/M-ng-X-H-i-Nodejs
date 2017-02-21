@@ -108,14 +108,34 @@ module.exports = function(app, passport,server,multer) {
 
 	app.get('/profile/:id_member',isLoggedIn, function (req, res) {
         var user_member =  req.params.id_member;
+
+        var user = req.user;
+        var j = user.followers;
+        var MyObjectStringify = "[";
+        var last = j.length;
+        var count = 0;
+        if (last > 0) {
+            for (var x = 0; x < j.length; x++) {
+                MyObjectStringify += '{"_id":' + JSON.stringify(j[x].userId) + '}';
+                count++;
+                if (count < last)
+                    MyObjectStringify += ",";
+            }
+        }
+        MyObjectStringify += "]";
+        var list = JSON.parse(MyObjectStringify);
+
         var user = User.findOne({"_id":user_member},function (err,users) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member,function (err, data) {
+                    User.find({$or: list}, function (err, friend) {
+                        if(err) throw  err;
                     res.render('profile.ejs', {
                         user_other: users,
                         user: req.user,
                         timeline: data,
-                        friend: '',
+                        friend: friend,
+                    });
                     });
                 });
 
@@ -211,41 +231,42 @@ module.exports = function(app, passport,server,multer) {
         });
     });
 
-    var storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, '/uploads')
+    var storage =   multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, './public/uploads');
         },
-        filename: function (req, file, cb) {
-            cb(null, file.fieldname + '-' + Date.now())
+        filename: function (req, file, callback) {
+            callback(null, file.fieldname + '-' + Date.now()+'.jpg');
         }
     });
+    var upload = multer({ storage : storage }).array('myAvatar',2);
 
-    var upload = multer({ storage: storage }).single('myAvatar');
 
     app.post('/update-profile/:id_member',isLoggedIn,function (req, res) {
-        // var user_member =  req.params.id_member;
-        // User.findOne({"_id":user_member},function (err,users) {
-        //     if (!err) {
-        //         users.local.name = req.body.name;
-        //         users.local.email = req.body.email;
-        //         users.local.image = req.body.image;
-        //         users.save(function (err) {
-        //             backURL=req.header('Referer') || '/';
-        //             res.redirect(backURL);
-        //         });
-        //     } else {
-        //         res.send(JSON.stringify(err), {
-        //             'Content-Type': 'application/json'
-        //         }, 404);
-        //     }
-        // });
-        upload(req, res, function (err) {
-            if (err) {
-                res.end();
-            }else {
-                console.log(req.file);
-                backURL=req.header('Referer') || '/';
-                res.redirect(backURL);
+         var user_member =  req.params.id_member;
+
+        console.log(JSON.stringify(req.body, null, 2));
+        User.findOne({"_id":user_member},function (err,users) {
+            if (!err) {
+                upload(req, res, function (err) {
+                    if (err) {
+                        res.end('upload fail');
+                    }else {
+                        console.log(req.files);
+                    }
+                });
+                users.local.birthday = req.body.birthday;
+                users.local.job = req.body.job;
+                users.local.gender = req.body.gender;
+                users.local.hometown = req.body.hometown;
+                users.local.education = req.body.education;
+                users.local.name = req.body.fullname;
+                users.save(function (err) {
+                    backURL=req.header('Referer') || '/';
+                    res.redirect(backURL);
+                });
+            } else {
+                res.end('error');
             }
         });
     });
@@ -294,8 +315,8 @@ module.exports = function(app, passport,server,multer) {
         var content =  req.body.content_status;
         var status = new Status();
         status.content = content;
-        status.like = 0;
-        status.share = 0;
+        status.like = [];
+        status.share = [];
         status.comment = [];
         status.user.name = req.body.user_name;
         status.user.email = req.body.user_email;

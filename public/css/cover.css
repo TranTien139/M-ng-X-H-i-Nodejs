@@ -134,7 +134,7 @@
   z-index: 3;
 }
 .cover.profile .cover-info .name a {
-  color: #fff;
+  color: #000;
   font-size: 30px;
   font-weight: 500;
 }
@@ -248,4 +248,20 @@
     border-right: 0 !important;
     border-bottom: 1px solid #e2e9e6;
   }
+}
+
+.cover.profile .cover-info .cover-nav > li > button {
+  line-height: 20px;
+  padding: 18px 15px;
+  color: #bebebe;
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  background: transparent;
+  border: 0px;
+}
+.cover.profile .cover-info .cover-nav > li > button i {
+  font-size: 20px;
+  vertical-align: middle;
+  color: #e4e4e4;
 }

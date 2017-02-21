@@ -5,7 +5,7 @@ module.exports = mongoose.model('Status',{
     userId: String,
     content: String,
     date: {type: Date, default: Date.now},
-    like: Number,
-    share: Number,
+    like: [],
+    share: [],
     comment: [{id:String,email:String,image:String,name: String,content: String,date: {type: Date, default: Date.now}}]
 });

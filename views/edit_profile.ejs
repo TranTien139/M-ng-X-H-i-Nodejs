@@ -2,7 +2,7 @@
 <div class="row page-content">
     <div class="col-md-8 col-md-offset-2">
 
-        <form method="post" action="/update-profile/<%= user._id %>" enctype="multipart/form-data">
+        <form method="post" action="/update-profile/<%= user._id %>"  enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-12">
                 <div class="cover profile">
@@ -10,7 +10,7 @@
                         <div class="image">
                             <img src="img/Cover/profile-cover.jpg" class="show-in-modal" alt="people">
                         </div>
-                        <input type="file" id="myCover" name="myCover" style="display:none;" >
+                        <input type="file" id="myCover" name="myAvatar" style="display:none;" >
                         <button type="button" class="btn btn-success" style="position: absolute; bottom: 10px; right: 20px;" onclick="document.getElementById('myCover').click();">Change
                         </button>
                     </div>
@@ -22,7 +22,7 @@
                             </button>
 
                         </div>
-                        <div class="name"><a href="#">John Breakgrow jr.</a></div>
+                        <div class="name"><a href="#"><%= user_other.local.name %></a></div>
                         <ul class="cover-nav">
                             <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i>
                                     Timeline</a></li>
@@ -31,8 +31,8 @@
                             </li>
                             <li><a href="/photos/<%= user_other._id %>"><i class="fa fa-fw fa-image"></i> Photos</a>
                             </li>
-                            <li><button type="submit" title="save"><i class="fa fa-pencil-square-o"
-                                                                                 aria-hidden="true"></i></button></li>
+                            <li><button type="submit" title="save"><i class="fa fa-floppy-o"
+                                                                                 aria-hidden="true"></i>&nbsp;Save</button></li>
                         </ul>
                     </div>
                 </div>
@@ -50,19 +50,19 @@
                             <li class="padding-v-5">
                                 <div class="row">
                                     <div class="col-sm-4"><span class="text-muted">Date of Birth</span></div>
-                                    <div class="col-sm-8"><input type="date" class="form-control" name="birthday" placeholder="Date"></div>
+                                    <div class="col-sm-8"><input type="date" class="form-control" name="birthday" value="<%= user.local.birthday %>" placeholder="Date"></div>
                                 </div>
                             </li>
                             <li class="padding-v-5">
                                 <div class="row">
                                     <div class="col-sm-4"><span class="text-muted">Job</span></div>
-                                    <div class="col-sm-8"><input type="text" class="form-control" name="job"></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" value="<%= user.local.job %>" name="job"></div>
                                 </div>
                             </li>
                             <li class="padding-v-5">
                                 <div class="row">
                                     <div class="col-sm-4"><span class="text-muted">Gender</span></div>
-                                    <div class="col-sm-8"><select class="form-control" name="gender">
+                                    <div class="col-sm-8"><select class="form-control" name="gender" value="<%= user.local.gender %>" >
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                         </select>
@@ -72,26 +72,25 @@
                             <li class="padding-v-5">
                                 <div class="row">
                                     <div class="col-sm-4"><span class="text-muted">Lives in</span></div>
-                                    <div class="col-sm-8"><input type="text" class="form-control" name="live"></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="hometown" value="<%= user.local.hometown %>"></div>
                                 </div>
                             </li>
                             <li class="padding-v-5">
                                 <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">University</span></div>
-                                    <div class="col-sm-8"><input type="text" class="form-control" name="university"></div>
+                                    <div class="col-sm-4"><span class="text-muted">Education</span></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="education" value="<%= user.local.education %>"></div>
                                 </div>
                             </li>
                             <li class="padding-v-5">
                                 <div class="row">
                                     <div class="col-sm-4"><span class="text-muted">Fullname</span></div>
-                                    <div class="col-sm-8"><input type="text" class="form-control" name="fullname"></div>
+                                    <div class="col-sm-8"><input type="text" class="form-control" name="fullname" value="<%= user.local.name %>"></div>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-
         </div><!-- end timeline posts-->
         </form>
 
