@@ -17,7 +17,7 @@ var userSchema = mongoose.Schema({
         image        : String,
         password     : String,
     },
-    followers:[{userId:String}],
+    followers:[{userId:String,image:String,name:String,message:String,seen:String, time:{type: Date, default: Date.now}}],
     following:[{userId:String}]
 });
 

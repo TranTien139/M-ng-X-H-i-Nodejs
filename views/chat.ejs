@@ -3,106 +3,32 @@
 <div class="container page-content">
     <div class="row">
         <div class="col-md-4 bg-white">
-            <div class=" row border-bottom padding-sm" style="height: 40px;">
+            <div class=" row border-bottom padding-sm" style="height: 40px; padding-left: 30px;">
                 Member
             </div>
             <!-- member list -->
             <ul class="friend-list">
+                <% if(user.followers.length >0){%>
+                <% for(var i=0; i< user.followers.length ; i++){ %>
                 <li class="active animated bounceInDown">
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/guy-1.jpg" alt="" class="img-circle">
+                    <a href="/chat?conversation=<%= user.followers[i].userId %>" class="clearfix">
+                        <img src="<%= user.followers[i].image %>" alt="" class="img-circle">
                         <div class="friend-name">
-                            <strong>John Doe</strong>
+                            <strong><%= user.followers[i].name %></strong>
                         </div>
-                        <div class="last-message text-muted">Hello, Are you there?</div>
-                        <small class="time text-muted">Just now</small>
-                        <small class="chat-alert label label-danger">1</small>
+                        <div class="last-message text-muted"><%= user.followers[i].message %></div>
+                        <small class="time text-muted"><% if(user.followers[i].date!= undefined){ %><%= new Date().toISOString() %> <% } %></small>
+                        <small class="chat-alert label label-danger"><% if(user.followers[i].seen!= undefined && user.followers[i].seen === 'yes' ){ %> 1 <% } %></small>
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-1.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Jane Doe</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">5 mins ago</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-check"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-2.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Kate</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">Yesterday</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-3.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Kate</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">Yesterday</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-4.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Kate</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">Yesterday</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-4.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Kate</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">Yesterday</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-4.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Kate</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">Yesterday</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="clearfix">
-                        <img src="img/Friends/woman-5.jpg" alt="" class="img-circle">
-                        <div class="friend-name">
-                            <strong>Jane Doe</strong>
-                        </div>
-                        <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                        <small class="time text-muted">5 mins ago</small>
-                        <small class="chat-alert text-muted"><i class="fa fa-check"></i></small>
-                    </a>
-                </li>
+                <% }} %>
             </ul>
         </div>
 
         <!--=========================================================-->
         <!-- selected chat -->
         <div class="col-md-8 bg-white ">
-            <div class="chat-message" style="max-height: 600px;overflow-y:auto ">
+            <div class="chat-message" style="max-height: 550px;overflow-y:auto ">
                 <ul class="chat">
                     <li class="left clearfix">
                   <span class="chat-img pull-left">
@@ -205,12 +131,15 @@
                 </ul>
             </div>
             <div class="chat-box_ bg-white">
+                <form action="/post-chat" method="post">
+                    <input type="hidden" name="chat_with" value="<%= chat_with %>">
                 <div class="input-group">
-                    <input class="form-control border no-shadow no-rounded" placeholder="Type your message here">
+                    <input class="form-control border no-shadow no-rounded" name="content_chat" placeholder="Type your message here">
                     <span class="input-group-btn">
-                <button class="btn btn-success no-rounded" type="button">Send</button>
+                <button class="btn btn-success no-rounded" type="submit">Send</button>
               </span>
                 </div><!-- /input-group -->
+                </form>
             </div>
         </div>
     </div>
