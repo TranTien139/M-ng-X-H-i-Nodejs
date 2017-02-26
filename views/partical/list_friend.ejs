@@ -4,11 +4,12 @@
         <p class="text-center chat-title">Online users</p>
         <% if(friend.length >0){%>
         <% for(var i=0; i< friend.length; i++){ %>
-        <a href="/chat?conversation=<%= friend[i].userId %>" class="list-group-item">
-            <i class="fa fa-check-circle connected-status"></i>
+        <a href="/chat?conversation=<%= friend[i].userId %>" class="list-group-item friend_<%= friend[i].userId %>">
+            <i class=""></i>
             <img src="<%= friend[i].image %>" class="img-chat img-thumbnail">
             <span class="chat-user-name"><%= friend[i].name %></span>
         </a>
         <% }} %>
+        <div id="list_user"></div>
     </div>
 </div>

@@ -297,6 +297,14 @@ module.exports = function (app, passport, server, multer,redisClient) {
             if(chat_data){
                 User.findOne({'_id': id}, function (err, users) {
                     if (err) return done(err);
+
+                    // if(chat_data.first === id) {
+                    //    redisClient.get("chat_" + id + "_" + user._id, function (err, reply) {
+                    //     });
+                    // }else {
+                    //      redisClient.get("chat_" + user._id + "_" + id, function (err, reply) {
+                    //     });
+                    // }
                 res.render('chat.ejs', {
                     user: user,
                     chat_with:users,
@@ -331,6 +339,13 @@ module.exports = function (app, passport, server, multer,redisClient) {
         Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
             if (chat_data) {
+                // if(chat_data.first === id) {
+                //     redisClient.set("chat_" + id + "_" + user._id, data_content, function (err, reply) {
+                //     });
+                // }else {
+                //     redisClient.set("chat_" + user._id + "_" + id, data_content, function (err, reply) {
+                //     });
+                // }
                 chat_data.content.push(data_content);
                 chat_data.save(function (err) {
                     res.end();
@@ -340,6 +355,7 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 chat.user.user1 =  user._id;
                 chat.user.user2 =  id;
                 chat.content.push(data_content);
+                chat.first = user._id;
                 chat.save(function (err) {
                     res.end();
                 });
@@ -402,20 +418,30 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 callback(true);
                 socket.nickname = data;
                 users[socket.nickname] = socket;
+                nicknames.push(socket.nickname);
+                updateNickName();
             }
         });
+
         socket.on('chat message', function (msg) {
-            if (msg.id_chat_with != '') {
+            if (msg.id_chat_with != '' && (typeof users[msg.id_chat_with] !== 'undefined')) {
                 users[msg.id_chat_with].emit('gui-lai', {id: msg.id_send, msg: msg.message,name: msg.name_send, image: msg.image_send});
             } else {
             }
         });
-
         socket.on('disconnect', function (data) {
             if (!socket.nickname) return;
             delete users[socket.nickname];
+            nicknames.slice(nicknames.indexOf(socket.nickname),1);
+            updateNickName();
         });
+
     });
+
+    function updateNickName(){
+        io.sockets.emit('usernames',nicknames);
+    }
+
 
 };
 
