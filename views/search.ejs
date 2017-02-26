@@ -2,9 +2,9 @@
 <div class="container page-content ">
     <div class="row">
         <h3>kết quả tìm kiếm với từ khóa: <%= key %></h3>
-        <% for(var i=0; i< result.length; i++){ %>
+        <% for(var i=0; i< result.length; i++){ if(result[i]._id.toString().trim() != user._id.toString().trim()) {%>
         <div class="col-sm-3"><a href="/profile/<%=  result[i]._id %>"> <img src="<%=  result[i].local.image  %>" width="80" height="80" ><span><%=  result[i].local.name  %></span> </a></div>
-        <% } %>
+        <% } } %>
     </div>
 </div>
 

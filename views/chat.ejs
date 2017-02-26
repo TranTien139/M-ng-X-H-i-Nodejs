@@ -30,104 +30,24 @@
         <div class="col-md-8 bg-white ">
             <div class="chat-message" style="max-height: 550px;overflow-y:auto ">
                 <ul class="chat">
+                    <% if(data_chat !=''){ for(var i=0; i<data_chat.length; i++){ %>
                     <li class="left clearfix">
-                  <span class="chat-img pull-left">
-                    <img src="img/Friends/woman-1.jpg" alt="User Avatar">
+                  <span class="chat-img <% if(data_chat[i].id === user._id){ %> pull-right <%}else{%> pull-left <%}%>">
+                    <img src="<%= data_chat[i].image %>" alt="User Avatar">
                   </span>
                         <div class="chat-body clearfix">
                             <div class="header">
-                                <strong class="primary-font">Jane</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago</small>
+                                <strong class="primary-font"><%= data_chat[i].name %></strong>
+                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i><%= new Date(data_chat[i].date).toISOString() %></small>
                             </div>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                <%= data_chat[i].content %>
                             </p>
                         </div>
                     </li>
-                    <li class="right clearfix">
-                  <span class="chat-img pull-right">
-                    <img src="img/Friends/guy-3.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">John</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales at.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                    <img src="img/Friends/woman-1.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">Jane</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="right clearfix">
-                    <span class="chat-img pull-right">
-                    <img src="img/Friends/guy-3.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">John</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales at.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="left clearfix">
-                    <span class="chat-img pull-left">
-                    <img src="img/Friends/woman-1.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">Jane</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="right clearfix">
-                    <span class="chat-img pull-right">
-                    <img src="img/Friends/guy-3.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">John</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales at.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="right clearfix">
-                    <span class="chat-img pull-right">
-                    <img src="img/Friends/guy-3.jpg" alt="User Avatar">
-                  </span>
-                        <div class="chat-body clearfix">
-                            <div class="header">
-                                <strong class="primary-font">John</strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago</small>
-                            </div>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales at.
-                            </p>
-                        </div>
-                    </li>
+
+                    <% } }  %>
+
                 </ul>
             </div>
             <div class="chat-box_ bg-white">

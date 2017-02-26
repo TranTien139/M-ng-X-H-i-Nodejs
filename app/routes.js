@@ -6,7 +6,7 @@ var NewFeed = require('../app/controller/statusController.js');
 var Chat = require('../app/models/chat.js');
 var mongoose = require('mongoose');
 
-module.exports = function (app, passport, server, multer) {
+module.exports = function (app, passport, server, multer,redisClient) {
 
     // =====================================
     // HOME PAGE (with login links) ========
@@ -65,38 +65,23 @@ module.exports = function (app, passport, server, multer) {
         var user = req.user;
 
         var j = user.followers;
-        var MyObjectStringify = "[";
-        var last = j.length;
-        var count = 0;
-        if (last > 0) {
-            for (var x = 0; x < j.length; x++) {
-                MyObjectStringify += '{"_id":' + JSON.stringify(j[x].userId) + '}';
-                count++;
-                if (count < last)
-                    MyObjectStringify += ",";
-            }
-        }
-        MyObjectStringify += "]";
-        var list = JSON.parse(MyObjectStringify);
-
-        User.find({$or: list}, function (err, friend) {
             var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
-                if (friend != undefined) {
-                    res.render('index.ejs', {
-                        user: user,
-                        friend: friend,
-                        newfeed: data
-                    });
-                } else {
-                    res.render('index.ejs', {
-                        user: user,
-                        friend: '',
-                        newfeed: data
-                    });
-                }
-            });
+                // redisClient.set("language","nodejs",function(err,reply) {
+                //     console.log(err);
+                //     console.log(reply);
+                // });
 
-        });
+                redisClient.get("language",function(err,reply) {
+                    console.log(err);
+                    console.log(reply);
+                });
+                    res.render('index.ejs', {
+                        user: user,
+                        friend: user.followers,
+                        newfeed: data
+                    });
+
+            });
     });
 
     // =====================================
@@ -111,33 +96,18 @@ module.exports = function (app, passport, server, multer) {
         var user_member = req.params.id_member;
 
         var user = req.user;
-        var j = user.followers;
-        var MyObjectStringify = "[";
-        var last = j.length;
-        var count = 0;
-        if (last > 0) {
-            for (var x = 0; x < j.length; x++) {
-                MyObjectStringify += '{"_id":' + JSON.stringify(j[x].userId) + '}';
-                count++;
-                if (count < last)
-                    MyObjectStringify += ",";
-            }
-        }
-        MyObjectStringify += "]";
-        var list = JSON.parse(MyObjectStringify);
+        var friend = user.followers;
 
-        var user = User.findOne({"_id": user_member}, function (err, users) {
+        User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
-                    User.find({$or: list}, function (err, friend) {
-                        if (err) throw  err;
+                    console.log(data);
                         res.render('profile.ejs', {
                             user_other: users,
                             user: req.user,
                             timeline: data,
                             friend: friend,
                         });
-                    });
                 });
 
             } else {
@@ -273,37 +243,38 @@ module.exports = function (app, passport, server, multer) {
 
     app.get("/search_friend", isLoggedIn, function (req, res) {
         var regex = new RegExp(req.query["keyword"], 'i');
-        var query = User.find({$or: [{"local.name": regex}, {"local.email": regex}]}).limit(100);
+        var query = User.find({$or: [{"local.name": regex}, {"local.email": regex}]}).limit(20);
         query.exec(function (err, users) {
             if (!err) {
-                console.log(users);
                 res.render('search.ejs', {
                     key: req.query.keyword,
                     result: users,
                     user: req.user
                 });
             } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
+                res.end();
             }
         });
     });
 
     app.post("/send-add-friend/:me/:friend", isLoggedIn, function (req, res) {
         var me = req.params.me;
+        var user_me = req.user;
         var friend = req.params.friend;
-        User.findOne({'_id': me}, function (err, user) {
-            if (err) return done(err);
-            if (user) {
-                user.followers.push({userId: friend});
-                user.save();
-            }
-        });
+        // User.findOne({'_id': me}, function (err, user) {
+        //     if (err) return done(err);
+        //     if (user) {
+        //         user.followers.push({userId: friend});
+        //         user.save();
+        //     }
+        // });
         User.findOne({'_id': friend}, function (err, user) {
             if (err) return done(err);
             if (user) {
-                user.followers.push({userId: me});
+                var obj = {userId: friend,image:friend.local.image,name:friend.local.name,message:'', seen:'',time:''};
+                user_me.followers.push(obj);
+                user_me.save();
+                user.message_friend.push({userId:user_me._id, image:user_me.local.image, name:user_me.local.name});
                 user.save();
             }
         });
@@ -329,9 +300,23 @@ module.exports = function (app, passport, server, multer) {
     app.get('/chat', isLoggedIn, function (req, res) {
         var id = req.query.conversation;
         var user = req.user;
-        res.render('chat.ejs', {
-            user: user,
-            chat_with:id
+
+        Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
+            if (err) return done(err);
+            if(chat_data){
+                console.log(chat_data);
+                res.render('chat.ejs', {
+                    user: user,
+                    chat_with:id,
+                    data_chat: chat_data.content
+                });
+            }else {
+                res.render('chat.ejs', {
+                    user: user,
+                    chat_with:id,
+                    data_chat: ''
+                });
+            }
         });
     });
 
@@ -339,9 +324,32 @@ module.exports = function (app, passport, server, multer) {
         var id = req.body.chat_with;
         var user = req.user;
         var content = req.body.content_chat;
-        res.render('chat.ejs', {
-            user: user,
-            chat_with: id
+        var data_content = {};
+        data_content.id = user._id;
+        data_content.image = user.local.image;
+        data_content.name = user.local.name;
+        data_content.content = content;
+        data_content.date = new Date();
+        data_content.seen = '';
+
+        Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
+            if (err) return done(err);
+            if (chat_data) {
+                chat_data.content.push(data_content);
+                chat_data.save(function (err) {
+                    backURL = req.header('Referer') || '/';
+                    res.redirect(backURL);
+                });
+            }else {
+                var chat = new Chat;
+                chat.user.user1 =  user._id;
+                chat.user.user2 =  id;
+                chat.content.push(data_content);
+                chat.save(function (err) {
+                    backURL = req.header('Referer') || '/';
+                    res.redirect(backURL);
+                });
+            }
         });
     });
 
