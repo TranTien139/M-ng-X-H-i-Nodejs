@@ -63,18 +63,8 @@ module.exports = function (app, passport, server, multer,redisClient) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
-
         var j = user.followers;
             var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
-                // redisClient.set("language","nodejs",function(err,reply) {
-                //     console.log(err);
-                //     console.log(reply);
-                // });
-
-                redisClient.get("language",function(err,reply) {
-                    console.log(err);
-                    console.log(reply);
-                });
                     res.render('index.ejs', {
                         user: user,
                         friend: user.followers,
@@ -271,11 +261,11 @@ module.exports = function (app, passport, server, multer,redisClient) {
         User.findOne({'_id': friend}, function (err, user) {
             if (err) return done(err);
             if (user) {
-                var obj = {userId: friend,image:friend.local.image,name:friend.local.name,message:'', seen:'',time:''};
+                var obj = {userId: friend,image:friend.local.image,name:friend.local.name};
                 user_me.followers.push(obj);
                 user_me.save();
-                user.message_friend.push({userId:user_me._id, image:user_me.local.image, name:user_me.local.name});
-                user.save();
+                // user.message_friend.push({userId:user_me._id, image:user_me.local.image, name:user_me.local.name});
+                // user.save();
             }
         });
         res.redirect('/profile/' + friend);
@@ -299,31 +289,37 @@ module.exports = function (app, passport, server, multer,redisClient) {
 
     app.get('/chat', isLoggedIn, function (req, res) {
         var id = req.query.conversation;
+
         var user = req.user;
 
         Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
             if(chat_data){
-                console.log(chat_data);
+                User.findOne({'_id': id}, function (err, users) {
+                    if (err) return done(err);
                 res.render('chat.ejs', {
                     user: user,
-                    chat_with:id,
+                    chat_with:users,
                     data_chat: chat_data.content
                 });
+                });
             }else {
-                res.render('chat.ejs', {
-                    user: user,
-                    chat_with:id,
-                    data_chat: ''
+                User.findOne({'_id': id}, function (err, users) {
+                    if (err) return done(err);
+                    res.render('chat.ejs', {
+                        user: user,
+                        chat_with:users,
+                        data_chat: ''
+                    });
                 });
             }
         });
     });
 
     app.post('/post-chat', isLoggedIn, function (req, res) {
-        var id = req.body.chat_with;
+        var id = req.body.id_chat_with;
         var user = req.user;
-        var content = req.body.content_chat;
+        var content = req.body.message;
         var data_content = {};
         data_content.id = user._id;
         data_content.image = user.local.image;
@@ -337,8 +333,7 @@ module.exports = function (app, passport, server, multer,redisClient) {
             if (chat_data) {
                 chat_data.content.push(data_content);
                 chat_data.save(function (err) {
-                    backURL = req.header('Referer') || '/';
-                    res.redirect(backURL);
+                    res.end();
                 });
             }else {
                 var chat = new Chat;
@@ -346,8 +341,7 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 chat.user.user2 =  id;
                 chat.content.push(data_content);
                 chat.save(function (err) {
-                    backURL = req.header('Referer') || '/';
-                    res.redirect(backURL);
+                    res.end();
                 });
             }
         });
@@ -408,24 +402,18 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 callback(true);
                 socket.nickname = data;
                 users[socket.nickname] = socket;
-                UpdateNickName();
             }
         });
         socket.on('chat message', function (msg) {
-            if (msg.chat_with != '') {
-                users[msg.chat_with].emit('gui-lai', {nick: msg.name_chat, msg: msg.msg});
+            if (msg.id_chat_with != '') {
+                users[msg.id_chat_with].emit('gui-lai', {id: msg.id_send, msg: msg.message,name: msg.name_send, image: msg.image_send});
             } else {
             }
         });
 
-        function UpdateNickName() {
-            io.sockets.emit('usernames', Object.keys(users));
-        }
-
         socket.on('disconnect', function (data) {
             if (!socket.nickname) return;
             delete users[socket.nickname];
-            UpdateNickName();
         });
     });
 

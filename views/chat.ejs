@@ -29,10 +29,10 @@
         <!-- selected chat -->
         <div class="col-md-8 bg-white ">
             <div class="chat-message" style="max-height: 550px;overflow-y:auto ">
-                <ul class="chat">
+                <ul class="chat" id="messages">
                     <% if(data_chat !=''){ for(var i=0; i<data_chat.length; i++){ %>
-                    <li class="left clearfix">
-                  <span class="chat-img <% if(data_chat[i].id === user._id){ %> pull-right <%}else{%> pull-left <%}%>">
+                    <li class="<% if(data_chat[i].id.toString() != user._id.toString()){ %> right <%}else{%> left <%}%> clearfix">
+                  <span class="chat-img <% if(data_chat[i].id.toString() != user._id.toString()){ %> pull-right <%}else{%> pull-left <%}%>">
                     <img src="<%= data_chat[i].image %>" alt="User Avatar">
                   </span>
                         <div class="chat-body clearfix">
@@ -45,20 +45,26 @@
                             </p>
                         </div>
                     </li>
-
                     <% } }  %>
 
                 </ul>
             </div>
             <div class="chat-box_ bg-white">
-                <form action="/post-chat" method="post">
-                    <input type="hidden" name="chat_with" value="<%= chat_with %>">
+                <form>
                 <div class="input-group">
-                    <input class="form-control border no-shadow no-rounded" name="content_chat" placeholder="Type your message here">
+                    <input class="form-control border no-shadow no-rounded" id="content_chat" name="content_chat" placeholder="Type your message here">
                     <span class="input-group-btn">
-                <button class="btn btn-success no-rounded" type="submit">Send</button>
+                <button class="btn btn-success no-rounded" id="btnSendMessage" autocomplete="off" type="button">Send</button>
               </span>
                 </div><!-- /input-group -->
+
+                <input type="hidden" id="id_send" name="id_send" value="<%= user._id %>">
+                <input type="hidden" id="image_send" name="image_send" value="<%= user.local.image %>">
+                <input type="hidden" id="name_send" name="name_send" value="<%= user.local.name %>">
+
+                <input type="hidden" id="id_chat_with" name="id_chat_with" value="<%= chat_with._id %>">
+                <input type="hidden" id="image_chat_with"  name="image_chat_with"   value="<%= chat_with.local.image %>">
+                <input type="hidden" id="name_chat_with"  name="name_chat_with"  value="<%= chat_with.local.name %>">
                 </form>
             </div>
         </div>

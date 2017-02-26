@@ -14,16 +14,6 @@ var configDB = require('./config/database.js');
 
 var redisClient = redis.createClient({host : 'localhost', port : 6379});
 
-// redisClient.on('ready',function() {
-//     console.log("Redis is ready");
-//
-// });
-//
-// redisClient.on('error',function() {
-//     console.log("Error in Redis");
-// });
-
-
 app.use(bodyParser.json({ type: 'application/*+json' }));
 
 mongoose.connect(configDB.url); // connect to our database
