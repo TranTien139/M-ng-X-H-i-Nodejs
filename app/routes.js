@@ -338,22 +338,6 @@ module.exports = function (app, passport, server, multer,redisClient) {
         Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
             if (chat_data) {
-
-                var list_old =  redisClient.get("chat_" + id.toString(), function (err, reply) {
-                        });
-                // if(list_old != '') {
-                //     list_old.push(data_content);
-                //     redisClient.set("chat_" + id, data_content, function (err, reply) {
-                //     });
-                // }else {
-                    var list_mess_old = [];
-                    list_mess_old.push(data_content);
-
-                    console.log(list_mess_old);
-                    redisClient.set("chat_" + id.toString(), list_mess_old.toString(), function (err, reply) {
-                    });
-              //  }
-
                 chat_data.content.push(data_content);
                 chat_data.save(function (err) {
                     res.end();
@@ -389,6 +373,27 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 if (err) throw  err;
                 backURL = req.header('Referer') || '/';
                 res.redirect(backURL);
+            });
+        });
+    });
+
+    app.post("/post-like/:action", isLoggedIn, function (req, res) {
+        var id_status = req.body.id_article;
+        var action = req.params.action;
+        var user = req.user;
+        NewFeed.getStatusPost(id_status, function (err, data1) {
+            if (err) throw  err;
+            if(action === 'like') {
+                if (data1.like.indexOf(user._id.toString()) === -1) {
+                    data1.like.push(user._id.toString());
+                }
+            }else {
+                    data1.like.splice(data1.like.indexOf(user._id.toString()),1);
+                    console.log( data1.like);
+            }
+            data1.save(function (err) {
+                if (err) throw  err;
+                res.end();
             });
         });
     });
@@ -440,7 +445,7 @@ module.exports = function (app, passport, server, multer,redisClient) {
         socket.on('disconnect', function (data) {
             if (!socket.nickname) return;
             delete users[socket.nickname];
-            nicknames.slice(nicknames.indexOf(socket.nickname),1);
+            nicknames.splice(nicknames.indexOf(socket.nickname),1);
             updateNickName();
         });
 

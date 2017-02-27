@@ -58,7 +58,7 @@
 
         <!-- center posts -->
         <div class="col-md-6">
-            <div class="row">
+            <div class="row" ng-app="AppShowHide" ng-controller="ShowHideController">
                             <!-- post state form -->
                             <div class="box profile-info n-border-top">
                                 <form action="/add-status" method="POST">
@@ -68,18 +68,13 @@
                                     <input type="hidden" value="<%= user.local.email %>" name="user_email">
                                     <input type="hidden" value="<%= user.local.name %>" name="user_name">
                                     <input type="hidden" value="<%= user.local.image %>" name="user_image">
-
+                                <div id="results_upload"></div>
                                 <div class="box-footer box-form">
                                     <button type="submit" class="btn btn-azure pull-right">Post</button>
                                     <ul class="nav nav-pills">
-                                        <li><a href="http://demos.bootdey.com/dayday/home.html#"><i
-                                                        class="fa fa-map-marker"></i></a></li>
-                                        <li><a href="http://demos.bootdey.com/dayday/home.html#"><i
+                                        <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
                                                         class="fa fa-camera"></i></a></li>
-                                        <li><a href="http://demos.bootdey.com/dayday/home.html#"><i
-                                                        class=" fa fa-film"></i></a></li>
-                                        <li><a href="http://demos.bootdey.com/dayday/home.html#"><i
-                                                        class="fa fa-microphone"></i></a></li>
+                                        <input type="file" style="display: none" id="addImageStatus" multiple name="imag_status">
                                     </ul>
                                 </div>
                                 </form>
@@ -99,12 +94,19 @@
                                     <p><%= newfeed[i].content %>
                                     </p>
 
-                                    <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
-                                        Share
-                                    </button>
-                                    <button type="button" class="btn btn-default btn-xs"><i
+                                    <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
+                                        <!--Share-->
+                                    <!--</button>-->
+                                    <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="LikeStatus('like','<%= newfeed[i]._id %>', this)"><i
                                                 class="fa fa-thumbs-o-up"></i> Like
                                     </button>
+                                    <% }else {%>
+                                    <button type="button" class="btn btn-default btn-xs"  onclick="LikeStatus('unlike','<%= newfeed[i]._id %>',this)"><i
+                                                class="fa fa-thumbs-o-up"></i> UnLike
+                                    </button>
+                                    <% }%>
+
                                     <span class="pull-right text-muted"><%= newfeed[i].like.length %> likes - <%= newfeed[i].comment.length %> comments</span>
                                 </div>
                                 <div class="box-footer box-comments" style="display: block;">

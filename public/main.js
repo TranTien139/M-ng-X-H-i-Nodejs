@@ -13,3 +13,21 @@ app.controller('profileController',function($scope,$http){
         return false;
     }
 });
+
+var app = angular.module('AppShowHide',[]);
+app.controller('ShowHideController',function($scope,$http){
+    // $scope.sendAddFriend = function ($me,$friend) {
+    //     $http.post("/send-add-friend/"+$me+'/'+$friend).success(function(){
+    //     });
+    // }
+    // var hasLiked = false;
+    // $scope.likeClick = function () {
+    //     if (!hasLiked) {
+    //         hasLiked = true;
+    //         $scope.liked = 'Unlike';
+    //     } else {
+    //         hasLiked = false;
+    //         $scope.liked= 'Like';
+    //     }
+    // }
+});
