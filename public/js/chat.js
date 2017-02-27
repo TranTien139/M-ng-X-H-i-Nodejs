@@ -6,8 +6,8 @@ $(document).ready(function(){
     var $nickname = $('#id_send');
     var $chat_with= $('#id_chat_with');
 
-    // socket.emit('new user', $nickname.val(), function (data) {
-    // });
+    socket.emit('new user', $nickname.val(), function (data) {
+    });
 
     socket.on('gui-lai', function(data){
         displayData(data);

@@ -1,10 +1,25 @@
 <% include partical/header.ejs %>
 <div class="container page-content ">
+    <div class="col-sm-10 col-sm-offset-1">
     <div class="row">
-        <h3>kết quả tìm kiếm với từ khóa: <%= key %></h3>
         <% for(var i=0; i< result.length; i++){ if(result[i]._id.toString().trim() != user._id.toString().trim()) {%>
-        <div class="col-sm-3"><a href="/profile/<%=  result[i]._id %>"> <img src="<%=  result[i].local.image  %>" width="80" height="80" ><span><%=  result[i].local.name  %></span> </a></div>
+        <div class="col-md-3">
+            <div class="contact-box center-version">
+                <a href="/profile/<%=  result[i]._id %>">
+                    <img alt="image" class="img-circle" src="<%=  result[i].local.image  %>">
+                    <h3 class="m-b-xs"><strong><%=  result[i].local.name  %></strong></h3>
+
+                    <div class="font-bold">Graphics designer</div>
+                </a>
+                <div class="contact-box-footer">
+                    <div class="m-t-xs btn-group">
+                        <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <% } } %>
+    </div>
     </div>
 </div>
 

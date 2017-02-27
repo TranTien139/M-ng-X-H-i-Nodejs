@@ -298,13 +298,12 @@ module.exports = function (app, passport, server, multer,redisClient) {
                 User.findOne({'_id': id}, function (err, users) {
                     if (err) return done(err);
 
-                    // if(chat_data.first === id) {
-                    //    redisClient.get("chat_" + id + "_" + user._id, function (err, reply) {
-                    //     });
-                    // }else {
-                    //      redisClient.get("chat_" + user._id + "_" + id, function (err, reply) {
-                    //     });
-                    // }
+                    var list_old =  redisClient.get("chat_" + id.toString(), function (err, reply) {
+                        console.log(reply);
+                    });
+                    console.log('test');
+                    console.log(list_old);
+
                 res.render('chat.ejs', {
                     user: user,
                     chat_with:users,
@@ -339,13 +338,22 @@ module.exports = function (app, passport, server, multer,redisClient) {
         Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
             if (chat_data) {
-                // if(chat_data.first === id) {
-                //     redisClient.set("chat_" + id + "_" + user._id, data_content, function (err, reply) {
+
+                var list_old =  redisClient.get("chat_" + id.toString(), function (err, reply) {
+                        });
+                // if(list_old != '') {
+                //     list_old.push(data_content);
+                //     redisClient.set("chat_" + id, data_content, function (err, reply) {
                 //     });
                 // }else {
-                //     redisClient.set("chat_" + user._id + "_" + id, data_content, function (err, reply) {
-                //     });
-                // }
+                    var list_mess_old = [];
+                    list_mess_old.push(data_content);
+
+                    console.log(list_mess_old);
+                    redisClient.set("chat_" + id.toString(), list_mess_old.toString(), function (err, reply) {
+                    });
+              //  }
+
                 chat_data.content.push(data_content);
                 chat_data.save(function (err) {
                     res.end();
