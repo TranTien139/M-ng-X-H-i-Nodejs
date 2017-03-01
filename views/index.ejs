@@ -10,28 +10,28 @@
 
                         <div class="user-heading round">
                             <a href="/profile/<%= user._id %>">
-                                <img src="<%= user.local.image %>" alt="">
+                                <img src="/uploads/<%= user.local.image %>" alt="">
                             </a>
                             <h1><%= user.local.name %></h1>
                             <p><%= user.local.email %></p>
                         </div>
 
                         <ul class="nav nav-pills nav-stacked">
-                            <li class="active"><a href="http://demos.bootdey.com/dayday/home.html#"> <i
+                            <li class="active"><a href=""> <i
                                             class="fa fa-user"></i> News feed</a></li>
                             <li>
-                                <a href="http://demos.bootdey.com/dayday/home.html#">
+                                <a href="">
                                     <i class="fa fa-envelope"></i> Messages
                                     <span class="label label-info pull-right r-activity">9</span>
                                 </a>
                             </li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-calendar"></i>
+                            <li><a href=""> <i class="fa fa-calendar"></i>
                                     Events</a></li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-image"></i> Photos</a>
+                            <li><a href=""> <i class="fa fa-image"></i> Photos</a>
                             </li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-share"></i> Browse</a>
+                            <li><a href=""> <i class="fa fa-share"></i> Browse</a>
                             </li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-floppy-o"></i>
+                            <li><a href=""> <i class="fa fa-floppy-o"></i>
                                     Saved</a></li>
                         </ul>
                     </div>
@@ -40,15 +40,15 @@
                 <div class="widget">
                     <div class="widget-body">
                         <ul class="nav nav-pills nav-stacked">
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-globe"></i> Pages</a>
+                            <li><a href=""> <i class="fa fa-globe"></i> Pages</a>
                             </li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-gamepad"></i>
+                            <li><a href=""> <i class="fa fa-gamepad"></i>
                                     Games</a></li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-puzzle-piece"></i>
+                            <li><a href=""> <i class="fa fa-puzzle-piece"></i>
                                     Ads</a></li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-home"></i>
+                            <li><a href=""> <i class="fa fa-home"></i>
                                     Markerplace</a></li>
-                            <li><a href="http://demos.bootdey.com/dayday/home.html#"> <i class="fa fa-users"></i> Groups</a>
+                            <li><a href=""> <i class="fa fa-users"></i> Groups</a>
                             </li>
                         </ul>
                     </div>
@@ -61,20 +61,16 @@
             <div class="row" ng-app="AppShowHide" ng-controller="ShowHideController">
                             <!-- post state form -->
                             <div class="box profile-info n-border-top">
-                                <form action="/add-status" method="POST">
+                                <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
                                               placeholder="Whats in your mind today?" name="content_status"></textarea>
-                                    <input type="hidden" value="<%= user._id %>" name="user_id">
-                                    <input type="hidden" value="<%= user.local.email %>" name="user_email">
-                                    <input type="hidden" value="<%= user.local.name %>" name="user_name">
-                                    <input type="hidden" value="<%= user.local.image %>" name="user_image">
-                                <div id="results_upload"></div>
+                                <ul id="results_upload" class="list-inline"></ul>
                                 <div class="box-footer box-form">
                                     <button type="submit" class="btn btn-azure pull-right">Post</button>
                                     <ul class="nav nav-pills">
                                         <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
                                                         class="fa fa-camera"></i></a></li>
-                                        <input type="file" style="display: none" id="addImageStatus" multiple name="imag_status">
+                                        <input type="file" style="display: none" id="addImageStatus" multiple name="addImageStatus">
                                     </ul>
                                 </div>
                                 </form>
@@ -93,6 +89,9 @@
                                 <div class="box-body" style="display: block;">
                                     <p><%= newfeed[i].content %>
                                     </p>
+                                    <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k=0; k<newfeed[i].image.length; k++){%>
+                                        <img src="../uploads/status/<%= newfeed[i].image[k] %>" class="img-responsive show-in-modal" alt="photo">
+                                    <%}}%>
 
                                     <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
                                         <!--Share-->
@@ -129,7 +128,7 @@
                                 <div class="box-footer" style="display: block;">
                                     <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
                                         <img class="img-responsive img-circle img-sm"
-                                             src="<%= user.local.image %>" alt="Alt Text">
+                                             src="/uploads/<%= user.local.image %>" alt="Alt Text">
                                         <div class="img-push">
                                             <input type="text" name="content_comment" class="form-control input-sm"
                                                    placeholder="Press enter to post comment">

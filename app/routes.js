@@ -6,20 +6,17 @@ var NewFeed = require('../app/controller/statusController.js');
 var Chat = require('../app/models/chat.js');
 var mongoose = require('mongoose');
 
-module.exports = function (app, passport, server, multer,redisClient) {
+var path = require('path'),
+    fs = require('fs');
 
-    // =====================================
-    // HOME PAGE (with login links) ========
-    // =====================================
+module.exports = function (app, passport, server, redisClient) {
 
     app.get('/', function (req, res) {
-
         if (req.isAuthenticated()) {
             res.redirect('/home');
         } else {
             res.render('login.ejs', {message: req.flash('loginMessage')});
         }
-
     });
 
     app.get('/login', function (req, res) {
@@ -190,36 +187,53 @@ module.exports = function (app, passport, server, multer,redisClient) {
         });
     });
 
-    var storage = multer.diskStorage({
-        destination: function (req, file, callback) {
-            callback(null, './public/uploads');
-        },
-        filename: function (req, file, callback) {
-            callback(null, file.fieldname + '-' + Date.now() + '.jpg');
-        }
-    });
-    var upload = multer({storage: storage}).array('myAvatar', 2);
-
-
     app.post('/update-profile/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
 
-        console.log(JSON.stringify(req.body, null, 2));
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                upload(req, res, function (err) {
-                    if (err) {
-                        res.end('upload fail');
+                fs.readFile(req.files.myAvatar.path, function (err, data) {
+                    var imageName = req.files.myAvatar.name;
+                    if(!imageName){
+                        console.log("There was an error");
                     } else {
-                        console.log(req.files);
+                        var newPath = __dirname + "/../public/uploads/" + imageName;
+                        fs.writeFile(newPath, data, function (err) {
+                            console.log('upload success');
+                        });
                     }
                 });
+
+                fs.readFile(req.files.myCover.path, function (err, data) {
+                    var imageName1 = req.files.myCover.name;
+                    if(!imageName1){
+                        console.log("There was an error");
+                    } else {
+                        var newPath = __dirname + "/../public/uploads/" + imageName1;
+                        fs.writeFile(newPath, data, function (err) {
+                            console.log('upload success');
+                        });
+                    }
+                });
+
+                if(req.files.myAvatar.name !== '') {
+                    var ava = req.files.myAvatar.name;
+                }else {
+                    var ava = users.local.image;
+                }
+                if(req.files.myCover.name !== '') {
+                    var cover = req.files.myCover.name;
+                }else {
+                    var cover = users.local.cover;
+                }
                 users.local.birthday = req.body.birthday;
                 users.local.job = req.body.job;
                 users.local.gender = req.body.gender;
                 users.local.hometown = req.body.hometown;
                 users.local.education = req.body.education;
                 users.local.name = req.body.fullname;
+                users.local.image = ava;
+                users.local.cover = cover;
                 users.save(function (err) {
                     backURL = req.header('Referer') || '/';
                     res.redirect(backURL);
@@ -273,18 +287,39 @@ module.exports = function (app, passport, server, multer,redisClient) {
 
     app.post("/add-status", isLoggedIn, function (req, res) {
         var content = req.body.content_status;
+        var user = req.user;
+        var list_image = [];
+
+        if(req.files.addImageStatus !=''){
+            for(var i=0; i<req.files.addImageStatus.length; i++){
+                fs.readFile(req.files.addImageStatus[i].path, function (err, data) {
+                    var imageName = req.files.addImageStatus[0].name;
+                    if(!imageName){
+                        console.log("There was an error");
+                    } else {
+                        var newPath = __dirname + "/../public/uploads/status/" + imageName;
+                        fs.writeFile(newPath, data, function (err) {
+                            console.log('upload success');
+                        });
+                    }
+                });
+                list_image.push(req.files.addImageStatus[i].originalFilename);
+            }
+        }
         var status = new Status();
         status.content = content;
         status.like = [];
         status.share = [];
         status.comment = [];
-        status.user.name = req.body.user_name;
-        status.user.email = req.body.user_email;
-        status.user.image = req.body.user_image;
-        status.userId = req.body.user_id;
-        status.save();
-        backURL = req.header('Referer') || '/';
-        res.redirect(backURL);
+        status.user.name = user.local.name;
+        status.user.email = user.local.email;
+        status.user.image = user.local.image;
+        status.userId = user._id;
+        status.image = list_image;
+        status.save(function (err) {
+            backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
+        });
     });
 
     app.get('/chat', isLoggedIn, function (req, res) {

@@ -40,13 +40,11 @@ if(window.File && window.FileList && window.FileReader)
 
                 var picFile = event.target;
 
-                var div = document.createElement("div");
+                var div = document.createElement("li");
 
                 div.innerHTML = "<img class='thumbnail' width='80' height='80' src='" + picFile.result + "'" +
-                    "title='" + picFile.name + "'/> <a onclick='removeHtml(this)' class='remove_pict'>X</a>";
-
+                    "title='" + picFile.name + "'/> <a style='cursor: pointer;'  onclick='removeHtml(this)' class='remove_pict'>X</a>";
                 output.insertBefore(div,null);
-
             });
 
             //Read the image
@@ -55,7 +53,6 @@ if(window.File && window.FileList && window.FileReader)
 
     });
 }
-
 
     $("#results_upload").on( "click",".remove_pict",function(){
         $(this).parent().remove();

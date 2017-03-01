@@ -2,71 +2,23 @@
 <% include partical/bar_profile.ejs  %>
 
 
-    <div class="col-md-3">
-        <div class="contact-box center-version">
-            <a href="#">
-                <img alt="image" class="img-circle" src="img/Friends/guy-1.jpg">
-                <h3 class="m-b-xs"><strong>John Doe</strong></h3>
+<% if(user_other.followers.length>0){ for(var i=0; i<user_other.followers.length; i++){ %>
+<div class="col-md-3">
+    <div class="contact-box center-version">
+        <a href="/profile/<%= user_other.followers.userId %>">
+            <img alt="image" class="img-circle" src="../uploads/<%= user_other.followers[i].image %>">
+            <h3 class="m-b-xs"><strong><%= user_other.followers[i].name %></strong></h3>
 
-                <div class="font-bold">Graphics designer</div>
-            </a>
-            <div class="contact-box-footer">
-                <div class="m-t-xs btn-group">
-                    <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
-                </div>
+            <div class="font-bold"></div>
+        </a>
+        <div class="contact-box-footer">
+            <div class="m-t-xs btn-group">
+                <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
             </div>
         </div>
     </div>
-
-    <div class="col-md-3">
-        <div class="contact-box center-version">
-            <a href="#">
-                <img alt="image" class="img-circle" src="img/Friends/guy-1.jpg">
-                <h3 class="m-b-xs"><strong>John Doe</strong></h3>
-
-                <div class="font-bold">Graphics designer</div>
-            </a>
-            <div class="contact-box-footer">
-                <div class="m-t-xs btn-group">
-                    <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="contact-box center-version">
-            <a href="#">
-                <img alt="image" class="img-circle" src="img/Friends/guy-1.jpg">
-                <h3 class="m-b-xs"><strong>John Doe</strong></h3>
-
-                <div class="font-bold">Graphics designer</div>
-            </a>
-            <div class="contact-box-footer">
-                <div class="m-t-xs btn-group">
-                    <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="contact-box center-version">
-            <a href="#">
-                <img alt="image" class="img-circle" src="img/Friends/guy-1.jpg">
-                <h3 class="m-b-xs"><strong>John Doe</strong></h3>
-
-                <div class="font-bold">Graphics designer</div>
-            </a>
-            <div class="contact-box-footer">
-                <div class="m-t-xs btn-group">
-                    <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+</div>
+<% }} %>
 
         </div><!-- end timeline posts-->
 

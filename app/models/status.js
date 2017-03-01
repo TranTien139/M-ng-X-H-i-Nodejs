@@ -4,6 +4,7 @@ module.exports = mongoose.model('Status',{
     user: {email:String,image:String,name: String},
     userId: String,
     content: String,
+    image: [],
     date: {type: Date, default: Date.now},
     like: [],
     share: [],

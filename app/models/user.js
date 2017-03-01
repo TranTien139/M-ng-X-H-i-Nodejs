@@ -15,6 +15,7 @@ var userSchema = mongoose.Schema({
         hometown:String,
         education: String,
         image        : String,
+        cover        : String,
         password     : String,
     },
     followers:[{userId:String,image:String,name:String}]
