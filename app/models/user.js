@@ -18,7 +18,10 @@ var userSchema = mongoose.Schema({
         cover        : String,
         password     : String,
     },
-    followers:[{userId:String,image:String,name:String}]
+    followers:[{userId:String,image:String,name:String}],
+    addfriend:[],
+    notify:[],
+    message:[]
 });
 
 // methods ======================

@@ -61,14 +61,14 @@ module.exports = function (app, passport, server, redisClient) {
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
         var j = user.followers;
-            var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
-                    res.render('index.ejs', {
-                        user: user,
-                        friend: user.followers,
-                        newfeed: data
-                    });
-
+        var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
+            res.render('index.ejs', {
+                user: user,
+                friend: user.followers,
+                newfeed: data
             });
+
+        });
     });
 
     // =====================================
@@ -88,13 +88,14 @@ module.exports = function (app, passport, server, redisClient) {
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
-                    console.log(data);
-                        res.render('profile.ejs', {
-                            user_other: users,
-                            user: req.user,
-                            timeline: data,
-                            friend: friend,
-                        });
+                    var check = users.addfriend.indexOf(user._id.toString());
+                    res.render('profile.ejs', {
+                        user_other: users,
+                        user: req.user,
+                        timeline: data,
+                        friend: friend,
+                        check: check
+                    });
                 });
 
             } else {
@@ -105,16 +106,16 @@ module.exports = function (app, passport, server, redisClient) {
 
     app.get('/about/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
-        var user = User.findOne({"_id": user_member}, function (err, users) {
+        var user = req.user;
+         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
+                    var check = users.addfriend.indexOf(user._id.toString());
                     res.render('about.ejs', {
                         user_other: users,
                         user: req.user,
-                        timeline: data,
-                        friend: '',
+                        friend: req.user.followers,
+                        check: check
                     });
-                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -126,16 +127,16 @@ module.exports = function (app, passport, server, redisClient) {
 
     app.get('/friends/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
-        var user = User.findOne({"_id": user_member}, function (err, users) {
+        var user = req.user;
+       User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
+                    var check = users.addfriend.indexOf(user._id.toString());
                     res.render('friends.ejs', {
                         user_other: users,
                         user: req.user,
-                        timeline: data,
-                        friend: '',
+                        friend: req.user.followers,
+                        check: check
                     });
-                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -147,16 +148,16 @@ module.exports = function (app, passport, server, redisClient) {
 
     app.get('/photos/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
-        var user = User.findOne({"_id": user_member}, function (err, users) {
+       var user = req.user;
+        User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
+                    var check = users.addfriend.indexOf(user._id.toString());
                     res.render('photos.ejs', {
                         user_other: users,
                         user: req.user,
-                        timeline: data,
-                        friend: '',
+                        friend: req.user.followers,
+                        check: check
                     });
-                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -167,23 +168,9 @@ module.exports = function (app, passport, server, redisClient) {
     });
 
     app.get('/edit/profile/:id_member', isLoggedIn, function (req, res) {
-        var user_member = req.params.id_member;
-        var user = User.findOne({"_id": user_member}, function (err, users) {
-            if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
-                    res.render('edit_profile.ejs', {
-                        user_other: users,
-                        user: req.user,
-                        timeline: data,
-                        friend: '',
-                    });
-                });
-
-            } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
-            }
+        res.render('edit_profile.ejs', {
+            user: req.user,
+            friend: req.user.followers
         });
     });
 
@@ -194,7 +181,7 @@ module.exports = function (app, passport, server, redisClient) {
             if (!err) {
                 fs.readFile(req.files.myAvatar.path, function (err, data) {
                     var imageName = req.files.myAvatar.name;
-                    if(!imageName){
+                    if (!imageName) {
                         console.log("There was an error");
                     } else {
                         var newPath = __dirname + "/../public/uploads/" + imageName;
@@ -206,7 +193,7 @@ module.exports = function (app, passport, server, redisClient) {
 
                 fs.readFile(req.files.myCover.path, function (err, data) {
                     var imageName1 = req.files.myCover.name;
-                    if(!imageName1){
+                    if (!imageName1) {
                         console.log("There was an error");
                     } else {
                         var newPath = __dirname + "/../public/uploads/" + imageName1;
@@ -216,14 +203,14 @@ module.exports = function (app, passport, server, redisClient) {
                     }
                 });
 
-                if(req.files.myAvatar.name !== '') {
+                if (req.files.myAvatar.name !== '') {
                     var ava = req.files.myAvatar.name;
-                }else {
+                } else {
                     var ava = users.local.image;
                 }
-                if(req.files.myCover.name !== '') {
+                if (req.files.myCover.name !== '') {
                     var cover = req.files.myCover.name;
-                }else {
+                } else {
                     var cover = users.local.cover;
                 }
                 users.local.birthday = req.body.birthday;
@@ -265,24 +252,44 @@ module.exports = function (app, passport, server, redisClient) {
         var me = req.params.me;
         var user_me = req.user;
         var friend = req.params.friend;
-        // User.findOne({'_id': me}, function (err, user) {
-        //     if (err) return done(err);
-        //     if (user) {
-        //         user.followers.push({userId: friend});
-        //         user.save();
-        //     }
-        // });
+
         User.findOne({'_id': friend}, function (err, user) {
             if (err) return done(err);
             if (user) {
-                var obj = {userId: friend,image:friend.local.image,name:friend.local.name};
-                user_me.followers.push(obj);
-                user_me.save();
-                // user.message_friend.push({userId:user_me._id, image:user_me.local.image, name:user_me.local.name});
-                // user.save();
+                if (user.addfriend.indexOf(me.toString()) === -1) {
+                    user.addfriend.push(me.toString());
+                    user.save();
+                }
             }
         });
-        res.redirect('/profile/' + friend);
+        res.end();
+    });
+
+    app.post("/confirm-friend/:me/:friend", isLoggedIn, function (req, res) {
+        var me = req.params.me;
+        var user_me = req.user;
+        var friend = req.params.friend;
+
+        User.findOne({'_id': friend}, function (err, user) {
+            if (err) return done(err);
+            if (user) {
+                var obj = {};
+                obj.userId = user._id.toString();
+                obj.image = user.image;
+                obj.name = user.name;
+                user_me.followers.push(obj);
+                user_me.addfriend.splice(user_me.addfriend.indexOf(user_me._id.toString()), 1);
+                user_me.save();
+
+                var obj1 = {};
+                obj1.userId = user_me._id.toString();
+                obj1.image = user_me.image;
+                obj1.name = user_me.name;
+                user.followers.push(obj1);
+                user.save();
+            }
+        });
+        res.end();
     });
 
     app.post("/add-status", isLoggedIn, function (req, res) {
@@ -290,11 +297,11 @@ module.exports = function (app, passport, server, redisClient) {
         var user = req.user;
         var list_image = [];
 
-        if(req.files.addImageStatus !=''){
-            for(var i=0; i<req.files.addImageStatus.length; i++){
+        if (req.files.addImageStatus != '') {
+            for (var i = 0; i < req.files.addImageStatus.length; i++) {
                 fs.readFile(req.files.addImageStatus[i].path, function (err, data) {
                     var imageName = req.files.addImageStatus[0].name;
-                    if(!imageName){
+                    if (!imageName) {
                         console.log("There was an error");
                     } else {
                         var newPath = __dirname + "/../public/uploads/status/" + imageName;
@@ -327,30 +334,23 @@ module.exports = function (app, passport, server, redisClient) {
 
         var user = req.user;
 
-        Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
+        Chat.findOne({$or: [{$and: [{'user.user1': user._id}, {'user.user2': id}]}, {$and: [{'user.user1': id}, {'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
-            if(chat_data){
-                User.findOne({'_id': id}, function (err, users) {
-                    if (err) return done(err);
-
-                    var list_old =  redisClient.get("chat_" + id.toString(), function (err, reply) {
-                        console.log(reply);
-                    });
-                    console.log('test');
-                    console.log(list_old);
-
-                res.render('chat.ejs', {
-                    user: user,
-                    chat_with:users,
-                    data_chat: chat_data.content
-                });
-                });
-            }else {
+            if (chat_data) {
                 User.findOne({'_id': id}, function (err, users) {
                     if (err) return done(err);
                     res.render('chat.ejs', {
                         user: user,
-                        chat_with:users,
+                        chat_with: users,
+                        data_chat: chat_data.content
+                    });
+                });
+            } else {
+                User.findOne({'_id': id}, function (err, users) {
+                    if (err) return done(err);
+                    res.render('chat.ejs', {
+                        user: user,
+                        chat_with: users,
                         data_chat: ''
                     });
                 });
@@ -370,17 +370,17 @@ module.exports = function (app, passport, server, redisClient) {
         data_content.date = new Date();
         data_content.seen = '';
 
-        Chat.findOne({$or: [{$and: [{'user.user1': user._id},{'user.user2':id}]},{$and: [{'user.user1': id},{'user.user2': user._id}]}]}, function (err, chat_data) {
+        Chat.findOne({$or: [{$and: [{'user.user1': user._id}, {'user.user2': id}]}, {$and: [{'user.user1': id}, {'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
             if (chat_data) {
                 chat_data.content.push(data_content);
                 chat_data.save(function (err) {
                     res.end();
                 });
-            }else {
+            } else {
                 var chat = new Chat;
-                chat.user.user1 =  user._id;
-                chat.user.user2 =  id;
+                chat.user.user1 = user._id;
+                chat.user.user2 = id;
                 chat.content.push(data_content);
                 chat.first = user._id;
                 chat.save(function (err) {
@@ -418,13 +418,12 @@ module.exports = function (app, passport, server, redisClient) {
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
             if (err) throw  err;
-            if(action === 'like') {
+            if (action === 'like') {
                 if (data1.like.indexOf(user._id.toString()) === -1) {
                     data1.like.push(user._id.toString());
                 }
-            }else {
-                    data1.like.splice(data1.like.indexOf(user._id.toString()),1);
-                    console.log( data1.like);
+            } else {
+                data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
             }
             data1.save(function (err) {
                 if (err) throw  err;
@@ -473,21 +472,26 @@ module.exports = function (app, passport, server, redisClient) {
 
         socket.on('chat message', function (msg) {
             if (msg.id_chat_with != '' && (typeof users[msg.id_chat_with] !== 'undefined')) {
-                users[msg.id_chat_with].emit('gui-lai', {id: msg.id_send, msg: msg.message,name: msg.name_send, image: msg.image_send});
+                users[msg.id_chat_with].emit('gui-lai', {
+                    id: msg.id_send,
+                    msg: msg.message,
+                    name: msg.name_send,
+                    image: msg.image_send
+                });
             } else {
             }
         });
         socket.on('disconnect', function (data) {
             if (!socket.nickname) return;
             delete users[socket.nickname];
-            nicknames.splice(nicknames.indexOf(socket.nickname),1);
+            nicknames.splice(nicknames.indexOf(socket.nickname), 1);
             updateNickName();
         });
 
     });
 
-    function updateNickName(){
-        io.sockets.emit('usernames',nicknames);
+    function updateNickName() {
+        io.sockets.emit('usernames', nicknames);
     }
 
 
