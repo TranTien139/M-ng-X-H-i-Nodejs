@@ -58,3 +58,9 @@ if(window.File && window.FileList && window.FileReader)
         $(this).parent().remove();
     });
 
+function  getAddFriend($list) {
+    $.post('/get-list-addfriend/',{'list_addfriend':$list}, function (data) {
+
+    });
+}
+

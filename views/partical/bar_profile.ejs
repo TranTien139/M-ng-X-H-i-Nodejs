@@ -5,7 +5,7 @@
                 <div class="cover profile" ng-app="profileApp">
                     <div class="wrapper" ng-controller="profileController">
                         <div class="image">
-                            <img src="../uploads/<%= user_other.local.cover %>" class="show-in-modal" alt="people">
+                            <img src="<%= user_other.local.cover %>" class="show-in-modal" alt="people">
                         </div>
                         <% if(user._id.toString().trim() != user_other._id.toString().trim()){ if(check === -1){ %>
                         <button class="btn btn-warning" style="position: absolute; bottom: 10px; right: 20px;" ng-show="checkIsFollow('<%= user_other._id.toString().trim() %>')" ng-click ="sendAddFriend('<%= user._id.toString().trim() %>','<%= user_other._id.toString().trim() %>')">add friend</button>
@@ -16,9 +16,9 @@
                     </div>
                     <div class="cover-info">
                         <div class="avatar">
-                            <img src="../uploads/<%= user.local.image %>" alt="people">
+                            <img src="<%= user_other.local.image %>" alt="people">
                         </div>
-                        <div class="name"><a href="#"><%= user_other.local.name %></a></div>
+                        <div class="name"><a ><%= user_other.local.name %></a></div>
                         <ul class="cover-nav">
                             <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
                             <!--<li><a href="/about/<%= user_other._id %>"><i class="fa fa-fw fa-user"></i> About</a></li>-->

@@ -184,7 +184,7 @@ module.exports = function (app, passport, server, redisClient) {
                     if (!imageName) {
                         console.log("There was an error");
                     } else {
-                        var newPath = __dirname + "/../public/uploads/" + imageName;
+                        var newPath = __dirname + "/../public/uploads/avatar/" + imageName;
                         fs.writeFile(newPath, data, function (err) {
                             console.log('upload success');
                         });
@@ -196,23 +196,27 @@ module.exports = function (app, passport, server, redisClient) {
                     if (!imageName1) {
                         console.log("There was an error");
                     } else {
-                        var newPath = __dirname + "/../public/uploads/" + imageName1;
+                        var newPath = __dirname + "/../public/uploads/cover/" + imageName1;
                         fs.writeFile(newPath, data, function (err) {
                             console.log('upload success');
                         });
                     }
                 });
 
+                var domain = 'http://localhost:8080';
                 if (req.files.myAvatar.name !== '') {
-                    var ava = req.files.myAvatar.name;
+                    var ava1 = req.files.myAvatar.name;
+                    var ava = domain+'/uploads/avatar/'+ava1;
                 } else {
                     var ava = users.local.image;
                 }
                 if (req.files.myCover.name !== '') {
-                    var cover = req.files.myCover.name;
+                    var cover1 = req.files.myCover.name;
+                    var cover = domain+'/uploads/cover/'+cover1;
                 } else {
                     var cover = users.local.cover;
                 }
+
                 users.local.birthday = req.body.birthday;
                 users.local.job = req.body.job;
                 users.local.gender = req.body.gender;
@@ -430,6 +434,12 @@ module.exports = function (app, passport, server, redisClient) {
                 res.end();
             });
         });
+    });
+
+
+    app.post("/get-list-addfriend",isLoggedIn, function (req,res) {
+        var list_addfriend = req.query.list_addfriend;
+        res.end();
     });
 
 

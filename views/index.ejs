@@ -10,7 +10,7 @@
 
                         <div class="user-heading round">
                             <a href="/profile/<%= user._id %>">
-                                <img src="/uploads/<%= user.local.image %>" alt="">
+                                <img src="<%= user.local.image %>" alt="">
                             </a>
                             <h1><%= user.local.name %></h1>
                             <p><%= user.local.email %></p>
@@ -90,7 +90,7 @@
                                     <p><%= newfeed[i].content %>
                                     </p>
                                     <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k=0; k<newfeed[i].image.length; k++){%>
-                                        <img src="../uploads/status/<%= newfeed[i].image[k] %>" class="img-responsive show-in-modal" alt="photo">
+                                        <img src="<%= newfeed[i].image[k] %>" class="img-responsive show-in-modal" alt="photo">
                                     <%}}%>
 
                                     <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
@@ -128,7 +128,7 @@
                                 <div class="box-footer" style="display: block;">
                                     <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
                                         <img class="img-responsive img-circle img-sm"
-                                             src="/uploads/<%= user.local.image %>" alt="Alt Text">
+                                             src="<%= user.local.image %>" alt="Alt Text">
                                         <div class="img-push">
                                             <input type="text" name="content_comment" class="form-control input-sm"
                                                    placeholder="Press enter to post comment">
