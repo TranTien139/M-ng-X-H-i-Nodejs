@@ -60,7 +60,16 @@ if(window.File && window.FileList && window.FileReader)
 
 function  getAddFriend($list) {
     $.post('/get-list-addfriend/',{'list_addfriend':$list}, function (data) {
+        $('#content_addfriend').html(data);
+    });
+}
 
+function ConfirmAddFriend($id) {
+    $.post('/confirm-friend/'+$id,{'id_friend':$id}, function (data) {
+    });
+}
+function getUnFriend($id) {
+    $.post('/send-unfriend/'+$id,{}, function (data) {
     });
 }
 

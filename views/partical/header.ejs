@@ -36,7 +36,7 @@
                     </form></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="actives"><a style="cursor: pointer;" data-toggle="modal" data-target="#message_modal">add friend(<%= user.addfriend.length %>)</a></li>
+                <li class="actives"><a style="cursor: pointer;" data-toggle="modal" onclick="javascript:getAddFriend('<%= user._id %>')" data-target="#message_modal">add friend(<%= user.addfriend.length %>)</a></li>
                 <li class="actives"><a>message(<%= user.message.length %>)</a></li>
                 <li class="actives"><a>notification(<%= user.notify.length %>)</a></li>
                 <li class="dropdown">

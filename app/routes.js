@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var path = require('path'),
     fs = require('fs');
 
-module.exports = function (app, passport, server, redisClient) {
+module.exports = function (app, passport, server) {
 
     app.get('/', function (req, res) {
         if (req.isAuthenticated()) {
@@ -89,12 +89,16 @@ module.exports = function (app, passport, server, redisClient) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
+                    var isfriend = users.followers.filter(function(obj) {
+                        return obj.userId !== user._id.toString()
+                    });
                     res.render('profile.ejs', {
                         user_other: users,
                         user: req.user,
                         timeline: data,
                         friend: friend,
-                        check: check
+                        check: check,
+                        isfriend: isfriend
                     });
                 });
 
@@ -110,11 +114,15 @@ module.exports = function (app, passport, server, redisClient) {
          User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                     var check = users.addfriend.indexOf(user._id.toString());
+                var isfriend = users.followers.filter(function(obj) {
+                    return obj.userId !== user._id.toString()
+                });
                     res.render('about.ejs', {
                         user_other: users,
                         user: req.user,
                         friend: req.user.followers,
-                        check: check
+                        check: check,
+                        isfriend: isfriend
                     });
 
             } else {
@@ -131,11 +139,15 @@ module.exports = function (app, passport, server, redisClient) {
        User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                     var check = users.addfriend.indexOf(user._id.toString());
+                var isfriend = users.followers.filter(function(obj) {
+                    return obj.userId !== user._id.toString()
+                });
                     res.render('friends.ejs', {
                         user_other: users,
                         user: req.user,
                         friend: req.user.followers,
-                        check: check
+                        check: check,
+                        isfriend: isfriend
                     });
 
             } else {
@@ -152,11 +164,15 @@ module.exports = function (app, passport, server, redisClient) {
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                     var check = users.addfriend.indexOf(user._id.toString());
+                var isfriend = users.followers.filter(function(obj) {
+                    return obj.userId !== user._id.toString()
+                });
                     res.render('photos.ejs', {
                         user_other: users,
                         user: req.user,
                         friend: req.user.followers,
-                        check: check
+                        check: check,
+                        isfriend: isfriend
                     });
 
             } else {
@@ -269,8 +285,28 @@ module.exports = function (app, passport, server, redisClient) {
         res.end();
     });
 
-    app.post("/confirm-friend/:me/:friend", isLoggedIn, function (req, res) {
-        var me = req.params.me;
+    app.post("/send-unfriend/:friend", isLoggedIn, function (req, res) {
+        var user_me = req.user;
+        var friend = req.params.friend;
+
+        User.findOne({'_id': friend}, function (err, users) {
+            if (err) return done(err);
+            var isfriend = users.followers.filter(function(obj) {
+                 return obj.userId !== user_me._id.toString()
+            });
+            users.followers = isfriend;
+            users.save();
+
+            var isfriend1 = user_me.followers.filter(function(obj) {
+                return obj.userId !== users._id.toString()
+            });
+            user_me.followers = isfriend1;
+            user_me.save();
+        });
+        res.end();
+    });
+
+    app.post("/confirm-friend/:friend", isLoggedIn, function (req, res) {
         var user_me = req.user;
         var friend = req.params.friend;
 
@@ -279,16 +315,16 @@ module.exports = function (app, passport, server, redisClient) {
             if (user) {
                 var obj = {};
                 obj.userId = user._id.toString();
-                obj.image = user.image;
-                obj.name = user.name;
+                obj.image = user.local.image;
+                obj.name = user.local.name;
                 user_me.followers.push(obj);
                 user_me.addfriend.splice(user_me.addfriend.indexOf(user_me._id.toString()), 1);
                 user_me.save();
 
                 var obj1 = {};
                 obj1.userId = user_me._id.toString();
-                obj1.image = user_me.image;
-                obj1.name = user_me.name;
+                obj1.image = user_me.local.image;
+                obj1.name = user_me.local.name;
                 user.followers.push(obj1);
                 user.save();
             }
@@ -438,8 +474,22 @@ module.exports = function (app, passport, server, redisClient) {
 
 
     app.post("/get-list-addfriend",isLoggedIn, function (req,res) {
-        var list_addfriend = req.query.list_addfriend;
-        res.end();
+        var id = req.query.list_addfriend;
+        var data = '';
+        if(req.user.addfriend.length>0) {
+            User.find({
+                '_id': { $in: req.user.addfriend}
+            }, function(err, users){
+                for (var i = 0; i < users.length; i++) {
+                    fr_id = "'"+users[i]._id+"'";
+                        data = data + '<li><div class="col-sm-3"><img src="'+users[i].local.image+'"></div><div class="col-sm-5">'+users[i].local.name+'</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend('+fr_id+')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                }
+                res.send(data);
+            });
+
+
+        }
+
     });
 
 

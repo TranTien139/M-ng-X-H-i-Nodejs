@@ -11,7 +11,7 @@ var server = require('http').createServer(app);
 
 var configDB = require('./config/database.js');
 
-var redisClient = redis.createClient({host : 'localhost', port : 6379});
+//var redisClient = redis.createClient({host : 'localhost', port : 6379});
 
 mongoose.connect(configDB.url); // connect to our database
 
@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.bodyParser());
 app.use(flash());
 
-require('./app/routes.js')(app, passport,server,redisClient);
+require('./app/routes.js')(app, passport,server);
 
 server.listen(port, "127.0.0.1",function () {
     console.log('listen on port ' + port);
