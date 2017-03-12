@@ -60,6 +60,19 @@ module.exports = function (app, passport, server) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
+
+        if(user.local.image === '') {
+            var domain = 'http://localhost:8080';
+            fs.readFile('public/uploads/avatar/demo-avatar.png', function (err, data) {
+                if (err) throw err;
+                fs.writeFile('public/uploads/avatar/'+'avatar_'+user._id.toString() +'.jpg', data, function (err) {
+                    if (err) throw err;
+                    user.local.image = domain+'/uploads/avatar/'+'avatar_'+user._id.toString() +'.jpg';
+                    user.save();
+                });
+            });
+        }
+
         var j = user.followers;
         var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
             res.render('index.ejs', {
@@ -67,7 +80,6 @@ module.exports = function (app, passport, server) {
                 friend: user.followers,
                 newfeed: data
             });
-
         });
     });
 
@@ -90,7 +102,7 @@ module.exports = function (app, passport, server) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function(obj) {
-                        return obj.userId !== user._id.toString()
+                        return obj.userId === user._id.toString()
                     });
                     res.render('profile.ejs', {
                         user_other: users,
@@ -115,7 +127,7 @@ module.exports = function (app, passport, server) {
             if (!err) {
                     var check = users.addfriend.indexOf(user._id.toString());
                 var isfriend = users.followers.filter(function(obj) {
-                    return obj.userId !== user._id.toString()
+                    return obj.userId === user._id.toString()
                 });
                     res.render('about.ejs', {
                         user_other: users,
@@ -140,7 +152,7 @@ module.exports = function (app, passport, server) {
             if (!err) {
                     var check = users.addfriend.indexOf(user._id.toString());
                 var isfriend = users.followers.filter(function(obj) {
-                    return obj.userId !== user._id.toString()
+                    return obj.userId === user._id.toString()
                 });
                     res.render('friends.ejs', {
                         user_other: users,
@@ -163,17 +175,20 @@ module.exports = function (app, passport, server) {
        var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
+                NewFeed.getNewFeedMe(user_member, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
-                var isfriend = users.followers.filter(function(obj) {
-                    return obj.userId !== user._id.toString()
-                });
+                    var isfriend = users.followers.filter(function(obj) {
+                        return obj.userId === user._id.toString()
+                    });
                     res.render('photos.ejs', {
                         user_other: users,
                         user: req.user,
+                        timeline: data,
                         friend: req.user.followers,
                         check: check,
                         isfriend: isfriend
                     });
+                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -200,7 +215,7 @@ module.exports = function (app, passport, server) {
                     if (!imageName) {
                         console.log("There was an error");
                     } else {
-                        var newPath = __dirname + "/../public/uploads/avatar/" + imageName;
+                        var newPath = __dirname + "/../public/uploads/avatar/" + 'avatar_'+users._id.toString()+'.jpg';
                         fs.writeFile(newPath, data, function (err) {
                             console.log('upload success');
                         });
@@ -221,7 +236,7 @@ module.exports = function (app, passport, server) {
 
                 var domain = 'http://localhost:8080';
                 if (req.files.myAvatar.name !== '') {
-                    var ava1 = req.files.myAvatar.name;
+                    var ava1 = 'avatar_'+users._id.toString()+'.jpg';
                     var ava = domain+'/uploads/avatar/'+ava1;
                 } else {
                     var ava = users.local.image;
@@ -238,7 +253,6 @@ module.exports = function (app, passport, server) {
                 users.local.gender = req.body.gender;
                 users.local.hometown = req.body.hometown;
                 users.local.education = req.body.education;
-                users.local.name = req.body.fullname;
                 users.local.image = ava;
                 users.local.cover = cover;
                 users.save(function (err) {
@@ -302,6 +316,20 @@ module.exports = function (app, passport, server) {
             });
             user_me.followers = isfriend1;
             user_me.save();
+        });
+        res.end();
+    });
+
+    app.post("/send-unsendfriend/:friend", isLoggedIn, function (req, res) {
+        var user_me = req.user;
+        var friend = req.params.friend;
+
+        User.findOne({'_id': friend}, function (err, users) {
+            if (err) return done(err);
+            if (users.addfriend.indexOf(user_me._id.toString()) !== -1) {
+                users.addfriend.splice(users.addfriend.indexOf(user_me._id.toString()), 1);
+                users.save();
+            }
         });
         res.end();
     });

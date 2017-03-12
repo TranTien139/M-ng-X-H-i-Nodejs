@@ -16,6 +16,66 @@ function  LikeStatus($action,$id) {
     });
 }
 
+function  getAddFriend($list) {
+    $.post('/get-list-addfriend/',{'list_addfriend':$list}, function (data) {
+        $('#content_addfriend').html(data);
+    });
+}
+
+function ConfirmAddFriend($id) {
+    $.post('/confirm-friend/'+$id,{'id_friend':$id}, function (data) {
+    });
+}
+function getUnFriend($id) {
+    $.post('/send-unfriend/'+$id,{}, function (data) {
+    });
+}
+
+function getUnSendFriend($id) {
+    $.post('/send-unsendfriend/'+$id,{}, function (data) {
+    });
+}
+
+function ReadAllMessage() {
+    $.post('/read-allmessage',{}, function (data) {
+    });
+}
+
+// preview image
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#myAvatar_preview').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#myAvatar").change(function(){
+    readURL(this);
+});
+
+function readURL1(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#myCover_preview').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#myCover").change(function(){
+    readURL1(this);
+});
+
 //Check File API support
 if(window.File && window.FileList && window.FileReader)
 {
@@ -54,27 +114,7 @@ if(window.File && window.FileList && window.FileReader)
     });
 }
 
-    $("#results_upload").on( "click",".remove_pict",function(){
-        $(this).parent().remove();
-    });
-
-function  getAddFriend($list) {
-    $.post('/get-list-addfriend/',{'list_addfriend':$list}, function (data) {
-        $('#content_addfriend').html(data);
-    });
-}
-
-function ConfirmAddFriend($id) {
-    $.post('/confirm-friend/'+$id,{'id_friend':$id}, function (data) {
-    });
-}
-function getUnFriend($id) {
-    $.post('/send-unfriend/'+$id,{}, function (data) {
-    });
-}
-
-function ReadAllMessage() {
-    $.post('/read-allmessage',{}, function (data) {
-    });
-}
+$("#results_upload").on( "click",".remove_pict",function(){
+    $(this).parent().remove();
+});
 

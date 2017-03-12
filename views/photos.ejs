@@ -1,97 +1,29 @@
 <% include partical/header.ejs %>
-<% include partical/bar_profile.ejs  %>
+<% include partical/bar_profile.ejs %>
 
-    <div class="col-md-12">
-        <div id="grid" class="row">
-            <div class="mix col-sm-3 page1 page4 margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
+<div class="col-md-12">
+    <div id="grid" class="row">
+
+        <% if(timeline.length > 0){  for(var i=0; i< timeline.length; i++){ if(timeline[i].image.length>0){ %>
+        <div class="mix col-sm-3 page1 page4 margin30">
+            <div class="item-img-wrap ">
+                <img src="/uploads/status/<%= timeline[i].image[0] %>" class="img-responsive" alt="workimg">
+                <div class="item-img-overlay">
+                    <a href="javascript:void(0)" class="show-image">
+                        <span></span>
+                    </a>
                 </div>
             </div>
-            <div class="mix col-sm-3 page2 page3 margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3  page3 page2 margin30 ">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3  page4 margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3 page1 margin30 ">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3  page2 margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3  page3 margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mix col-sm-3 page4  margin30">
-                <div class="item-img-wrap ">
-                    <img src="http://demos.bootdey.com/dayday/img/Photos/5.jpg" class="img-responsive" alt="workimg">
-                    <div class="item-img-overlay">
-                        <a href="#" class="show-image">
-                            <span></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div><!-- grid-->
-    </div>
+        </div>
+        <% }}} %>
+    </div><!-- grid-->
+</div>
 
 
+</div><!-- end timeline posts-->
 
-        </div><!-- end timeline posts-->
-
-    </div>
 </div>
 </div>
-<% include partical/list_friend.ejs  %>
+</div>
+<% include partical/list_friend.ejs %>
 <% include partical/footer.ejs %>
