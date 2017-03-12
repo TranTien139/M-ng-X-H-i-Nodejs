@@ -3,22 +3,22 @@
 <div class="container page-content">
     <div class="row">
         <div class="col-md-4 bg-white">
-            <div class=" row border-bottom padding-sm" style="height: 40px; padding-left: 10px;">
+            <div class=" row border-bottom padding-sm" style="height: 40px; padding-left: 15px;">
                 List Friend
             </div>
             <!-- member list -->
             <ul class="friend-list">
                 <% if(user.followers.length >0){%>
                 <% for(var i=0; i< user.followers.length ; i++){ %>
-                <li class="active animated bounceInDown">
+                <li class="<% if(user.followers[i].userId.toString() === chat_with._id.toString() ){%>active <% } %> animated bounceInDown" id="chatlist<%= user.followers[i].userId %>">
                     <a href="/chat?conversation=<%= user.followers[i].userId %>" class="clearfix">
                         <img src="<%= user.followers[i].image %>" alt="" class="img-circle">
                         <div class="friend-name">
                             <strong><%= user.followers[i].name %></strong>
                         </div>
-                        <div class="last-message text-muted"><%= user.followers[i].message %></div>
-                        <small class="time text-muted"><% if(user.followers[i].date!= undefined){ %><%= new Date().toISOString() %> <% } %></small>
-                        <small class="chat-alert label label-danger"><% if(user.followers[i].seen!= undefined && user.followers[i].seen === 'yes' ){ %> 1 <% } %></small>
+                        <div class="last-message text-muted"></div>
+                        <small class="time text-muted"></small>
+                        <small class="chat-alert label label-danger"></small>
                     </a>
                 </li>
                 <% }} %>
@@ -48,9 +48,9 @@
                     <% } }  %>
 
                 </ul>
+                <p id="seen_message" class="pull-right"></p>
             </div>
             <div class="chat-box_ bg-white">
-
                 <div class="input-group">
                     <input class="form-control border no-shadow no-rounded" id="content_chat" name="content_chat" placeholder="Type your message here">
                     <span class="input-group-btn">

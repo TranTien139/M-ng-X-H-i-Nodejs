@@ -73,3 +73,8 @@ function getUnFriend($id) {
     });
 }
 
+function ReadAllMessage() {
+    $.post('/read-allmessage',{}, function (data) {
+    });
+}
+

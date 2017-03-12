@@ -37,13 +37,14 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="actives"><a style="cursor: pointer;" data-toggle="modal" onclick="javascript:getAddFriend('<%= user._id %>')" data-target="#message_modal">add friend(<%= user.addfriend.length %>)</a></li>
-                <li class="actives"><a>message(<%= user.message.length %>)</a></li>
-                <li class="actives"><a>notification(<%= user.notify.length %>)</a></li>
+                <li class="actives" data-toggle="modal" data-target="#chat_modal"><a style="cursor: pointer;" >message(<%= user.message.length %>)</a></li>
+                <li class="actives"><a style="cursor: pointer;" >notification(<%= user.notify.length %>)</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Action <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a href="/edit/profile/<%= user._id %>">edit profile</a></li>
                         <li><a href="/logout">Logout</a></li>
                     </ul>
                 </li>

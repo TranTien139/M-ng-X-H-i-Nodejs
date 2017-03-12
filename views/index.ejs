@@ -70,7 +70,7 @@
                                     <ul class="nav nav-pills">
                                         <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
                                                         class="fa fa-camera"></i></a></li>
-                                        <input type="file" style="display: none" id="addImageStatus" multiple name="addImageStatus">
+                                        <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                                     </ul>
                                 </div>
                                 </form>
@@ -90,12 +90,14 @@
                                     <p><%= newfeed[i].content %>
                                     </p>
                                     <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k=0; k<newfeed[i].image.length; k++){%>
-                                        <img src="<%= newfeed[i].image[k] %>" class="img-responsive show-in-modal" alt="photo">
+                                        <img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
+                                    <div class="col-sm-12" style="padding-top: 10px;"></div>
                                     <%}}%>
 
                                     <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
                                         <!--Share-->
                                     <!--</button>-->
+
                                     <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
                                     <button type="button" class="btn btn-default btn-xs" onclick="LikeStatus('like','<%= newfeed[i]._id %>', this)"><i
                                                 class="fa fa-thumbs-o-up"></i> Like

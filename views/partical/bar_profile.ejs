@@ -24,12 +24,8 @@
                         <div class="name"><a ><%= user_other.local.name %></a></div>
                         <ul class="cover-nav">
                             <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
-                            <!--<li><a href="/about/<%= user_other._id %>"><i class="fa fa-fw fa-user"></i> About</a></li>-->
                             <li><a href="/friends/<%= user_other._id %>"><i class="fa fa-fw fa-users"></i> Friends</a></li>
                             <li><a href="/photos/<%= user_other._id %>"><i class="fa fa-fw fa-image"></i> Photos</a></li>
-                            <% if(user._id.toString().trim() === user_other._id.toString().trim()){ %>
-                            <li><a href="/edit/profile/<%= user_other._id %>"><i class="fa fa-pencil-square-o"></i> Edit</a></li>
-                            <% } %>
                         </ul>
                     </div>
                 </div>

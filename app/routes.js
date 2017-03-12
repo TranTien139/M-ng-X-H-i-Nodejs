@@ -337,22 +337,22 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         var list_image = [];
 
+
         if (req.files.addImageStatus != '') {
-            for (var i = 0; i < req.files.addImageStatus.length; i++) {
-                fs.readFile(req.files.addImageStatus[i].path, function (err, data) {
-                    var imageName = req.files.addImageStatus[0].name;
-                    if (!imageName) {
-                        console.log("There was an error");
-                    } else {
-                        var newPath = __dirname + "/../public/uploads/status/" + imageName;
-                        fs.writeFile(newPath, data, function (err) {
-                            console.log('upload success');
-                        });
-                    }
-                });
-                list_image.push(req.files.addImageStatus[i].originalFilename);
-            }
+            fs.readFile(req.files.addImageStatus.path, function (err, data) {
+                var imageName = req.files.addImageStatus.name;
+                if (!imageName) {
+                    console.log("There was an error");
+                } else {
+                    var newPath = __dirname + "/../public/uploads/status/" + imageName;
+                    fs.writeFile(newPath, data, function (err) {
+                        console.log('upload success');
+                    });
+                }
+            });
+            list_image.push(req.files.addImageStatus.name);
         }
+
         var status = new Status();
         status.content = content;
         status.like = [];
@@ -409,6 +409,12 @@ module.exports = function (app, passport, server) {
         data_content.content = content;
         data_content.date = new Date();
         data_content.seen = '';
+
+        User.findOne({'_id': id}, function (err, users) {
+            if (err) return done(err);
+            users.message.push(data_content);
+            users.save();
+        });
 
         Chat.findOne({$or: [{$and: [{'user.user1': user._id}, {'user.user2': id}]}, {$and: [{'user.user1': id}, {'user.user2': user._id}]}]}, function (err, chat_data) {
             if (err) return done(err);
@@ -470,6 +476,14 @@ module.exports = function (app, passport, server) {
                 res.end();
             });
         });
+    });
+
+
+    app.post("/read-allmessage",isLoggedIn, function (req,res) {
+        var user = req.user;
+        user.message = [];
+        user.save();
+        res.end();
     });
 
 
@@ -536,11 +550,20 @@ module.exports = function (app, passport, server) {
                     id: msg.id_send,
                     msg: msg.message,
                     name: msg.name_send,
-                    image: msg.image_send
+                    image: msg.image_send,
+                    datetime: msg.datetime
                 });
             } else {
             }
         });
+
+        socket.on('seen message', function (msg) {
+            if (msg.id_chat_with != '' && (typeof users[msg.id_chat_with] !== 'undefined')) {
+                users[msg.id_chat_with].emit('seen back', {
+                });
+            }
+        });
+
         socket.on('disconnect', function (data) {
             if (!socket.nickname) return;
             delete users[socket.nickname];
