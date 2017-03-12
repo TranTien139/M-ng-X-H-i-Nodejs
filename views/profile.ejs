@@ -162,7 +162,7 @@
                                         <div class="user-block">
                                             <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
                                             <span class="username"><a href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
-                                            <span class="description"><%= new Date(timeline[i].date).toISOString() %></span>
+                                            <span class="description"><%= timeline[i].date.toLocaleTimeString()+' '+ timeline[i].date.getDate() +'-'+ timeline[i].date.getMonth() +'-'+ timeline[i].date.getFullYear()  %></span>
                                         </div>
                                     </div>
 

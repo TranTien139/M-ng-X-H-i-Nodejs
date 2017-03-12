@@ -59,241 +59,169 @@
         <!-- center posts -->
         <div class="col-md-6">
             <div class="row" ng-app="AppShowHide" ng-controller="ShowHideController">
-                            <!-- post state form -->
-                            <div class="box profile-info n-border-top">
-                                <form action="/add-status" method="POST" enctype="multipart/form-data">
+                <!-- post state form -->
+                <div class="box profile-info n-border-top">
+                    <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
                                               placeholder="Whats in your mind today?" name="content_status"></textarea>
-                                <ul id="results_upload" class="list-inline"></ul>
-                                <div class="box-footer box-form">
-                                    <button type="submit" class="btn btn-azure pull-right">Post</button>
-                                    <ul class="nav nav-pills">
-                                        <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
-                                                        class="fa fa-camera"></i></a></li>
-                                        <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
-                                    </ul>
-                                </div>
-                                </form>
-                            </div>
-                <% if(newfeed.length>0){ for(var i=0;i<newfeed.length; i++){  %>
-                            <!--   posts -->
-                            <div class="box box-widget">
-                                <div class="box-header with-border">
-                                    <div class="user-block">
-                                        <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
-                                        <span class="username"><a href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
-                                        <span class="description"><%= new Date(newfeed[i].date).toISOString() %></span>
-                                    </div>
-                                </div>
+                        <ul id="results_upload" class="list-inline"></ul>
+                        <div class="box-footer box-form">
+                            <button type="submit" class="btn btn-azure pull-right">Post</button>
+                            <ul class="nav nav-pills">
+                                <li><a style="cursor: pointer"
+                                       onclick="document.getElementById('addImageStatus').click();"><i
+                                                class="fa fa-camera"></i></a></li>
+                                <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+                <% if(newfeed.length > 0){ for(var i = 0;i < newfeed.length; i++){ %>
+                <!--   posts -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
+                            <span class="username"><a
+                                        href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
+                            <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
+                        </div>
+                    </div>
 
-                                <div class="box-body" style="display: block;">
-                                    <p><%= newfeed[i].content %>
-                                    </p>
-                                    <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k=0; k<newfeed[i].image.length; k++){%>
-                                        <img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
-                                    <div class="col-sm-12" style="padding-top: 10px;"></div>
-                                    <%}}%>
+                    <div class="box-body" style="display: block;">
+                        <p><%= newfeed[i].content %>
+                        </p>
+                        <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k = 0; k < newfeed[i].image.length; k++){ %>
+                        <img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;"
+                             class="img-responsive show-in-modal" alt="photo">
+                        <div class="col-sm-12" style="padding-top: 10px;"></div>
+                        <% }} %>
 
-                                    <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
-                                        <!--Share-->
-                                    <!--</button>-->
+                        <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
+                        <!--Share-->
+                        <!--</button>-->
 
-                                    <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
-                                    <button type="button" class="btn btn-default btn-xs" onclick="LikeStatus('like','<%= newfeed[i]._id %>', this)"><i
-                                                class="fa fa-thumbs-o-up"></i> Like
-                                    </button>
-                                    <% }else {%>
-                                    <button type="button" class="btn btn-default btn-xs"  onclick="LikeStatus('unlike','<%= newfeed[i]._id %>',this)"><i
-                                                class="fa fa-thumbs-o-up"></i> UnLike
-                                    </button>
-                                    <% }%>
+                        <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
+                        <button type="button" class="btn btn-default btn-xs"
+                                onclick="LikeStatus('like','<%= newfeed[i]._id %>', this)"><i
+                                    class="fa fa-thumbs-o-up"></i> Like
+                        </button>
+                        <% }else { %>
+                        <button type="button" class="btn btn-default btn-xs"
+                                onclick="LikeStatus('unlike','<%= newfeed[i]._id %>',this)"><i
+                                    class="fa fa-thumbs-o-up"></i> UnLike
+                        </button>
+                        <% } %>
 
-                                    <span class="pull-right text-muted"><%= newfeed[i].like.length %> likes - <%= newfeed[i].comment.length %> comments</span>
-                                </div>
-                                <div class="box-footer box-comments" style="display: block;">
-                                    <% if( newfeed[i].comment.length>0){ for(var k=0 ; k< newfeed[i].comment.length ; k++){%>
-                                    <div class="box-comment">
-                                        <a href="/profile/<%= newfeed[i].comment[k].id %>">
-                                        <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
-                                             alt="User Image">
-                                        <div class="comment-text">
+                        <span class="pull-right text-muted"><%= newfeed[i].like.length %>
+                            likes - <%= newfeed[i].comment.length %> comments</span>
+                    </div>
+                    <div class="box-footer box-comments" style="display: block;">
+                        <% if( newfeed[i].comment.length > 0){ for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
+                        <div class="box-comment">
+                            <a href="/profile/<%= newfeed[i].comment[k].id %>">
+                                <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
+                                     alt="User Image">
+                                <div class="comment-text">
                           <span class="username">
                           <%= newfeed[i].comment[k].name %>
-                          <span class="text-muted pull-right"><%= new Date(newfeed[i].comment[k].date).toISOString() %></span>
+                              <span class="text-muted pull-right"><%= new Date(newfeed[i].comment[k].date).toISOString() %></span>
                           </span>
-                                        </a>
-                                            <%= newfeed[i].comment[k].content %>
-                                        </div>
-                                    </div>
-                                    <% }}%>
-                                </div>
-                                <div class="box-footer" style="display: block;">
-                                    <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
-                                        <img class="img-responsive img-circle img-sm"
-                                             src="<%= user.local.image %>" alt="Alt Text">
-                                        <div class="img-push">
-                                            <input type="text" name="content_comment" class="form-control input-sm"
-                                                   placeholder="Press enter to post comment">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div><!--  end posts-->
-                <%}} %>
-
+                            </a>
+                            <%= newfeed[i].comment[k].content %>
                         </div>
                     </div>
-
-        <!-- right posts -->
-        <div class="col-md-3">
-            <!-- Friends activity -->
-            <div class="widget">
-                <div class="widget-header">
-                    <h3 class="widget-caption">Friends activity</h3>
+                    <% }} %>
                 </div>
-                <div class="widget-body bordered-top bordered-sky">
-                    <div class="card">
-                        <div class="content">
-                            <ul class="list-unstyled team-members">
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-2.jpg" alt="img"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">Hillary Markston</a></b>
-                                            shared a
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
-                                            <span class="timeago">5 min ago</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-3.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">Leidy
-                                                    marshel</a></b> shared a
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
-                                            <span class="timeago">5 min ago</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-4.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">Presilla bo</a></b>
-                                            shared a
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
-                                            <span class="timeago">5 min ago</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-4.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-9">
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">Martha
-                                                    markguy</a></b> shared a
-                                            <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
-                                            <span class="timeago">5 min ago</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                <div class="box-footer" style="display: block;">
+                    <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
+                        <img class="img-responsive img-circle img-sm"
+                             src="<%= user.local.image %>" alt="Alt Text">
+                        <div class="img-push">
+                            <input type="text" name="content_comment" class="form-control input-sm"
+                                   placeholder="Press enter to post comment">
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </div><!-- End Friends activity -->
+            </div><!--  end posts-->
+            <% }} %>
 
-            <!-- People You May Know -->
-            <div class="widget">
-                <div class="widget-header">
-                    <h3 class="widget-caption">People You May Know</h3>
-                </div>
-                <div class="widget-body bordered-top bordered-sky">
-                    <div class="card">
-                        <div class="content">
-                            <ul class="list-unstyled team-members">
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/guy-2.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            Carlos marthur
-                                        </div>
-
-                                        <div class="col-xs-3 text-right">
-                                            <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
-                                            </btn>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-1.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            Maria gustami
-                                        </div>
-
-                                        <div class="col-xs-3 text-right">
-                                            <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
-                                            </btn>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="avatar">
-                                                <img src="./Day-Dayhome_files/woman-2.jpg" alt="Circle Image"
-                                                     class="img-circle img-no-padding img-responsive">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            Angellina mcblown
-                                        </div>
-
-                                        <div class="col-xs-3 text-right">
-                                            <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
-                                            </btn>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- End people yout may know -->
-        </div><!-- end right posts -->
+        </div>
     </div>
+
+    <!-- right posts -->
+    <div class="col-md-3">
+        <!-- Friends activity -->
+        <div class="widget">
+            <div class="widget-header">
+                <h3 class="widget-caption">Friends activity</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+                <div class="card">
+                    <div class="content">
+                        <ul class="list-unstyled team-members">
+
+                            <li>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <div class="avatar">
+                                            <img src="./Day-Dayhome_files/woman-2.jpg" alt="img"
+                                                 class="img-circle img-no-padding img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <b><a href="http://demos.bootdey.com/dayday/home.html#">Hillary Markston</a></b>
+                                        shared a
+                                        <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
+                                        <span class="timeago">5 min ago</span>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Friends activity -->
+
+        <!-- People You May Know -->
+        <div class="widget">
+            <div class="widget-header">
+                <h3 class="widget-caption">People You May Know</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+                <div class="card">
+                    <div class="content">
+                        <ul class="list-unstyled team-members">
+                            <% if(random.length > 0){ random.forEach(function (randoms) { %>
+                            <li>
+                                <a href="/profile/<%= randoms._id %>">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <div class="avatar">
+                                            <img src="<%= randoms.local.image %>" alt="Circle Image"
+                                                 class="img-circle img-no-padding img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                       <%= randoms.local.name %>
+                                    </div>
+
+                                    <div class="col-xs-3 text-right">
+                                        <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
+                                        </btn>
+                                    </div>
+                                </div>
+                                </a>
+                            </li>
+                            <% }) } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End people yout may know -->
+    </div><!-- end right posts -->
+</div>
 </div>
 
 <input type="hidden" id="id_send" name="id_send" value="<%= user._id %>">

@@ -38,7 +38,7 @@
                         <div class="chat-body clearfix">
                             <div class="header">
                                 <strong class="primary-font"><%= data_chat[i].name %></strong>
-                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i><%= new Date(data_chat[i].date).toISOString() %></small>
+                                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i><%=  data_chat[i].date.getDate() +'/'+ data_chat[i].date.getMonth() +'/'+ data_chat[i].date.getFullYear() +' '+ data_chat[i].date.toLocaleTimeString() %></small>
                             </div>
                             <p>
                                 <%= data_chat[i].content %>

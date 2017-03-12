@@ -61,25 +61,31 @@ module.exports = function (app, passport, server) {
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
 
-        if(user.local.image === '') {
+        if (user.local.image === '') {
             var domain = 'http://localhost:8080';
             fs.readFile('public/uploads/avatar/demo-avatar.png', function (err, data) {
                 if (err) throw err;
-                fs.writeFile('public/uploads/avatar/'+'avatar_'+user._id.toString() +'.jpg', data, function (err) {
+                fs.writeFile('public/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg', data, function (err) {
                     if (err) throw err;
-                    user.local.image = domain+'/uploads/avatar/'+'avatar_'+user._id.toString() +'.jpg';
+                    user.local.image = domain + '/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg';
                     user.save();
                 });
             });
         }
 
+
+
         var j = user.followers;
         var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
-            res.render('index.ejs', {
-                user: user,
-                friend: user.followers,
-                newfeed: data
+            User.aggregate({ $sample: { size: 3 } },function (err, ls) {
+                res.render('index.ejs', {
+                    user: user,
+                    friend: user.followers,
+                    newfeed: data,
+                    random: ls
+                });
             });
+
         });
     });
 
@@ -101,7 +107,7 @@ module.exports = function (app, passport, server) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
-                    var isfriend = users.followers.filter(function(obj) {
+                    var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
                     });
                     res.render('profile.ejs', {
@@ -123,19 +129,19 @@ module.exports = function (app, passport, server) {
     app.get('/about/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
         var user = req.user;
-         User.findOne({"_id": user_member}, function (err, users) {
+        User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                    var check = users.addfriend.indexOf(user._id.toString());
-                var isfriend = users.followers.filter(function(obj) {
+                var check = users.addfriend.indexOf(user._id.toString());
+                var isfriend = users.followers.filter(function (obj) {
                     return obj.userId === user._id.toString()
                 });
-                    res.render('about.ejs', {
-                        user_other: users,
-                        user: req.user,
-                        friend: req.user.followers,
-                        check: check,
-                        isfriend: isfriend
-                    });
+                res.render('about.ejs', {
+                    user_other: users,
+                    user: req.user,
+                    friend: req.user.followers,
+                    check: check,
+                    isfriend: isfriend
+                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -148,19 +154,19 @@ module.exports = function (app, passport, server) {
     app.get('/friends/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
         var user = req.user;
-       User.findOne({"_id": user_member}, function (err, users) {
+        User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                    var check = users.addfriend.indexOf(user._id.toString());
-                var isfriend = users.followers.filter(function(obj) {
+                var check = users.addfriend.indexOf(user._id.toString());
+                var isfriend = users.followers.filter(function (obj) {
                     return obj.userId === user._id.toString()
                 });
-                    res.render('friends.ejs', {
-                        user_other: users,
-                        user: req.user,
-                        friend: req.user.followers,
-                        check: check,
-                        isfriend: isfriend
-                    });
+                res.render('friends.ejs', {
+                    user_other: users,
+                    user: req.user,
+                    friend: req.user.followers,
+                    check: check,
+                    isfriend: isfriend
+                });
 
             } else {
                 res.send(JSON.stringify(err), {
@@ -172,12 +178,12 @@ module.exports = function (app, passport, server) {
 
     app.get('/photos/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
-       var user = req.user;
+        var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                 NewFeed.getNewFeedMe(user_member, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
-                    var isfriend = users.followers.filter(function(obj) {
+                    var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
                     });
                     res.render('photos.ejs', {
@@ -215,7 +221,7 @@ module.exports = function (app, passport, server) {
                     if (!imageName) {
                         console.log("There was an error");
                     } else {
-                        var newPath = __dirname + "/../public/uploads/avatar/" + 'avatar_'+users._id.toString()+'.jpg';
+                        var newPath = __dirname + "/../public/uploads/avatar/" + 'avatar_' + users._id.toString() + '.jpg';
                         fs.writeFile(newPath, data, function (err) {
                             console.log('upload success');
                         });
@@ -236,14 +242,14 @@ module.exports = function (app, passport, server) {
 
                 var domain = 'http://localhost:8080';
                 if (req.files.myAvatar.name !== '') {
-                    var ava1 = 'avatar_'+users._id.toString()+'.jpg';
-                    var ava = domain+'/uploads/avatar/'+ava1;
+                    var ava1 = 'avatar_' + users._id.toString() + '.jpg';
+                    var ava = domain + '/uploads/avatar/' + ava1;
                 } else {
                     var ava = users.local.image;
                 }
                 if (req.files.myCover.name !== '') {
                     var cover1 = req.files.myCover.name;
-                    var cover = domain+'/uploads/cover/'+cover1;
+                    var cover = domain + '/uploads/cover/' + cover1;
                 } else {
                     var cover = users.local.cover;
                 }
@@ -305,13 +311,13 @@ module.exports = function (app, passport, server) {
 
         User.findOne({'_id': friend}, function (err, users) {
             if (err) return done(err);
-            var isfriend = users.followers.filter(function(obj) {
-                 return obj.userId !== user_me._id.toString()
+            var isfriend = users.followers.filter(function (obj) {
+                return obj.userId !== user_me._id.toString()
             });
             users.followers = isfriend;
             users.save();
 
-            var isfriend1 = user_me.followers.filter(function(obj) {
+            var isfriend1 = user_me.followers.filter(function (obj) {
                 return obj.userId !== users._id.toString()
             });
             user_me.followers = isfriend1;
@@ -364,9 +370,7 @@ module.exports = function (app, passport, server) {
         var content = req.body.content_status;
         var user = req.user;
         var list_image = [];
-
-
-        if (req.files.addImageStatus != '') {
+        if (req.files.addImageStatus.originalFilename !== '') {
             fs.readFile(req.files.addImageStatus.path, function (err, data) {
                 var imageName = req.files.addImageStatus.name;
                 if (!imageName) {
@@ -507,7 +511,7 @@ module.exports = function (app, passport, server) {
     });
 
 
-    app.post("/read-allmessage",isLoggedIn, function (req,res) {
+    app.post("/read-allmessage", isLoggedIn, function (req, res) {
         var user = req.user;
         user.message = [];
         user.save();
@@ -515,16 +519,16 @@ module.exports = function (app, passport, server) {
     });
 
 
-    app.post("/get-list-addfriend",isLoggedIn, function (req,res) {
+    app.post("/get-list-addfriend", isLoggedIn, function (req, res) {
         var id = req.query.list_addfriend;
         var data = '';
-        if(req.user.addfriend.length>0) {
+        if (req.user.addfriend.length > 0) {
             User.find({
-                '_id': { $in: req.user.addfriend}
-            }, function(err, users){
+                '_id': {$in: req.user.addfriend}
+            }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
-                    fr_id = "'"+users[i]._id+"'";
-                        data = data + '<li><div class="col-sm-3"><img src="'+users[i].local.image+'"></div><div class="col-sm-5">'+users[i].local.name+'</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend('+fr_id+')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                    fr_id = "'" + users[i]._id + "'";
+                    data = data + '<li><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
                 }
                 res.send(data);
             });
@@ -587,8 +591,7 @@ module.exports = function (app, passport, server) {
 
         socket.on('seen message', function (msg) {
             if (msg.id_chat_with != '' && (typeof users[msg.id_chat_with] !== 'undefined')) {
-                users[msg.id_chat_with].emit('seen back', {
-                });
+                users[msg.id_chat_with].emit('seen back', {});
             }
         });
 
