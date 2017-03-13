@@ -1,45 +1,70 @@
-$(document).ready(function(){
-	$('#nav_user').click(function(){
-		$('.chat-sidebar').toggleClass('focus');
-	});
+$(document).ready(function () {
+    $('#nav_user').click(function () {
+        $('.chat-sidebar').toggleClass('focus');
+    });
 });
 
-function  LikeStatus($action,$id) {
-	if($action === 'like'){
-		$(this).text('UnLike');
-	}else {
-        $(this).text('Like');
-	}
-    $(this).css('color','red');
-    $.post('/post-like/'+$action,{'id_article':$id}, function (data) {
+$(".like-Unlike").click(function (e) {
+    $id = $(this).attr('data-id');
+    $action = $(this).attr('action');
+    if ($(this).attr('action') === 'like') {
+        $.post('/post-like/' + $action, {'id_article': $id}, function (data) {
 
-    });
-}
+        });
+        $(this).attr('action', 'unlike');
+        $(this).html('<i class="fa fa-thumbs-o-down">Unlike</i>');
+        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) + 1;
+        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
+    }
+    else {
+        $.post('/post-like/' + $action, {'id_article': $id}, function (data) {
 
-function  getAddFriend($list) {
-    $.post('/get-list-addfriend/',{'list_addfriend':$list}, function (data) {
+        });
+        $(this).attr('action', 'like');
+        $(this).html('<i class="fa fa-thumbs-o-up">Like</i>');
+        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) - 1;
+        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
+    }
+});
+
+function getAddFriend($list) {
+    $.post('/get-list-addfriend/', {'list_addfriend': $list}, function (data) {
         $('#content_addfriend').html(data);
     });
 }
 
 function ConfirmAddFriend($id) {
-    $.post('/confirm-friend/'+$id,{'id_friend':$id}, function (data) {
+    $.post('/confirm-friend/' + $id, {'id_friend': $id}, function (data) {
     });
-}
-function getUnFriend($id) {
-    $.post('/send-unfriend/'+$id,{}, function (data) {
-    });
-}
-
-function getUnSendFriend($id) {
-    $.post('/send-unsendfriend/'+$id,{}, function (data) {
-    });
+    $('#fr_'+$id).remove();
 }
 
 function ReadAllMessage() {
-    $.post('/read-allmessage',{}, function (data) {
+    $.post('/read-allmessage', {}, function (data) {
     });
+    $('#content_allmessage').html('');
 }
+
+$('.addfriend_unfriend').click(function (e) {
+    $id_other = $(this).attr('id-other');
+    $action = $(this).attr('action');
+    if ($action === 'send') {
+        $.post("/send-add-friend/" + $id_other, {}, function (data) {
+        });
+        $(this).text('cancel add friend');
+    }
+    if ($action === 'unfriend') {
+        $.post('/send-unfriend/' + $id_other, {}, function (data) {
+        });
+        $(this).text('add friend');
+    }
+
+    if ($action === 'cancelsend') {
+        $.post('/send-unsendfriend/' + $id_other, {}, function (data) {
+        });
+        $(this).text('add friend');
+    }
+});
 
 // preview image
 function readURL(input) {
@@ -55,7 +80,7 @@ function readURL(input) {
     }
 }
 
-$("#myAvatar").change(function(){
+$("#myAvatar").change(function () {
     readURL(this);
 });
 
@@ -72,31 +97,29 @@ function readURL1(input) {
     }
 }
 
-$("#myCover").change(function(){
+$("#myCover").change(function () {
     readURL1(this);
 });
 
 //Check File API support
-if(window.File && window.FileList && window.FileReader)
-{
+if (window.File && window.FileList && window.FileReader) {
     var filesInput = document.getElementById("addImageStatus");
 
-    filesInput.addEventListener("change", function(event){
+    filesInput.addEventListener("change", function (event) {
 
         var files = event.target.files; //FileList object
         var output = document.getElementById("results_upload");
 
-        for(var i = 0; i< files.length; i++)
-        {
+        for (var i = 0; i < files.length; i++) {
             var file = files[i];
 
             //Only pics
-            if(!file.type.match('image'))
+            if (!file.type.match('image'))
                 continue;
 
             var picReader = new FileReader();
 
-            picReader.addEventListener("load",function(event){
+            picReader.addEventListener("load", function (event) {
 
                 var picFile = event.target;
 
@@ -104,7 +127,7 @@ if(window.File && window.FileList && window.FileReader)
 
                 div.innerHTML = "<img class='thumbnail' width='80' height='80' src='" + picFile.result + "'" +
                     "title='" + picFile.name + "'/> <a style='cursor: pointer;'  onclick='removeHtml(this)' class='remove_pict'>X</a>";
-                output.insertBefore(div,null);
+                output.insertBefore(div, null);
             });
 
             //Read the image
@@ -114,7 +137,7 @@ if(window.File && window.FileList && window.FileReader)
     });
 }
 
-$("#results_upload").on( "click",".remove_pict",function(){
+$("#results_upload").on("click", ".remove_pict", function () {
     $(this).parent().remove();
 });
 

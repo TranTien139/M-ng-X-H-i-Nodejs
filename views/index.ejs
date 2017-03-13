@@ -63,10 +63,10 @@
                 <div class="box profile-info n-border-top">
                     <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
-                                              placeholder="Whats in your mind today?" name="content_status"></textarea>
+                                              placeholder="Whats in your mind today?" name="content_status" required></textarea>
                         <ul id="results_upload" class="list-inline"></ul>
                         <div class="box-footer box-form">
-                            <button type="submit" class="btn btn-azure pull-right">Post</button>
+                            <button type="submit" class="btn btn-warning pull-right">Post</button>
                             <ul class="nav nav-pills">
                                 <li><a style="cursor: pointer"
                                        onclick="document.getElementById('addImageStatus').click();"><i
@@ -102,19 +102,15 @@
                         <!--</button>-->
 
                         <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
-                        <button type="button" class="btn btn-default btn-xs"
-                                onclick="LikeStatus('like','<%= newfeed[i]._id %>', this)"><i
-                                    class="fa fa-thumbs-o-up"></i> Like
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= newfeed[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
                         </button>
                         <% }else { %>
-                        <button type="button" class="btn btn-default btn-xs"
-                                onclick="LikeStatus('unlike','<%= newfeed[i]._id %>',this)"><i
-                                    class="fa fa-thumbs-o-up"></i> UnLike
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= newfeed[i]._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
                         </button>
                         <% } %>
 
-                        <span class="pull-right text-muted"><%= newfeed[i].like.length %>
-                            likes - <%= newfeed[i].comment.length %> comments</span>
+                        <span class="pull-right text-muted"><span class="count-like"><%= newfeed[i].like.length %></span>
+                            likes - <span class="count-comment"><%= newfeed[i].comment.length %></span> comments</span>
                     </div>
                     <div class="box-footer box-comments" style="display: block;">
                         <% if( newfeed[i].comment.length > 0){ for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
@@ -125,7 +121,7 @@
                                 <div class="comment-text">
                           <span class="username">
                           <%= newfeed[i].comment[k].name %>
-                              <span class="text-muted pull-right"><%= new Date(newfeed[i].comment[k].date).toISOString() %></span>
+                              <span class="text-muted pull-right"><%= newfeed[i].comment[k].date.toLocaleTimeString() + ' ' + newfeed[i].comment[k].date.getDate() + '-' + newfeed[i].comment[k].date.getMonth() + '-' + newfeed[i].comment[k].date.getFullYear() %></span>
                           </span>
                             </a>
                             <%= newfeed[i].comment[k].content %>
@@ -139,7 +135,7 @@
                              src="<%= user.local.image %>" alt="Alt Text">
                         <div class="img-push">
                             <input type="text" name="content_comment" class="form-control input-sm"
-                                   placeholder="Press enter to post comment">
+                                   placeholder="Press enter to post comment" required>
                         </div>
                     </form>
                 </div>

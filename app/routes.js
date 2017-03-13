@@ -288,16 +288,16 @@ module.exports = function (app, passport, server) {
         });
     });
 
-    app.post("/send-add-friend/:me/:friend", isLoggedIn, function (req, res) {
-        var me = req.params.me;
+    app.post("/send-add-friend/:friend", isLoggedIn, function (req, res) {
+
         var user_me = req.user;
         var friend = req.params.friend;
 
         User.findOne({'_id': friend}, function (err, user) {
             if (err) return done(err);
             if (user) {
-                if (user.addfriend.indexOf(me.toString()) === -1) {
-                    user.addfriend.push(me.toString());
+                if (user.addfriend.indexOf(user_me._id.toString()) === -1) {
+                    user.addfriend.push(user_me._id.toString());
                     user.save();
                 }
             }
@@ -444,7 +444,13 @@ module.exports = function (app, passport, server) {
 
         User.findOne({'_id': id}, function (err, users) {
             if (err) return done(err);
-            users.message.push(data_content);
+
+            var arr = users.message.filter(function (obj) {
+                return obj.id !== user._id.toString()
+            });
+
+            arr.push(data_content);
+            users.message = arr;
             users.save();
         });
 
@@ -528,14 +534,11 @@ module.exports = function (app, passport, server) {
             }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
                     fr_id = "'" + users[i]._id + "'";
-                    data = data + '<li><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                    data = data + '<li id="fr_'+ users[i]._id +'"><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
                 }
                 res.send(data);
             });
-
-
         }
-
     });
 
 

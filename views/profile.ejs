@@ -141,12 +141,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- post state form -->
+                                <div class="box profile-info n-border-top">
                                 <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
-                                              placeholder="Whats in your mind today?" name="content_status"></textarea>
+                                              placeholder="Whats in your mind today?" name="content_status" required></textarea>
                                     <ul id="results_upload" class="list-inline"></ul>
                                     <div class="box-footer box-form">
-                                        <button type="submit" class="btn btn-azure pull-right">Post</button>
+                                        <button type="submit" class="btn btn-warning pull-right">Post</button>
                                         <ul class="nav nav-pills">
                                             <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
                                                             class="fa fa-camera"></i></a></li>
@@ -154,6 +155,7 @@
                                         </ul>
                                     </div>
                                 </form>
+                                </div>
 
                                 <% if(timeline.length>0){ for(var i=0;i<timeline.length; i++){  %>
                                 <!--   posts -->
@@ -174,13 +176,17 @@
                                        <div class="col-sm-12" style="padding-top: 10px;"></div>
                                         <%}}%>
 
-                                        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>
-                                            Share
+                                        <% if(timeline[i].like.indexOf(user._id.toString()) === -1){ %>
+                                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= timeline[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
                                         </button>
-                                        <button type="button" class="btn btn-default btn-xs"><i
-                                                    class="fa fa-thumbs-o-up"></i> Like
+                                        <% }else { %>
+                                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= timeline[i]._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
                                         </button>
-                                        <span class="pull-right text-muted"><%= timeline[i].like.length %> likes - <%= timeline[i].comment.length %> comments</span>
+                                        <% } %>
+
+                                        <span class="pull-right text-muted"><span class="count-like"><%= timeline[i].like.length %></span>
+                            likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
+
                                     </div>
                                     <div class="box-footer box-comments" style="display: block;">
                                         <% if( timeline[i].comment.length>0){ for(var k=0 ; k< timeline[i].comment.length ; k++){%>
@@ -191,7 +197,7 @@
                                                 <div class="comment-text">
                           <span class="username">
                           <%= timeline[i].comment[k].name %>
-                              <span class="text-muted pull-right"><%= new Date(timeline[i].comment[k].date).toISOString() %></span>
+                              <span class="text-muted pull-right"><%= timeline[i].comment[k].date.toLocaleTimeString()+' '+ timeline[i].comment[k].date.getDate() +'-'+ timeline[i].comment[k].date.getMonth() +'-'+ timeline[i].comment[k].date.getFullYear()  %></span>
                           </span>
                                             </a>
                                             <%= timeline[i].comment[k].content %>
@@ -205,7 +211,7 @@
                                              src="<%= user.local.image %>" alt="Alt Text">
                                         <div class="img-push">
                                             <input type="text" name="content_comment" class="form-control input-sm"
-                                                   placeholder="Press enter to post comment">
+                                                   placeholder="Press enter to post comment" required>
                                         </div>
                                     </form>
                                 </div>
