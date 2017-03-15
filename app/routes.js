@@ -5,6 +5,7 @@ var Status = require('../app/models/status.js');
 var NewFeed = require('../app/controller/statusController.js');
 var Chat = require('../app/models/chat.js');
 var mongoose = require('mongoose');
+var Group = require('../app/models/group.js');
 
 var path = require('path'),
     fs = require('fs');
@@ -74,10 +75,9 @@ module.exports = function (app, passport, server) {
         }
 
 
-
         var j = user.followers;
         var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
-            User.aggregate({ $sample: { size: 3 } },function (err, ls) {
+            User.aggregate({$sample: {size: 3}}, function (err, ls) {
                 res.render('index.ejs', {
                     user: user,
                     friend: user.followers,
@@ -516,6 +516,32 @@ module.exports = function (app, passport, server) {
         });
     });
 
+    app.post("/post-like-gr/:action", isLoggedIn, function (req, res) {
+        var id_status = req.body.id_article;
+        var action = req.params.action;
+        var user = req.user;
+        var id_group = req.body.id_group;
+        Group.findOne({'_id':id_group}, function (err, data1) {
+            if (err) throw  err;
+
+           var temp = data1.data.filter(function (obj) {
+                return obj._id.toString() === id_status.toString();
+            });
+            if(typeof temp === 'undefined'){temp[0] = [];}
+            if (action === 'like') {
+                if (temp[0].like.indexOf(user._id.toString()) === -1) {
+                    temp[0].like.push(user._id.toString());
+                }
+            } else {
+                temp[0].like.splice(temp[0].like.indexOf(user._id.toString()), 1);
+            }
+            data1.save(function (err) {
+                if (err) throw  err;
+                res.end();
+            });
+        });
+    });
+
 
     app.post("/read-allmessage", isLoggedIn, function (req, res) {
         var user = req.user;
@@ -534,9 +560,193 @@ module.exports = function (app, passport, server) {
             }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
                     fr_id = "'" + users[i]._id + "'";
-                    data = data + '<li id="fr_'+ users[i]._id +'"><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                    data = data + '<li id="fr_' + users[i]._id + '"><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
                 }
                 res.send(data);
+            });
+        }
+    });
+
+    app.get('/group/:id', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var id = req.params.id;
+        Group.findOne({'_id': id}, function (err, data) {
+            if (typeof  user.group != 'undefined') {
+                var check = user.group.filter(function (obj) {
+                    return obj.id === id;
+                });
+            } else {
+                check = [];
+            }
+
+            res.render('group.ejs', {
+                user: user,
+                info: data,
+                timeline: data.data,
+                check: check
+            });
+        });
+    });
+
+    app.get('/member-group/:id', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var id = req.params.id;
+
+        Group.findOne({'_id': id}, function (err, data) {
+            res.render('group_member.ejs', {
+                user: user,
+                info: data,
+                member: data.member
+            });
+        });
+    });
+
+    app.post('/create-group', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var name = req.body.name;
+        var description = req.body.description;
+
+        var domain = 'http://localhost:8080';
+        fs.readFile(req.files.cover.path, function (err, data) {
+            var imageName1 = req.files.cover.name;
+            if (!imageName1) {
+                console.log("There was an error");
+            } else {
+                var newPath = __dirname + "/../public/uploads/covergroup/" + imageName1;
+                fs.writeFile(newPath, data, function (err) {
+                    console.log('upload success');
+                });
+            }
+        });
+
+        if (typeof  req.files.cover.name != 'undefined') {
+            var cover = domain + '/uploads/covergroup/' + req.files.cover.name;
+        } else {
+            var cover = '';
+        }
+
+        var member = {};
+        member.id = user._id;
+        member.name = user.local.name;
+        member.image = user.local.image;
+
+        var group = new Group();
+        group.creator = user._id;
+        group.name = name;
+        group.member = member;
+        group.description = description;
+        group.cover = cover;
+        group.data = [];
+        group.save();
+
+        var gr = {};
+        gr.id = group._id;
+        gr.name = group.name;
+        gr.cover = group.cover;
+        user.group.push(gr);
+        user.save();
+
+        res.redirect('/group/' + group._id);
+    });
+
+    app.post("/add-status/group/:id", isLoggedIn, function (req, res) {
+        var content = req.body.content_status;
+        var user = req.user;
+        var id = req.params.id;
+        var list_image = [];
+        if (req.files.addImageStatus.originalFilename !== '') {
+            fs.readFile(req.files.addImageStatus.path, function (err, data) {
+                var imageName = req.files.addImageStatus.name;
+                if (!imageName) {
+                    console.log("There was an error");
+                } else {
+                    var newPath = __dirname + "/../public/uploads/statusgroup/" + imageName;
+                    fs.writeFile(newPath, data, function (err) {
+                        console.log('upload success');
+                    });
+                }
+            });
+            list_image.push(req.files.addImageStatus.name);
+        }
+        Group.findOne({'_id': id}, function (err, data) {
+            var status = {};
+            status.content = content;
+            status.like = [];
+            status.share = [];
+            status.comment = [];
+            var datauser = {name: user.local.name, email: user.local.email, image: user.local.image};
+            status.user = datauser;
+            status.userId = user._id;
+            status.image = list_image;
+
+            data.data.push(status);
+            data.save(function (err) {
+                backURL = req.header('Referer') || '/';
+                res.redirect(backURL);
+            });
+        });
+    });
+
+    app.post('/join-group/:id', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var id = req.params.id;
+        Group.findOne({'_id': id}, function (err, data) {
+            var status = {};
+            status.id = user._id;
+            status.image = user.local.image;
+            status.name = user.local.name;
+            data.member.push(status);
+            data.save();
+
+            var gr = {};
+            gr.id = data._id;
+            gr.name = data.name;
+            gr.cover = data.cover;
+            user.group.push(gr);
+            user.save();
+            res.end();
+        });
+    });
+
+    app.post('/unjoin-group/:id', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var id = req.params.id;
+
+        Group.findOne({'_id': id}, function (err, data) {
+            var abc = data.member.filter(function (obj) {
+                return obj.id !== user._id.toString()
+            });
+            data.member = abc;
+            data.save();
+
+            var cba = user.group.filter(function (obj) {
+                return obj.id !== id;
+            });
+            user.group = cba;
+            user.save();
+            res.end();
+        });
+    });
+
+    app.get('/create-group', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var key = req.query.search;
+        if (typeof key !== 'undefined') {
+            var regex = new RegExp(key, 'i');
+            var query = Group.find({"name": regex}).limit(20);
+            query.exec(function (err, groups) {
+                if (!err) {
+                    res.render('create_group.ejs', {
+                        user: user,
+                        group: groups
+                    });
+                } else {
+                    res.end();
+                }
+            });
+        } else {
+            res.render('create_group.ejs', {
+                user: user,
             });
         }
     });

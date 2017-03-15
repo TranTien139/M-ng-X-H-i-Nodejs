@@ -1,0 +1,55 @@
+<% include partical/header.ejs %>
+<div class="row page-content">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cover profile">
+                    <div class="wrapper">
+                        <div class="image">
+                            <img src="<%= info.cover %>" class="show-in-modal" id="myCover_preview" alt="people">
+                        </div>
+                        <button type="button" class="btn btn-success join-group"
+                                style="position: absolute; bottom: 10px; right: 20px;"
+                                 id_group="<%= info._id %>" action="join">Join group
+                        </button>
+                    </div>
+                    <div class="cover-info">
+                        <div class="name" style="left: 10px;"><a ><%= info.name %></a></div>
+                        <ul class="cover-nav" style="left: 0px;">
+                            <li class="active"><a href="/group/<%= info._id%>"><i class="fa fa-fw fa-bars"></i>
+                                    Timeline</a></li>
+                            <li><a href="/member-group/<%= info._id %>"><i class="fa fa-fw fa-user"></i>Member</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--============= timeline posts-->
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <% if(member.length>0){ for(var i=0; i<member.length; i++){ %>
+                <div class="col-md-3">
+                    <div class="contact-box center-version">
+                        <a href="/profile/<%= member[i].id %>">
+                            <img alt="image" class="img-circle" src="<%= member[i].image %>">
+                            <h3 class="m-b-xs"><strong><%= member[i].name %></strong></h3>
+
+                            <div class="font-bold"></div>
+                        </a>
+                        <div class="contact-box-footer">
+                            <div class="m-t-xs btn-group">
+                                <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }} %>
+            </div>
+        </div><!-- end left posts-->
+    </div>
+</div><!-- end timeline posts-->
+</div>
+
+<% include partical/footer.ejs %>

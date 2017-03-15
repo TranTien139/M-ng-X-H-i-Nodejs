@@ -27,6 +27,30 @@ $(".like-Unlike").click(function (e) {
     }
 });
 
+$(".like-UnlikeGroup").click(function (e) {
+    $id = $(this).attr('data-id');
+    $action = $(this).attr('action');
+    $id_group = $("#iddd_group").val();
+    if ($(this).attr('action') === 'like') {
+        $.post('/post-like-gr/' + $action, {'id_article': $id,'id_group':$id_group}, function (data) {
+
+        });
+        $(this).attr('action', 'unlike');
+        $(this).html('<i class="fa fa-thumbs-o-down">Unlike</i>');
+        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) + 1;
+        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
+    }
+    else {
+        $.post('/post-like-gr/' + $action, {'id_article': $id,'id_group': $id_group}, function (data) {
+
+        });
+        $(this).attr('action', 'like');
+        $(this).html('<i class="fa fa-thumbs-o-up">Like</i>');
+        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) - 1;
+        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
+    }
+});
+
 function getAddFriend($list) {
     $.post('/get-list-addfriend/', {'list_addfriend': $list}, function (data) {
         $('#content_addfriend').html(data);
@@ -66,6 +90,24 @@ $('.addfriend_unfriend').click(function (e) {
     }
 });
 
+$('.join-group').click(function (e) {
+    $id_group = $(this).attr('id_group');
+    $action = $(this).attr('action');
+    if ($action === 'join') {
+        $.post("/join-group/" + $id_group, {}, function (data) {
+        });
+        $(this).attr('unjoin');
+        $(this).text('UnJoin Group');
+    }
+    if ($action === 'unjoin') {
+
+        $.post('/unjoin-group/' + $id_group, {}, function (data) {
+        });
+        $(this).attr('join');
+        $(this).text('Join Group');
+    }
+});
+
 // preview image
 function readURL(input) {
 
@@ -99,6 +141,23 @@ function readURL1(input) {
 
 $("#myCover").change(function () {
     readURL1(this);
+});
+
+function readURL2(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#addImageGroup1').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#addImageGroup").change(function () {
+    readURL2(this);
 });
 
 //Check File API support

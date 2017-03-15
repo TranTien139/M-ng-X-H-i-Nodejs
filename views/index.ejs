@@ -48,7 +48,7 @@
                                     Ads</a></li>
                             <li><a href=""> <i class="fa fa-home"></i>
                                     Markerplace</a></li>
-                            <li><a href=""> <i class="fa fa-users"></i> Groups</a>
+                            <li><a href="/create-group"> <i class="fa fa-users"></i> Create Group</a>
                             </li>
                         </ul>
                     </div>
@@ -112,8 +112,9 @@
                         <span class="pull-right text-muted"><span class="count-like"><%= newfeed[i].like.length %></span>
                             likes - <span class="count-comment"><%= newfeed[i].comment.length %></span> comments</span>
                     </div>
+                    <%if( newfeed[i].comment.length > 0){ %>
                     <div class="box-footer box-comments" style="display: block;">
-                        <% if( newfeed[i].comment.length > 0){ for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
+                        <% for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
                         <div class="box-comment">
                             <a href="/profile/<%= newfeed[i].comment[k].id %>">
                                 <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
@@ -127,8 +128,9 @@
                             <%= newfeed[i].comment[k].content %>
                         </div>
                     </div>
-                    <% }} %>
+                    <% } %>
                 </div>
+                <% } %>
                 <div class="box-footer" style="display: block;">
                     <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
                         <img class="img-responsive img-circle img-sm"

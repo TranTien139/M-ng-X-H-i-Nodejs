@@ -1,232 +1,209 @@
 <% include partical/header.ejs %>
-<% include partical/bar_profile.ejs  %>
+<% include partical/bar_profile.ejs %>
 
-            <div class="col-md-5">
-                <div class="widget">
-                    <div class="widget-header">
-                        <h3 class="widget-caption">About</h3>
+<div class="col-md-5">
+    <div class="widget">
+        <div class="widget-header">
+            <h3 class="widget-caption">About</h3>
+        </div>
+        <div class="widget-body bordered-top bordered-sky">
+            <ul class="list-unstyled profile-about margin-none">
+                <li class="padding-v-5">
+                    <div class="row">
+                        <div class="col-sm-4"><span class="text-muted">Date of Birth</span></div>
+                        <div class="col-sm-8"><%= user_other.local.birthday %></div>
                     </div>
-                    <div class="widget-body bordered-top bordered-sky">
-                        <ul class="list-unstyled profile-about margin-none">
-                            <li class="padding-v-5">
-                                <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">Date of Birth</span></div>
-                                    <div class="col-sm-8"><%= user_other.local.birthday %></div>
-                                </div>
-                            </li>
-                            <li class="padding-v-5">
-                                <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">Job</span></div>
-                                    <div class="col-sm-8"><%= user_other.local.job %></div>
-                                </div>
-                            </li>
-                            <li class="padding-v-5">
-                                <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">Gender</span></div>
-                                    <div class="col-sm-8"><%= user_other.local.gender %></div>
-                                </div>
-                            </li>
-                            <li class="padding-v-5">
-                                <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">Lives in</span></div>
-                                    <div class="col-sm-8"><%= user_other.local.hometown %></div>
-                                </div>
-                            </li>
-                            <li class="padding-v-5">
-                                <div class="row">
-                                    <div class="col-sm-4"><span class="text-muted">Education</span></div>
-                                    <div class="col-sm-8"><%= user_other.local.education %></div>
-                                </div>
-                            </li>
-                        </ul>
+                </li>
+                <li class="padding-v-5">
+                    <div class="row">
+                        <div class="col-sm-4"><span class="text-muted">Job</span></div>
+                        <div class="col-sm-8"><%= user_other.local.job %></div>
                     </div>
-                </div>
+                </li>
+                <li class="padding-v-5">
+                    <div class="row">
+                        <div class="col-sm-4"><span class="text-muted">Gender</span></div>
+                        <div class="col-sm-8"><%= user_other.local.gender %></div>
+                    </div>
+                </li>
+                <li class="padding-v-5">
+                    <div class="row">
+                        <div class="col-sm-4"><span class="text-muted">Lives in</span></div>
+                        <div class="col-sm-8"><%= user_other.local.hometown %></div>
+                    </div>
+                </li>
+                <li class="padding-v-5">
+                    <div class="row">
+                        <div class="col-sm-4"><span class="text-muted">Education</span></div>
+                        <div class="col-sm-8"><%= user_other.local.education %></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-                <div class="widget widget-friends">
-                    <div class="widget-header">
-                        <h3 class="widget-caption">Friends</h3>
-                    </div>
-                    <div class="widget-body bordered-top  bordered-sky">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ul class="img-grid" style="margin: 0 auto;">
-                                    <% if(user_other.followers.length>0){ for(var i=0; i<user_other.followers.length; i++){ %>
-                                    <li>
-                                        <a href="/profile/<%= user_other.followers[i].userId %>">
-                                            <img src="<%= user_other.followers[i].image %>" alt="image">
-                                        </a>
-                                    </li>
-                                  <% }} %>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="widget">
-                    <div class="widget-header">
-                        <h3 class="widget-caption">Groups</h3>
-                    </div>
-                    <div class="widget-body bordered-top bordered-sky">
-                        <div class="card">
-                            <div class="content">
-                                <ul class="list-unstyled team-members">
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <div class="avatar">
-                                                    <img src="img/Likes/likes-1.png" alt="Circle Image"
-                                                         class="img-circle img-no-padding img-responsive">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                Github
-                                            </div>
-
-                                            <div class="col-xs-3 text-right">
-                                                <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i>
-                                                </btn>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <div class="avatar">
-                                                    <img src="img/Likes/likes-3.png" alt="Circle Image"
-                                                         class="img-circle img-no-padding img-responsive">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                Css snippets
-                                            </div>
-
-                                            <div class="col-xs-3 text-right">
-                                                <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i>
-                                                </btn>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-xs-3">
-                                                <div class="avatar">
-                                                    <img src="img/Likes/likes-2.png " alt="Circle Image"
-                                                         class="img-circle img-no-padding img-responsive">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                Html Action
-                                            </div>
-
-                                            <div class="col-xs-3 text-right">
-                                                <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i>
-                                                </btn>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+    <div class="widget widget-friends">
+        <div class="widget-header">
+            <h3 class="widget-caption">Friends</h3>
+        </div>
+        <div class="widget-body bordered-top  bordered-sky">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="img-grid" style="margin: 0 auto;">
+                        <% if(user_other.followers.length > 0){ for(var i = 0; i < user_other.followers.length; i++){ %>
+                        <li>
+                            <a href="/profile/<%= user_other.followers[i].userId %>">
+                                <img src="<%= user_other.followers[i].image %>" alt="image">
+                            </a>
+                        </li>
+                        <% }} %>
+                    </ul>
                 </div>
             </div>
+        </div>
+    </div>
 
-
-            <!--============= timeline posts-->
-            <div class="col-md-7">
-                <div class="row">
-                    <!-- left posts-->
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- post state form -->
-                                <div class="box profile-info n-border-top">
-                                <form action="/add-status" method="POST" enctype="multipart/form-data">
-                                    <textarea class="form-control input-lg p-text-area" rows="2"
-                                              placeholder="Whats in your mind today?" name="content_status" required></textarea>
-                                    <ul id="results_upload" class="list-inline"></ul>
-                                    <div class="box-footer box-form">
-                                        <button type="submit" class="btn btn-warning pull-right">Post</button>
-                                        <ul class="nav nav-pills">
-                                            <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
-                                                            class="fa fa-camera"></i></a></li>
-                                            <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
-                                        </ul>
+    <div class="widget">
+        <div class="widget-header">
+            <h3 class="widget-caption">Groups</h3>
+        </div>
+        <div class="widget-body bordered-top bordered-sky">
+            <div class="card">
+                <div class="content">
+                    <ul class="list-unstyled team-members">
+                        <% if(typeof  user_other.group != 'undefined' && user_other.group.length > 0) %>
+                        <% user_other.group.forEach(function (item) { %>
+                        <li>
+                            <a href="/group/<%= item.id %>">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div class="avatar">
+                                        <img src="<%= item.cover %>" alt="Circle Image"
+                                             class="img-circle img-no-padding img-responsive">
                                     </div>
-                                </form>
+                                </div>
+                                <div class="col-xs-6">
+                                    <%= item.name %>
                                 </div>
 
-                                <% if(timeline.length>0){ for(var i=0;i<timeline.length; i++){  %>
-                                <!--   posts -->
-                                <div class="box box-widget">
-                                    <div class="box-header with-border">
-                                        <div class="user-block">
-                                            <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
-                                            <span class="username"><a href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
-                                            <span class="description"><%= timeline[i].date.toLocaleTimeString()+' '+ timeline[i].date.getDate() +'-'+ timeline[i].date.getMonth() +'-'+ timeline[i].date.getFullYear()  %></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box-body" style="display: block;">
-                                        <p><%= timeline[i].content %>
-                                        </p>
-                                        <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k=0; k<timeline[i].image.length; k++){%>
-                                        <img src="/../uploads/status/<%= timeline[i].image[k] %>" style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
-                                       <div class="col-sm-12" style="padding-top: 10px;"></div>
-                                        <%}}%>
-
-                                        <% if(timeline[i].like.indexOf(user._id.toString()) === -1){ %>
-                                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= timeline[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
-                                        </button>
-                                        <% }else { %>
-                                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= timeline[i]._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
-                                        </button>
-                                        <% } %>
-
-                                        <span class="pull-right text-muted"><span class="count-like"><%= timeline[i].like.length %></span>
-                            likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
-
-                                    </div>
-                                    <div class="box-footer box-comments" style="display: block;">
-                                        <% if( timeline[i].comment.length>0){ for(var k=0 ; k< timeline[i].comment.length ; k++){%>
-                                        <div class="box-comment">
-                                            <a href="/profile/<%= timeline[i].comment[k].id %>">
-                                                <img class="img-circle img-sm" src="<%= timeline[i].comment[k].image %>"
-                                                     alt="User Image">
-                                                <div class="comment-text">
-                          <span class="username">
-                          <%= timeline[i].comment[k].name %>
-                              <span class="text-muted pull-right"><%= timeline[i].comment[k].date.toLocaleTimeString()+' '+ timeline[i].comment[k].date.getDate() +'-'+ timeline[i].comment[k].date.getMonth() +'-'+ timeline[i].comment[k].date.getFullYear()  %></span>
-                          </span>
-                                            </a>
-                                            <%= timeline[i].comment[k].content %>
-                                        </div>
-                                    </div>
-                                    <% }}%>
+                                <div class="col-xs-3 text-right">
+                                    <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i>
+                                    </btn>
                                 </div>
-                                <div class="box-footer" style="display: block;">
-                                    <form action="/post-comment/<%= timeline[i]._id %>" method="post">
-                                        <img class="img-responsive img-circle img-sm"
-                                             src="<%= user.local.image %>" alt="Alt Text">
-                                        <div class="img-push">
-                                            <input type="text" name="content_comment" class="form-control input-sm"
-                                                   placeholder="Press enter to post comment" required>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div><!--  end posts-->
-                            <%}} %>
-
-
                             </div>
-                        </div>
-                    </div><!-- end left posts-->
+                            </a>
+                        </li>
+                        <% }); %>
+                    </ul>
                 </div>
-            </div><!-- end timeline posts-->
-
+            </div>
         </div>
     </div>
 </div>
-<% include partical/list_friend.ejs  %>
+
+
+<!--============= timeline posts-->
+<div class="col-md-7">
+    <div class="row">
+        <!-- left posts-->
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- post state form -->
+                    <div class="box profile-info n-border-top">
+                        <form action="/add-status" method="POST" enctype="multipart/form-data">
+                                    <textarea class="form-control input-lg p-text-area" rows="2"
+                                              placeholder="Whats in your mind today?" name="content_status"
+                                              required></textarea>
+                            <ul id="results_upload" class="list-inline"></ul>
+                            <div class="box-footer box-form">
+                                <button type="submit" class="btn btn-warning pull-right">Post</button>
+                                <ul class="nav nav-pills">
+                                    <li><a style="cursor: pointer"
+                                           onclick="document.getElementById('addImageStatus').click();"><i
+                                                    class="fa fa-camera"></i></a></li>
+                                    <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+
+                    <% if(timeline.length > 0){ for(var i = 0;i < timeline.length; i++){ %>
+                    <!--   posts -->
+                    <div class="box box-widget">
+                        <div class="box-header with-border">
+                            <div class="user-block">
+                                <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
+                                <span class="username"><a
+                                            href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
+                                <span class="description"><%= timeline[i].date.toLocaleTimeString() + ' ' + timeline[i].date.getDate() + '-' + timeline[i].date.getMonth() + '-' + timeline[i].date.getFullYear() %></span>
+                            </div>
+                        </div>
+
+                        <div class="box-body" style="display: block;">
+                            <p><%= timeline[i].content %>
+                            </p>
+                            <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k = 0; k < timeline[i].image.length; k++){ %>
+                            <img src="/../uploads/status/<%= timeline[i].image[k] %>"
+                                 style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
+                            <div class="col-sm-12" style="padding-top: 10px;"></div>
+                            <% }} %>
+
+                            <% if(timeline[i].like.indexOf(user._id.toString()) === -1){ %>
+                            <button type="button" class="btn btn-success btn-xs like-Unlike"
+                                    data-id="<%= timeline[i]._id %>" action="like"><i class="fa fa-thumbs-o-up">Like</i>
+                            </button>
+                            <% }else { %>
+                            <button type="button" class="btn btn-success btn-xs like-Unlike"
+                                    data-id="<%= timeline[i]._id %>" action="unlike"><i class="fa fa-thumbs-o-down">UnLike</i>
+                            </button>
+                            <% } %>
+
+                            <span class="pull-right text-muted"><span
+                                        class="count-like"><%= timeline[i].like.length %></span>
+                            likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
+
+                        </div>
+                        <%if( timeline[i].comment.length > 0){ %>
+                        <div class="box-footer box-comments" style="display: block;">
+                            <% for(var k = 0 ; k < timeline[i].comment.length ; k++){ %>
+                            <div class="box-comment">
+                                <a href="/profile/<%= timeline[i].comment[k].id %>">
+                                    <img class="img-circle img-sm" src="<%= timeline[i].comment[k].image %>"
+                                         alt="User Image">
+                                    <div class="comment-text">
+                          <span class="username">
+                          <%= timeline[i].comment[k].name %>
+                              <span class="text-muted pull-right"><%= timeline[i].comment[k].date.toLocaleTimeString() + ' ' + timeline[i].comment[k].date.getDate() + '-' + timeline[i].comment[k].date.getMonth() + '-' + timeline[i].comment[k].date.getFullYear() %></span>
+                          </span>
+                                </a>
+                                <%= timeline[i].comment[k].content %>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                    <% } %>
+                    <div class="box-footer" style="display: block;">
+                        <form action="/post-comment/<%= timeline[i]._id %>" method="post">
+                            <img class="img-responsive img-circle img-sm"
+                                 src="<%= user.local.image %>" alt="Alt Text">
+                            <div class="img-push">
+                                <input type="text" name="content_comment" class="form-control input-sm"
+                                       placeholder="Press enter to post comment" required>
+                            </div>
+                        </form>
+                    </div>
+                </div><!--  end posts-->
+                <% }} %>
+
+            </div>
+        </div>
+    </div><!-- end left posts-->
+</div>
+</div><!-- end timeline posts-->
+
+</div>
+</div>
+</div>
+<% include partical/list_friend.ejs %>
 <% include partical/footer.ejs %>

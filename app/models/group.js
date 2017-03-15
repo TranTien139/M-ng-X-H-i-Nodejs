@@ -4,8 +4,11 @@ module.exports = mongoose.model('Group',{
     creator: String ,
     name: String,
     member:[{id:String,image:String,name: String}],
-    data: {
-        user: {email: String, image: String, name: String},
+    cover: String,
+    description: String,
+    date_create: {type: Date, default: Date.now},
+    data: [{
+        user: {id: String, image: String, name: String},
         userId: String,
         content: String,
         image: [],
@@ -20,6 +23,6 @@ module.exports = mongoose.model('Group',{
             content: String,
             date: {type: Date, default: Date.now},
             like: []
-        }]
-    }
+        }],
+    }],
 });
