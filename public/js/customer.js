@@ -69,6 +69,12 @@ function ReadAllMessage() {
     $('#content_allmessage').html('');
 }
 
+function ReadAllNotification(){
+    $.post('/read-notification', {}, function (data) {
+    });
+    $('#content_notifycation').html('');
+}
+
 $('.addfriend_unfriend').click(function (e) {
     $id_other = $(this).attr('id-other');
     $action = $(this).attr('action');

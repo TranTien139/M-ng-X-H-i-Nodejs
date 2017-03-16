@@ -30,7 +30,7 @@
                     <a onclick="javascript:ReadAllMessage()" style="cursor: pointer;">read all message</a>
                     <ul id="content_allmessage" style="padding-left: 0px;">
                         <% if(user.message.length>0){ for (var i=0; i< user.message.length; i++){%>
-                    <li style="width: 100%; height: 65px;"><a href="/chat?conversation=<%= user.message[i].id %>"><div class="col-sm-2"><img src="<%= user.message[i].image %>"></div><div class="col-sm-4"><%= user.message[i].name %></div><div class="col-sm-6"><%= user.message[i].content %></div></a></li>
+                    <li style="width: 100%; height: 65px;"><a href="/chat?conversation=<%= user.message[i].id %>"><div class="col-sm-2"><img src="<%= user.message[i].image %>" width="65" height="65"></div><div class="col-sm-4"><%= user.message[i].name %></div><div class="col-sm-6"><%= user.message[i].content %></div></a></li>
                     <% } } %>
                     </ul>
                 </div>
@@ -53,8 +53,10 @@
             <div class="modal-body">
                 <div class="row">
                     <a onclick="javascript:ReadAllNotification()" style="cursor: pointer;">read all notifacation</a>
-                    <ul id="content_allmessage" style="padding-left: 0px;">
-
+                    <ul id="content_notifycation" style="padding-left: 0px;">
+                        <% if(user.notify.length>0){ user.notify.forEach(function (noti) { %>
+                        <li style="width: 100%; height: 65px;"><a href="/detail-status/<%= noti.id_status %>"><div class="col-sm-2"><img src="<%= noti.image %>" width="65" height="65"></div><div class="col-sm-4"><%= noti.name %></div><div class="col-sm-4"><%= noti.action %>:<%= noti.title %></div><div class="col-sm-2"><%= noti.date.toLocaleTimeString() + ' ' + noti.date.getDate() + '-' + noti.date.getMonth() + '-' + noti.date.getFullYear() %></div></a></li>
+                        <% }); }  %>
                     </ul>
                 </div>
             </div>
@@ -64,6 +66,8 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
 
 <script src="/socket.io.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>

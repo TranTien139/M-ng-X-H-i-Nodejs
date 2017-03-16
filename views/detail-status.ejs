@@ -1,0 +1,76 @@
+<% include partical/header.ejs %>
+<div class="container page-content " style="background: #fff;">
+    <div class="col-sm-8">
+        <div class="row">
+            <div style="margin-top: 15px;">
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <img class="img-circle" src="<%= detail.user.image %>" alt="User Image">
+                            <span class="username"><a
+                                        href="/profile/<%= detail.userId %>"><%= detail.user.name %></a></span>
+                            <span class="description"><%= detail.date.toLocaleTimeString() + ' ' + detail.date.getDate() + '-' + detail.date.getMonth() + '-' + detail.date.getFullYear() %></span>
+                        </div>
+                    </div>
+
+                    <div class="box-body" style="display: block;">
+                        <p><%= detail.content %>
+                        </p>
+                        <% if(typeof detail.image != 'undefined' && detail.image.length > 0){ for(var k = 0; k < detail.image.length; k++){ %>
+                        <img src="/uploads/status/<%= detail.image[k] %>" style="width: 100%; height: 300px;"
+                             class="img-responsive show-in-modal" alt="photo">
+                        <div class="col-sm-12" style="padding-top: 10px;"></div>
+                        <% }} %>
+
+                        <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
+                        <!--Share-->
+                        <!--</button>-->
+
+                        <% if(detail.like.indexOf(user._id.toString()) === -1){ %>
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= detail._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
+                        </button>
+                        <% }else { %>
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= detail._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
+                        </button>
+                        <% } %>
+
+                        <span class="pull-right text-muted"><span class="count-like"><%= detail.like.length %></span>
+                            likes - <span class="count-comment"><%= detail.comment.length %></span> comments</span>
+                    </div>
+                    <%if( detail.comment.length > 0){ %>
+                    <div class="box-footer box-comments" style="display: block;">
+                        <% for(var k = 0 ; k < detail.comment.length ; k++){ %>
+                        <div class="box-comment">
+                            <a href="/profile/<%= detail.comment[k].id %>">
+                                <img class="img-circle img-sm" src="<%= detail.comment[k].image %>"
+                                     alt="User Image">
+                                <div class="comment-text">
+                          <span class="username">
+                          <%= detail.comment[k].name %>
+                              <span class="text-muted pull-right"><%= detail.comment[k].date.toLocaleTimeString() + ' ' + detail.comment[k].date.getDate() + '-' + detail.comment[k].date.getMonth() + '-' + detail.comment[k].date.getFullYear() %></span>
+                          </span>
+                            </a>
+                            <%= detail.comment[k].content %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                <% } %>
+                <div class="box-footer" style="display: block;">
+                    <form action="/post-comment/<%= detail._id %>" method="post">
+                        <img class="img-responsive img-circle img-sm"
+                             src="<%= user.local.image %>" alt="Alt Text">
+                        <div class="img-push">
+                            <input type="text" name="content_comment" class="form-control input-sm"
+                                   placeholder="Press enter to post comment" required>
+                        </div>
+                    </form>
+                </div>
+            </div><!--  end posts-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include partical/footer.ejs %>

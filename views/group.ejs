@@ -26,7 +26,7 @@
                         <ul class="cover-nav" style="left: 0px;">
                             <li class="active"><a href="/group/<%= info._id %>"><i class="fa fa-fw fa-bars"></i>
                                     Timeline</a></li>
-                            <li><a href="/member-group/<%= info._id %>"><i class="fa fa-fw fa-user"></i>Member</a></li>
+                            <li><a href="/member-group/<%= info._id%>"><i class="fa fa-fw fa-user"></i>Member</a></li>
                         </ul>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                             <% }}%>
                         </div>
                         <div class="box-footer" style="display: block;">
-                            <form action="/post-comment/<%= timeline[i]._id %>" method="post">
+                            <form action="/comment-status/group/<%= info._id %>/<%= timeline[i]._id %>" method="post">
                                 <img class="img-responsive img-circle img-sm"
                                      src="<%= user.local.image %>" alt="Alt Text">
                                 <div class="img-push">

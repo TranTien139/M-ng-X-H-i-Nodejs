@@ -490,6 +490,17 @@ module.exports = function (app, passport, server) {
             data1.comment.push(data);
             data1.save(function (err) {
                 if (err) throw  err;
+            });
+            NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
+                var noti = {};
+                noti.id = user._id;
+                noti.name = user.local.name;
+                noti.image = user.local.image;
+                noti.id_status = id_status;
+                noti.title = data1.content;
+                noti.action = 'comment';
+                user1.notify.push(noti);
+                user1.save();
                 backURL = req.header('Referer') || '/';
                 res.redirect(backURL);
             });
@@ -506,6 +517,17 @@ module.exports = function (app, passport, server) {
                 if (data1.like.indexOf(user._id.toString()) === -1) {
                     data1.like.push(user._id.toString());
                 }
+                NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
+                    var noti = {};
+                    noti.id = user._id;
+                    noti.name = user.local.name;
+                    noti.image = user.local.image;
+                    noti.id_status = id_status;
+                    noti.title = data1.content;
+                    noti.action = 'like';
+                    user1.notify.push(noti);
+                    user1.save();
+                });
             } else {
                 data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
             }
@@ -521,17 +543,31 @@ module.exports = function (app, passport, server) {
         var action = req.params.action;
         var user = req.user;
         var id_group = req.body.id_group;
-        Group.findOne({'_id':id_group}, function (err, data1) {
+        Group.findOne({'_id': id_group}, function (err, data1) {
             if (err) throw  err;
 
-           var temp = data1.data.filter(function (obj) {
+            var temp = data1.data.filter(function (obj) {
                 return obj._id.toString() === id_status.toString();
             });
-            if(typeof temp === 'undefined'){temp[0] = [];}
+            if (typeof temp === 'undefined') {
+                temp[0] = [];
+            }
             if (action === 'like') {
                 if (temp[0].like.indexOf(user._id.toString()) === -1) {
                     temp[0].like.push(user._id.toString());
                 }
+                NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
+                    var noti = {};
+                    noti.id = user._id;
+                    noti.name = user.local.name;
+                    noti.image = user.local.image;
+                    noti.id_status = id_status;
+                    noti.title = temp[0].content;
+                    noti.action = 'like';
+                    user1.notify.push(noti);
+                    user1.save();
+                    res.end();
+                });
             } else {
                 temp[0].like.splice(temp[0].like.indexOf(user._id.toString()), 1);
             }
@@ -560,7 +596,7 @@ module.exports = function (app, passport, server) {
             }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
                     fr_id = "'" + users[i]._id + "'";
-                    data = data + '<li id="fr_' + users[i]._id + '"><div class="col-sm-3"><img src="' + users[i].local.image + '"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                    data = data + '<li id="fr_' + users[i]._id + '"><div class="col-sm-3"><img src="' + users[i].local.image + '" style="width: 50px; height: 65px;"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
                 }
                 res.send(data);
             });
@@ -570,6 +606,7 @@ module.exports = function (app, passport, server) {
     app.get('/group/:id', isLoggedIn, function (req, res) {
         var user = req.user;
         var id = req.params.id;
+
         Group.findOne({'_id': id}, function (err, data) {
             if (typeof  user.group != 'undefined') {
                 var check = user.group.filter(function (obj) {
@@ -593,11 +630,20 @@ module.exports = function (app, passport, server) {
         var id = req.params.id;
 
         Group.findOne({'_id': id}, function (err, data) {
+            if (typeof  user.group != 'undefined') {
+                var check = user.group.filter(function (obj) {
+                    return obj.id === id;
+                });
+            } else {
+                check = [];
+            }
             res.render('group_member.ejs', {
                 user: user,
                 info: data,
-                member: data.member
+                member_list: data.member,
+                check: check
             });
+
         });
     });
 
@@ -687,6 +733,40 @@ module.exports = function (app, passport, server) {
         });
     });
 
+    app.post("/comment-status/group/:id_group/:id_article", isLoggedIn, function (req, res) {
+        var id_status = req.params.id_article;
+        var user = req.user;
+        var id_group = req.params.id_group;
+        Group.findOne({'_id': id_group}, function (err, data1) {
+            if (err) throw  err;
+            var temp = data1.data.filter(function (obj) {
+                return obj._id.toString() === id_status.toString();
+            });
+            var comment = {};
+            comment.id = user._id;
+            comment.email = user.local.email;
+            comment.image = user.local.image;
+            comment.name = user.local.name;
+            comment.content = req.body.content_comment;
+            comment.like = [];
+            temp[0].comment.push(comment);
+            data1.save();
+            NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
+                var noti = {};
+                noti.id = user._id;
+                noti.name = user.local.name;
+                noti.image = user.local.image;
+                noti.id_status = id_status;
+                noti.title = data1.content;
+                noti.action = 'comment';
+                user1.notify.push(noti);
+                user1.save();
+                backURL = req.header('Referer') || '/';
+                res.redirect(backURL);
+            });
+        });
+    });
+
     app.post('/join-group/:id', isLoggedIn, function (req, res) {
         var user = req.user;
         var id = req.params.id;
@@ -749,6 +829,25 @@ module.exports = function (app, passport, server) {
                 user: user,
             });
         }
+    });
+
+    app.post('/read-notification', isLoggedIn, function (req, res) {
+        var user = req.user;
+        user.notify = [];
+        user.save();
+        res.end();
+    });
+
+    app.get('/detail-status/:id',isLoggedIn ,function (req, res) {
+        var id = req.params.id;
+        var user = req.user;
+        Status.findOne({'_id': id}, function (err,data) {
+            console.log(data);
+            res.render('detail-status.ejs', {
+                user: user,
+                detail: data
+            });
+        });
     });
 
 

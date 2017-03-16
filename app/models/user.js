@@ -21,7 +21,7 @@ var userSchema = mongoose.Schema({
     followers:[{userId:String,image:String,name:String}],
     group:[{id:String,name:String,cover:String}],
     addfriend:[],
-    notify:[],
+    notify:[{id:String,image:String,name: String,title: String,id_status:String,action:String,date: {type: Date, default: Date.now}}],
     message:[{id:String,image:String,name: String,content: String,date: {type: Date, default: Date.now},seen:String}]
 });
 

@@ -18,7 +18,7 @@
                         <ul class="cover-nav" style="left: 0px;">
                             <li class="active"><a href="/group/<%= info._id%>"><i class="fa fa-fw fa-bars"></i>
                                     Timeline</a></li>
-                            <li><a href="/member-group/<%= info._id %>"><i class="fa fa-fw fa-user"></i>Member</a></li>
+                            <li><a href="/member-group/<%= info._id%>"><i class="fa fa-fw fa-user"></i>Member</a></li>
                         </ul>
                     </div>
                 </div>
@@ -28,13 +28,13 @@
     <!--============= timeline posts-->
     <div class="col-md-8 col-md-offset-2">
         <div class="row">
-            <div class="col-sm-12">
-                <% if(member.length>0){ for(var i=0; i<member.length; i++){ %>
+            <div class="">
+                <% if(typeof member_list !== 'undefined' && member_list.length>0){ for(var i=0; i<member_list.length; i++){ %>
                 <div class="col-md-3">
                     <div class="contact-box center-version">
-                        <a href="/profile/<%= member[i].id %>">
-                            <img alt="image" class="img-circle" src="<%= member[i].image %>">
-                            <h3 class="m-b-xs"><strong><%= member[i].name %></strong></h3>
+                        <a href="/profile/<%= member_list[i].id %>">
+                            <img alt="image" class="img-circle" src="<%= member_list[i].image %>">
+                            <h3 class="m-b-xs"><strong><%= member_list[i].name %></strong></h3>
 
                             <div class="font-bold"></div>
                         </a>

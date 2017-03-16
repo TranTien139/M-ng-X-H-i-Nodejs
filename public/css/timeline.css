@@ -723,6 +723,7 @@ h1.row-title, h2.row-title, h3.row-title, h4.row-title, h5.row-title, h6.row-tit
 }
 .box-comments {
     background: #f7f7f7 !important;
+    padding-bottom: 0px !important;
 }
 .box-footer {
     border-top-left-radius: 0;

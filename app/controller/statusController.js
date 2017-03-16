@@ -2,6 +2,7 @@
  * Created by Tran Tien on 14/02/2017.
  */
 var Waste = require('../../app/models/status.js');
+var UserPost = require('../../app/models/user.js');
 
 function  getNewFeed(id_user,follower,callback) {
 
@@ -35,6 +36,15 @@ function  getStatusPost(id,callback) {
         });
 }
 
+function  getUserPostStatus(id,callback) {
+    UserPost.findOne({"_id":id})
+        .sort({date: -1})
+        .exec(function(err, allWastes){
+            callback(err,allWastes);
+        });
+}
+
 module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
+module.exports.getUserPostStatus = getUserPostStatus;
