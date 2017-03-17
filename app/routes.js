@@ -476,7 +476,7 @@ module.exports = function (app, passport, server) {
 
     app.post("/post-comment/:id_status", isLoggedIn, function (req, res) {
         var id_status = req.params.id_status;
-        var content = req.body.content_comment;
+        var content = req.body.content_stt;
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
             if (err) throw  err;
@@ -491,18 +491,23 @@ module.exports = function (app, passport, server) {
             data1.save(function (err) {
                 if (err) throw  err;
             });
+            var data ='';
             NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
-                var noti = {};
-                noti.id = user._id;
-                noti.name = user.local.name;
-                noti.image = user.local.image;
-                noti.id_status = id_status;
-                noti.title = data1.content;
-                noti.action = 'comment';
-                user1.notify.push(noti);
-                user1.save();
-                backURL = req.header('Referer') || '/';
-                res.redirect(backURL);
+                if(user1._id.toString() != user._id.toString()) {
+                    var noti = {};
+                    noti.id = user._id;
+                    noti.name = user.local.name;
+                    noti.image = user.local.image;
+                    noti.id_status = id_status;
+                    noti.title = data1.content;
+                    noti.action = 'comment';
+                    user1.notify.push(noti);
+                    user1.save();
+                }
+                var currentdate = new Date();
+                var datetime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() +' '+ currentdate.getDate() + "-"+(currentdate.getMonth()+1) + "-" + currentdate.getFullYear();
+                data ='<div class="box-comment"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span> </span> </a> '+content+' </div> </div>';
+                res.send(data);
             });
         });
     });
@@ -518,15 +523,17 @@ module.exports = function (app, passport, server) {
                     data1.like.push(user._id.toString());
                 }
                 NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
-                    var noti = {};
-                    noti.id = user._id;
-                    noti.name = user.local.name;
-                    noti.image = user.local.image;
-                    noti.id_status = id_status;
-                    noti.title = data1.content;
-                    noti.action = 'like';
-                    user1.notify.push(noti);
-                    user1.save();
+                    if(user1._id.toString() != user._id.toString()) {
+                        var noti = {};
+                        noti.id = user._id;
+                        noti.name = user.local.name;
+                        noti.image = user.local.image;
+                        noti.id_status = id_status;
+                        noti.title = data1.content;
+                        noti.action = 'like';
+                        user1.notify.push(noti);
+                        user1.save();
+                    }
                 });
             } else {
                 data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
@@ -557,16 +564,18 @@ module.exports = function (app, passport, server) {
                     temp[0].like.push(user._id.toString());
                 }
                 NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
-                    var noti = {};
-                    noti.id = user._id;
-                    noti.name = user.local.name;
-                    noti.image = user.local.image;
-                    noti.id_status = id_status;
-                    noti.title = temp[0].content;
-                    noti.action = 'like';
-                    user1.notify.push(noti);
-                    user1.save();
-                    res.end();
+                    if(user1._id.toString() != user._id.toString()) {
+                        var noti = {};
+                        noti.id = user._id;
+                        noti.name = user.local.name;
+                        noti.image = user.local.image;
+                        noti.id_status = id_status;
+                        noti.title = temp[0].content;
+                        noti.action = 'like';
+                        user1.notify.push(noti);
+                        user1.save();
+                        res.end();
+                    }
                 });
             } else {
                 temp[0].like.splice(temp[0].like.indexOf(user._id.toString()), 1);
@@ -588,7 +597,6 @@ module.exports = function (app, passport, server) {
 
 
     app.post("/get-list-addfriend", isLoggedIn, function (req, res) {
-        var id = req.query.list_addfriend;
         var data = '';
         if (req.user.addfriend.length > 0) {
             User.find({
@@ -596,7 +604,7 @@ module.exports = function (app, passport, server) {
             }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
                     fr_id = "'" + users[i]._id + "'";
-                    data = data + '<li id="fr_' + users[i]._id + '"><div class="col-sm-3"><img src="' + users[i].local.image + '" style="width: 50px; height: 65px;"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></li>';
+                    data = data + '<li style="width: 100%; height: 65px; margin-bottom: 10px;" id="fr_' + users[i]._id + '"><a href="/profile/'+users[i]._id+'"><div class="col-sm-3"><img src="' + users[i].local.image + '" style="width: 50px; height: 65px;"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></a></li>';
                 }
                 res.send(data);
             });
@@ -727,9 +735,9 @@ module.exports = function (app, passport, server) {
 
             data.data.push(status);
             data.save(function (err) {
-                backURL = req.header('Referer') || '/';
-                res.redirect(backURL);
             });
+            backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
         });
     });
 
@@ -752,15 +760,17 @@ module.exports = function (app, passport, server) {
             temp[0].comment.push(comment);
             data1.save();
             NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
-                var noti = {};
-                noti.id = user._id;
-                noti.name = user.local.name;
-                noti.image = user.local.image;
-                noti.id_status = id_status;
-                noti.title = data1.content;
-                noti.action = 'comment';
-                user1.notify.push(noti);
-                user1.save();
+                if(user1._id.toString() != user._id.toString()) {
+                    var noti = {};
+                    noti.id = user._id;
+                    noti.name = user.local.name;
+                    noti.image = user.local.image;
+                    noti.id_status = id_status;
+                    noti.title = data1.content;
+                    noti.action = 'comment';
+                    user1.notify.push(noti);
+                    user1.save();
+                }
                 backURL = req.header('Referer') || '/';
                 res.redirect(backURL);
             });

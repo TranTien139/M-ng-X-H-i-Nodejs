@@ -144,8 +144,8 @@
                             <p><%= timeline[i].content %>
                             </p>
                             <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k = 0; k < timeline[i].image.length; k++){ %>
-                            <img src="/../uploads/status/<%= timeline[i].image[k] %>"
-                                 style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
+                            <a href="/detail-status/<%= timeline[i]._id %>"><img src="/../uploads/status/<%= timeline[i].image[k] %>"
+                                 style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo"></a>
                             <div class="col-sm-12" style="padding-top: 10px;"></div>
                             <% }} %>
 
@@ -164,8 +164,9 @@
                             likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
 
                         </div>
+                        <div id="status_<%= timeline[i]._id %>" >
                         <%if( timeline[i].comment.length > 0){ %>
-                        <div class="box-footer box-comments" style="display: block;">
+                            <div class="box-footer box-comments" style="display: block;">
                             <% for(var k = 0 ; k < timeline[i].comment.length ; k++){ %>
                             <div class="box-comment">
                                 <a href="/profile/<%= timeline[i].comment[k].id %>">
@@ -181,17 +182,16 @@
                             </div>
                         </div>
                         <% } %>
-                    </div>
+                        </div>
                     <% } %>
+                    </div>
                     <div class="box-footer" style="display: block;">
-                        <form action="/post-comment/<%= timeline[i]._id %>" method="post">
                             <img class="img-responsive img-circle img-sm"
                                  src="<%= user.local.image %>" alt="Alt Text">
                             <div class="img-push">
-                                <input type="text" name="content_comment" class="form-control input-sm"
+                                <input type="text" name="content_comment" object_status= "<%= timeline[i]._id %>" class="form-control input-sm"
                                        placeholder="Press enter to post comment" required>
                             </div>
-                        </form>
                     </div>
                 </div><!--  end posts-->
                 <% }} %>

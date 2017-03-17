@@ -51,8 +51,8 @@ $(".like-UnlikeGroup").click(function (e) {
     }
 });
 
-function getAddFriend($list) {
-    $.post('/get-list-addfriend/', {'list_addfriend': $list}, function (data) {
+function getAddFriend() {
+    $.post('/get-list-addfriend/', {}, function (data) {
         $('#content_addfriend').html(data);
     });
 }
@@ -111,6 +111,24 @@ $('.join-group').click(function (e) {
         });
         $(this).attr('join');
         $(this).text('Join Group');
+    }
+});
+
+$('input[name="content_comment"]').on('keypress', function (e) {
+    if(e.which === 13){
+        if($.trim($(this).val()) != '') {
+            var id_status = $(this).attr('object_status');
+            var content = $.trim($(this).val());
+
+            $.post('/post-comment/' + id_status, {'content_stt':content}, function (data) {
+                if($('#status_'+id_status+' .box-footer.box-comments .box-comment').length === 0){
+                    $('#status_'+id_status).append('<div class="box-footer box-comments" style="display: block;">'+data+'</div>');
+                }else {
+                    $('#status_' + id_status + ' .box-footer.box-comments .box-comment').last().after(data);
+                }
+            });
+            $(this).val('');
+        }
     }
 });
 

@@ -112,6 +112,8 @@
                         <span class="pull-right text-muted"><span class="count-like"><%= newfeed[i].like.length %></span>
                             likes - <span class="count-comment"><%= newfeed[i].comment.length %></span> comments</span>
                     </div>
+
+                    <div id="status_<%= newfeed[i]._id %>" >
                     <%if( newfeed[i].comment.length > 0){ %>
                     <div class="box-footer box-comments" style="display: block;">
                         <% for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
@@ -128,18 +130,18 @@
                             <%= newfeed[i].comment[k].content %>
                         </div>
                     </div>
+
                     <% } %>
                 </div>
                 <% } %>
+                </div>
                 <div class="box-footer" style="display: block;">
-                    <form action="/post-comment/<%= newfeed[i]._id %>" method="post">
                         <img class="img-responsive img-circle img-sm"
                              src="<%= user.local.image %>" alt="Alt Text">
                         <div class="img-push">
-                            <input type="text" name="content_comment" class="form-control input-sm"
+                            <input type="text" name="content_comment" object_status= "<%= newfeed[i]._id %>" class="form-control input-sm"
                                    placeholder="Press enter to post comment" required>
                         </div>
-                    </form>
                 </div>
             </div><!--  end posts-->
             <% }} %>
@@ -168,9 +170,9 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-9">
-                                        <b><a href="http://demos.bootdey.com/dayday/home.html#">Hillary Markston</a></b>
+                                        <b><a href="">Hillary Markston</a></b>
                                         shared a
-                                        <b><a href="http://demos.bootdey.com/dayday/home.html#">publication</a></b>.
+                                        <b><a href="">publication</a></b>.
                                         <span class="timeago">5 min ago</span>
                                     </div>
                                 </div>
