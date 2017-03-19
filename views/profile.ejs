@@ -130,7 +130,7 @@
 
                     <% if(timeline.length > 0){ for(var i = 0;i < timeline.length; i++){ %>
                     <!--   posts -->
-                    <div class="box box-widget">
+                    <div class="box box-widget" id="status_<%= timeline[i]._id %>">
                         <div class="box-header with-border">
                             <div class="user-block">
                                 <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
@@ -164,21 +164,23 @@
                             likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
 
                         </div>
-                        <div id="status_<%= timeline[i]._id %>" >
+                            <div class="boxmain-comment" >
                         <%if( timeline[i].comment.length > 0){ %>
                             <div class="box-footer box-comments" style="display: block;">
                             <% for(var k = 0 ; k < timeline[i].comment.length ; k++){ %>
-                            <div class="box-comment">
+                            <div class="box-comment" id="comment_<%= timeline[i]._id %>_<%= timeline[i].comment[k]._id %>">
                                 <a href="/profile/<%= timeline[i].comment[k].id %>">
                                     <img class="img-circle img-sm" src="<%= timeline[i].comment[k].image %>"
                                          alt="User Image">
+                                </a>
                                     <div class="comment-text">
                           <span class="username">
                           <%= timeline[i].comment[k].name %>
                               <span class="text-muted pull-right"><%= timeline[i].comment[k].date.toLocaleTimeString() + ' ' + timeline[i].comment[k].date.getDate() + '-' + timeline[i].comment[k].date.getMonth() + '-' + timeline[i].comment[k].date.getFullYear() %></span>
+                              <% if(user._id.toString() === timeline[i].comment[k].id.toString()){  %> <div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('<%= timeline[i]._id %>','<%= timeline[i].comment[k]._id %>')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('<%= timeline[i]._id %>','<%= timeline[i].comment[k]._id %>',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> <% } %>
                           </span>
-                                </a>
-                                <%= timeline[i].comment[k].content %>
+
+                                        <div class="content-comment"> <%= timeline[i].comment[k].content %></div>
                             </div>
                         </div>
                         <% } %>
@@ -189,7 +191,7 @@
                             <img class="img-responsive img-circle img-sm"
                                  src="<%= user.local.image %>" alt="Alt Text">
                             <div class="img-push">
-                                <input type="text" name="content_comment" object_status= "<%= timeline[i]._id %>" class="form-control input-sm"
+                                <input type="text" name="content_comment" object_status= "<%= timeline[i]._id %>" action="" class="form-control input-sm"
                                        placeholder="Press enter to post comment" required>
                             </div>
                     </div>

@@ -14,7 +14,7 @@ function  getNewFeed(id_user,follower,callback) {
         }
      requestedWastes.push({userId: id_user});
         Waste.find({$or: requestedWastes})
-            .sort({date: -1})
+            .sort({date: -1}).limit(10)
             .exec(function(err, allWastes){
                 callback(err,allWastes);
             });
@@ -22,7 +22,7 @@ function  getNewFeed(id_user,follower,callback) {
 function  getNewFeedMe(id,callback) {
 
     Waste.find({"userId":id})
-        .sort({date: -1})
+        .sort({date: -1}).limit(10)
         .exec(function(err, allWastes){
             callback(err,allWastes);
         });

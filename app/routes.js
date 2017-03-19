@@ -478,6 +478,7 @@ module.exports = function (app, passport, server) {
         var id_status = req.params.id_status;
         var content = req.body.content_stt;
         var user = req.user;
+        var action = req.body.action;
         NewFeed.getStatusPost(id_status, function (err, data1) {
             if (err) throw  err;
             var data = {};
@@ -487,7 +488,16 @@ module.exports = function (app, passport, server) {
             data.email = user.local.email;
             data.content = content;
             data.date = Date.now();
-            data1.comment.push(data);
+            if(action === '') {
+                data1.comment.push(data);
+
+            }else {
+                var id_cmt = action.split('_');
+               var cmt = data1.comment.filter(function (obj) {
+                    return obj._id.toString() === id_cmt[1];
+                });
+                cmt[0].content = content;
+            }
             data1.save(function (err) {
                 if (err) throw  err;
             });
@@ -506,7 +516,7 @@ module.exports = function (app, passport, server) {
                 }
                 var currentdate = new Date();
                 var datetime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() +' '+ currentdate.getDate() + "-"+(currentdate.getMonth()+1) + "-" + currentdate.getFullYear();
-                data ='<div class="box-comment"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span> </span> </a> '+content+' </div> </div>';
+                data ='<div class="box-comment"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> </a> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span> </span> '+content+' </div> </div>';
                 res.send(data);
             });
         });
@@ -852,7 +862,6 @@ module.exports = function (app, passport, server) {
         var id = req.params.id;
         var user = req.user;
         Status.findOne({'_id': id}, function (err,data) {
-            console.log(data);
             res.render('detail-status.ejs', {
                 user: user,
                 detail: data
@@ -860,6 +869,18 @@ module.exports = function (app, passport, server) {
         });
     });
 
+    app.post('/delete-commentstatus',isLoggedIn, function (req, res) {
+        var id_status = req.body.id_status;
+        var id_comment = req.body.id_comment;
+        Status.findOne({'_id': id_status}, function (err,data) {
+            var cmt = data.comment.filter(function (obj) {
+                return obj._id.toString() !== id_comment;
+            });
+            data.comment = cmt;
+            data.save();
+            res.end();
+        });
+    });
 
     // =====================================
     // FACEBOOK ROUTES =====================

@@ -15,3 +15,7 @@
 li{list-style: none;}
 
 .red{color: red; }
+.box-comment .comment-text{position: relative;}
+.edit-delete-comment{position: absolute;  top: -3px; right: 110px; display: none; }
+.edit-delete-comment li{cursor: pointer;}
+.box-comment .comment-text:hover .edit-delete-comment{display: block;}

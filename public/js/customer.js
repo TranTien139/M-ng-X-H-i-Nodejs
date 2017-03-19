@@ -119,15 +119,21 @@ $('input[name="content_comment"]').on('keypress', function (e) {
         if($.trim($(this).val()) != '') {
             var id_status = $(this).attr('object_status');
             var content = $.trim($(this).val());
-
-            $.post('/post-comment/' + id_status, {'content_stt':content}, function (data) {
-                if($('#status_'+id_status+' .box-footer.box-comments .box-comment').length === 0){
-                    $('#status_'+id_status).append('<div class="box-footer box-comments" style="display: block;">'+data+'</div>');
+            var action = $(this).attr('action');
+            $.post('/post-comment/' + id_status, {'content_stt':content,'action':action}, function (data) {
+                if(action === '') {
+                    if ($('#status_' + id_status + ' .box-footer.box-comments .box-comment').length === 0) {
+                        $('#status_' + id_status).children('.boxmain-comment').append('<div class="box-footer box-comments" style="display: block;">' + data + '</div>');
+                    } else {
+                        $('#status_' + id_status + ' .boxmain-comment .box-footer.box-comments .box-comment').last().after(data);
+                    }
                 }else {
-                    $('#status_' + id_status + ' .box-footer.box-comments .box-comment').last().after(data);
+                    var id_cmt = action.split('_');
+                    $('#comment_'+id_status+'_'+id_cmt[1]+ ' .content-comment').text(content);
                 }
             });
             $(this).val('');
+            $(this).attr('action','');
         }
     }
 });
@@ -223,4 +229,17 @@ if (window.File && window.FileList && window.FileReader) {
 $("#results_upload").on("click", ".remove_pict", function () {
     $(this).parent().remove();
 });
+
+
+function DeleteComment($id_status, $id_comment) {
+    $.post('/delete-commentstatus/', {"id_status":$id_status,"id_comment":$id_comment}, function (data) {
+        $('#comment_'+$id_status+'_'+$id_comment).remove();
+    });
+}
+
+function EditComment($id_status, $id_comment,$curr) {
+    var curr_content = $($curr).parent().parent().parent().parent().find('.content-comment').text();
+    $('#status_'+$id_status+' input[name="content_comment"]').val(curr_content);
+    $('#status_'+$id_status+' input[name="content_comment"]').attr('action','editcomment_'+$id_comment);
+}
 
