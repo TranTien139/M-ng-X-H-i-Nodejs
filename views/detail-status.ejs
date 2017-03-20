@@ -3,7 +3,7 @@
     <div class="col-sm-8">
         <div class="row">
             <div style="margin-top: 15px;">
-                <div class="box box-widget">
+                <div class="box box-widget" id="status_<%= detail._id %>">
                     <div class="box-header with-border">
                         <div class="user-block">
                             <img class="img-circle" src="<%= detail.user.image %>" alt="User Image">
@@ -37,35 +37,44 @@
                         <span class="pull-right text-muted"><span class="count-like"><%= detail.like.length %></span>
                             likes - <span class="count-comment"><%= detail.comment.length %></span> comments</span>
                     </div>
-                    <%if( detail.comment.length > 0){ %>
+                    <div class="boxmain-comment" >
+                    <%if( detail.comment.length > 0){ var long_stt = detail.comment.length; var start = 0; %>
                     <div class="box-footer box-comments" style="display: block;">
-                        <% for(var k = 0 ; k < detail.comment.length ; k++){ %>
-                        <div class="box-comment">
+                        <% if(long_stt>3){  %>
+                        <div class="readmore_comment">
+                            <a onclick="readmore_comment('<%= detail._id %>')">Xem thêm các bình luận trước(<%= long_stt-3 %>)</a>
+                        </div>
+                        <% start = long_stt-3; }  %>
+                        <% for(var k = start ; k < long_stt ; k++){ %>
+                        <div class="box-comment" id="comment_<%= detail._id %>_<%= detail.comment[k]._id %>">
                             <a href="/profile/<%= detail.comment[k].id %>">
                                 <img class="img-circle img-sm" src="<%= detail.comment[k].image %>"
                                      alt="User Image">
+                            </a>
                                 <div class="comment-text">
                           <span class="username">
                           <%= detail.comment[k].name %>
                               <span class="text-muted pull-right"><%= detail.comment[k].date.toLocaleTimeString() + ' ' + detail.comment[k].date.getDate() + '-' + detail.comment[k].date.getMonth() + '-' + detail.comment[k].date.getFullYear() %></span>
+                              <% if(user._id.toString() === detail.comment[k].id.toString()){  %> <div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('<%= detail._id %>','<%= detail.comment[k]._id %>')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('<%= detail._id %>','<%= detail.comment[k]._id %>',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> <% } %>
                           </span>
-                            </a>
-                            <%= detail.comment[k].content %>
+
+                                    <div class="content-comment"><%= detail.comment[k].content %></div>
                         </div>
                     </div>
                     <% } %>
                 </div>
                 <% } %>
-                <div class="box-footer" style="display: block;">
-                    <form action="/post-comment/<%= detail._id %>" method="post">
+                    </div>
+
+                    <div class="box-footer" style="display: block;">
                         <img class="img-responsive img-circle img-sm"
                              src="<%= user.local.image %>" alt="Alt Text">
                         <div class="img-push">
-                            <input type="text" name="content_comment" class="form-control input-sm"
+                            <input type="text" name="content_comment" object_status= "<%= detail._id %>" action="" class="form-control input-sm"
                                    placeholder="Press enter to post comment" required>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
             </div><!--  end posts-->
 
             </div>

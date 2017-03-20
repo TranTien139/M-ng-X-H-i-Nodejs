@@ -845,8 +845,16 @@ module.exports = function (app, passport, server) {
                 }
             });
         } else {
-            res.render('create_group.ejs', {
-                user: user,
+            var query = Group.find({}).limit(20);
+            query.exec(function (err, groups) {
+                if (!err) {
+                    res.render('create_group.ejs', {
+                        user: user,
+                        group: groups
+                    });
+                } else {
+                    res.end();
+                }
             });
         }
     });
@@ -879,6 +887,22 @@ module.exports = function (app, passport, server) {
             data.comment = cmt;
             data.save();
             res.end();
+        });
+    });
+
+    app.post("/readmore-comment/:id_status", isLoggedIn, function (req, res) {
+        var id_status = req.params.id_status;
+        var user = req.user;
+        NewFeed.getStatusPost(id_status, function (err, data1) {
+            var data ='';
+            var i= data1.comment.length;
+            data1.comment.forEach(function (item) {
+                if(i>3) {
+                    data += '<div class="box-comment"> <a href="/profile/' + item.id + '"><img class="img-circle img-sm" src="' + item.image + '"alt="User Image"> </a> <div class="comment-text"> <span class="username">' + item.name + '<span class="text-muted pull-right">' + item.date.toLocaleTimeString() + ' ' + item.date.getDate() + '-' + item.date.getMonth() + '-' + item.date.getFullYear() + '</span> </span> ' + item.content + ' </div> </div>';
+                }
+                i--;
+            });
+            res.send(data);
         });
     });
 

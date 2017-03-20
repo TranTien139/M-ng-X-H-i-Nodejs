@@ -243,3 +243,10 @@ function EditComment($id_status, $id_comment,$curr) {
     $('#status_'+$id_status+' input[name="content_comment"]').attr('action','editcomment_'+$id_comment);
 }
 
+function readmore_comment($id) {
+    $('.readmore_comment').hide();
+    $.post('/readmore-comment/'+$id, {}, function (data) {
+        $('#status_'+$id+' .box-footer.box-comments').prepend(data);
+    });
+}
+

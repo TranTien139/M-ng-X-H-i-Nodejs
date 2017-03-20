@@ -19,3 +19,4 @@ li{list-style: none;}
 .edit-delete-comment{position: absolute;  top: -3px; right: 110px; display: none; }
 .edit-delete-comment li{cursor: pointer;}
 .box-comment .comment-text:hover .edit-delete-comment{display: block;}
+a{cursor: pointer; }

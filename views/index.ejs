@@ -114,9 +114,14 @@
                     </div>
 
                     <div class="boxmain-comment" >
-                    <%if( newfeed[i].comment.length > 0){ %>
+                    <%if( newfeed[i].comment.length > 0){ var long_stt = newfeed[i].comment.length; var start = 0; %>
                     <div class="box-footer box-comments" style="display: block;">
-                        <% for(var k = 0 ; k < newfeed[i].comment.length ; k++){ %>
+                        <% if(long_stt>3){  %>
+                        <div class="readmore_comment">
+                           <a onclick="readmore_comment('<%= newfeed[i]._id %>')">Xem thêm các bình luận trước(<%= long_stt-3 %>)</a>
+                        </div>
+                        <% start = long_stt-3; }  %>
+                        <% for(var k = start ; k < long_stt ; k++){ %>
                         <div class="box-comment" id="comment_<%= newfeed[i]._id %>_<%= newfeed[i].comment[k]._id %>" >
                             <a href="/profile/<%= newfeed[i].comment[k].id %>">
                                 <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
