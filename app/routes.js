@@ -76,7 +76,7 @@ module.exports = function (app, passport, server) {
 
 
         var j = user.followers;
-        var newfeed = NewFeed.getNewFeed(user._id, j, function (err, data) {
+        var newfeed = NewFeed.getNewFeed(user._id, j,0,function (err, data) {
             User.aggregate({$sample: {size: 3}}, function (err, ls) {
                 res.render('index.ejs', {
                     user: user,
@@ -105,7 +105,7 @@ module.exports = function (app, passport, server) {
 
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
+                NewFeed.getNewFeedMe(user_member,0,function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
@@ -181,7 +181,7 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member, function (err, data) {
+                NewFeed.getNewFeedMe(user_member,0,function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
@@ -270,7 +270,6 @@ module.exports = function (app, passport, server) {
             }
         });
     });
-
 
     app.get("/search_friend", isLoggedIn, function (req, res) {
         var regex = new RegExp(req.query["keyword"], 'i');
@@ -904,6 +903,29 @@ module.exports = function (app, passport, server) {
             });
             res.send(data);
         });
+    });
+
+
+
+    app.post("/loadMoreNewFeed", isLoggedIn, function (req, res) {
+        res.end();
+    });
+
+    app.get("/loadMoreNewFeedHTML", isLoggedIn, function (req, res) {
+        var user = req.user;
+        var j = user.followers;
+        var page = req.query.page;
+        if(page === null){
+            var page = 0;
+        }
+        var skip = page*10;
+        var newfeed = NewFeed.getNewFeed(user._id, j,skip,function (err, data) {
+            res.render('template/LoadMoreNewFeed.ejs',{
+                user: user,
+                newfeed: data,
+            });
+        });
+
     });
 
     // =====================================

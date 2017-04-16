@@ -4,8 +4,7 @@
 var Waste = require('../../app/models/status.js');
 var UserPost = require('../../app/models/user.js');
 
-function  getNewFeed(id_user,follower,callback) {
-
+function getNewFeed(id_user,follower,skip,callback) {
         var requestedWastes = [];
         if(follower.length>0) {
             for (var i = 0, len = follower.length; i < len; i++) {
@@ -14,15 +13,14 @@ function  getNewFeed(id_user,follower,callback) {
         }
      requestedWastes.push({userId: id_user});
         Waste.find({$or: requestedWastes})
-            .sort({date: -1}).limit(10)
+            .sort({date: -1}).skip(skip).limit(10)
             .exec(function(err, allWastes){
                 callback(err,allWastes);
             });
 }
-function  getNewFeedMe(id,callback) {
-
+function  getNewFeedMe(id,skip,callback) {
     Waste.find({"userId":id})
-        .sort({date: -1}).limit(10)
+        .sort({date: -1}).skip(skip).limit(10)
         .exec(function(err, allWastes){
             callback(err,allWastes);
         });
