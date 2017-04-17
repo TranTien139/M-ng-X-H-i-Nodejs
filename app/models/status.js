@@ -8,5 +8,6 @@ module.exports = mongoose.model('Status',{
     date: {type: Date, default: Date.now},
     like: [],
     share: [],
-    comment: [{id:String,email:String,image:String,name: String,content: String,date: {type: Date, default: Date.now},like: []}]
+    comment: [{id:String,email:String,image:String,name: String,content: String,date: {type: Date, default: Date.now},like: []}],
+    group_id: String,
 });

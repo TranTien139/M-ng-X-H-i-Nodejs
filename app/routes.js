@@ -383,7 +383,7 @@ module.exports = function (app, passport, server) {
             });
             list_image.push(req.files.addImageStatus.name);
         }
-
+        var id_group = req.body.IdGroupMain;
         var status = new Status();
         status.content = content;
         status.like = [];
@@ -394,6 +394,7 @@ module.exports = function (app, passport, server) {
         status.user.image = user.local.image;
         status.userId = user._id;
         status.image = list_image;
+        status.group_id = id_group;
         status.save(function (err) {
             backURL = req.header('Referer') || '/';
             res.redirect(backURL);
@@ -554,48 +555,6 @@ module.exports = function (app, passport, server) {
         });
     });
 
-    app.post("/post-like-gr/:action", isLoggedIn, function (req, res) {
-        var id_status = req.body.id_article;
-        var action = req.params.action;
-        var user = req.user;
-        var id_group = req.body.id_group;
-        Group.findOne({'_id': id_group}, function (err, data1) {
-            if (err) throw  err;
-
-            var temp = data1.data.filter(function (obj) {
-                return obj._id.toString() === id_status.toString();
-            });
-            if (typeof temp === 'undefined') {
-                temp[0] = [];
-            }
-            if (action === 'like') {
-                if (temp[0].like.indexOf(user._id.toString()) === -1) {
-                    temp[0].like.push(user._id.toString());
-                }
-                NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
-                    if(user1._id.toString() != user._id.toString()) {
-                        var noti = {};
-                        noti.id = user._id;
-                        noti.name = user.local.name;
-                        noti.image = user.local.image;
-                        noti.id_status = id_status;
-                        noti.title = temp[0].content;
-                        noti.action = 'like';
-                        user1.notify.push(noti);
-                        user1.save();
-                        res.end();
-                    }
-                });
-            } else {
-                temp[0].like.splice(temp[0].like.indexOf(user._id.toString()), 1);
-            }
-            data1.save(function (err) {
-                if (err) throw  err;
-                res.end();
-            });
-        });
-    });
-
 
     app.post("/read-allmessage", isLoggedIn, function (req, res) {
         var user = req.user;
@@ -632,12 +591,14 @@ module.exports = function (app, passport, server) {
             } else {
                 check = [];
             }
-
+            NewFeed.getNewFeedGroup(id,0,function (err, data1) {
             res.render('group.ejs', {
                 user: user,
                 info: data,
-                timeline: data.data,
-                check: check
+                newfeed: data1,
+                check: check,
+                friend: user.followers,
+            });
             });
         });
     });
@@ -712,79 +673,6 @@ module.exports = function (app, passport, server) {
         res.redirect('/group/' + group._id);
     });
 
-    app.post("/add-status/group/:id", isLoggedIn, function (req, res) {
-        var content = req.body.content_status;
-        var user = req.user;
-        var id = req.params.id;
-        var list_image = [];
-        if (req.files.addImageStatus.originalFilename !== '') {
-            fs.readFile(req.files.addImageStatus.path, function (err, data) {
-                var imageName = req.files.addImageStatus.name;
-                if (!imageName) {
-                    console.log("There was an error");
-                } else {
-                    var newPath = __dirname + "/../public/uploads/statusgroup/" + imageName;
-                    fs.writeFile(newPath, data, function (err) {
-                        console.log('upload success');
-                    });
-                }
-            });
-            list_image.push(req.files.addImageStatus.name);
-        }
-        Group.findOne({'_id': id}, function (err, data) {
-            var status = {};
-            status.content = content;
-            status.like = [];
-            status.share = [];
-            status.comment = [];
-            var datauser = {name: user.local.name, email: user.local.email, image: user.local.image};
-            status.user = datauser;
-            status.userId = user._id;
-            status.image = list_image;
-
-            data.data.push(status);
-            data.save(function (err) {
-            });
-            backURL = req.header('Referer') || '/';
-            res.redirect(backURL);
-        });
-    });
-
-    app.post("/comment-status/group/:id_group/:id_article", isLoggedIn, function (req, res) {
-        var id_status = req.params.id_article;
-        var user = req.user;
-        var id_group = req.params.id_group;
-        Group.findOne({'_id': id_group}, function (err, data1) {
-            if (err) throw  err;
-            var temp = data1.data.filter(function (obj) {
-                return obj._id.toString() === id_status.toString();
-            });
-            var comment = {};
-            comment.id = user._id;
-            comment.email = user.local.email;
-            comment.image = user.local.image;
-            comment.name = user.local.name;
-            comment.content = req.body.content_comment;
-            comment.like = [];
-            temp[0].comment.push(comment);
-            data1.save();
-            NewFeed.getUserPostStatus(temp[0].userId, function (err, user1) {
-                if(user1._id.toString() != user._id.toString()) {
-                    var noti = {};
-                    noti.id = user._id;
-                    noti.name = user.local.name;
-                    noti.image = user.local.image;
-                    noti.id_status = id_status;
-                    noti.title = data1.content;
-                    noti.action = 'comment';
-                    user1.notify.push(noti);
-                    user1.save();
-                }
-                backURL = req.header('Referer') || '/';
-                res.redirect(backURL);
-            });
-        });
-    });
 
     app.post('/join-group/:id', isLoggedIn, function (req, res) {
         var user = req.user;
@@ -890,22 +778,20 @@ module.exports = function (app, passport, server) {
     });
 
     app.post("/readmore-comment/:id_status", isLoggedIn, function (req, res) {
+        res.end();
+    });
+
+    app.get("/readmore-comment/:id_status", isLoggedIn, function (req, res) {
         var id_status = req.params.id_status;
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
-            var data ='';
-            var i= data1.comment.length;
-            data1.comment.forEach(function (item) {
-                if(i>3) {
-                    data += '<div class="box-comment"> <a href="/profile/' + item.id + '"><img class="img-circle img-sm" src="' + item.image + '"alt="User Image"> </a> <div class="comment-text"> <span class="username">' + item.name + '<span class="text-muted pull-right">' + item.date.toLocaleTimeString() + ' ' + item.date.getDate() + '-' + item.date.getMonth() + '-' + item.date.getFullYear() + '</span> </span> ' + item.content + ' </div> </div>';
-                }
-                i--;
+            res.render('template/comment.ejs',{
+                user: user,
+                comment: data1.comment,
+                id_status: id_status
             });
-            res.send(data);
         });
     });
-
-
 
     app.post("/loadMoreNewFeed", isLoggedIn, function (req, res) {
         res.end();
@@ -919,13 +805,31 @@ module.exports = function (app, passport, server) {
             var page = 0;
         }
         var skip = page*10;
-        var newfeed = NewFeed.getNewFeed(user._id, j,skip,function (err, data) {
-            res.render('template/LoadMoreNewFeed.ejs',{
-                user: user,
-                newfeed: data,
-            });
-        });
 
+        var id_group = req.query.id_group;
+        var id_profile = req.query.id_profile;
+        if(id_profile != 'undefined') {
+            NewFeed.getNewFeedMe(id_profile, skip, function (err, data) {
+                res.render('template/LoadMoreNewFeed.ejs', {
+                    user: user,
+                    newfeed: data,
+                });
+            });
+        }else if(id_group != 'undefined'){
+            NewFeed.getNewFeedGroup(id_group, skip, function (err, data) {
+                res.render('template/LoadMoreNewFeed.ejs', {
+                    user: user,
+                    newfeed: data,
+                });
+            });
+        }else {
+            NewFeed.getNewFeed(user._id, j, skip, function (err, data) {
+                res.render('template/LoadMoreNewFeed.ejs', {
+                    user: user,
+                    newfeed: data,
+                });
+            });
+        }
     });
 
     // =====================================

@@ -34,96 +34,112 @@
         </div>
     </div>
     <!--============= timeline posts-->
-    <div class="col-md-8 col-md-offset-2">
-        <div class="row">
-            <!-- left posts-->
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- post state form -->
-                        <div class="box profile-info n-border-top">
-                            <form action="/add-status/group/<%= info._id %>" method="POST" enctype="multipart/form-data">
+    <!-- center posts -->
+    <div class="col-sm-8 col-sm-offset-2">
+        <div ng-app="AppShowHide" ng-controller="ShowHideController">
+            <!-- post state form -->
+            <div class="box profile-info n-border-top">
+                <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
                                               placeholder="Whats in your mind today?" name="content_status" required></textarea>
-                                <ul id="results_upload" class="list-inline"></ul>
-                                <div class="box-footer box-form">
-                                    <button type="submit" class="btn btn-warning pull-right">Post</button>
-                                    <ul class="nav nav-pills">
-                                        <li><a style="cursor: pointer" onclick="document.getElementById('addImageStatus').click();"><i
-                                                        class="fa fa-camera"></i></a></li>
-                                        <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
-                                    </ul>
-                                </div>
-                            </form>
-                        </div>
-
-                        <% if(timeline.length>0){ for(var i=0;i<timeline.length; i++){  %>
-                        <!--   posts -->
-                        <div class="box box-widget">
-                            <div class="box-header with-border">
-                                <div class="user-block">
-                                    <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
-                                    <span class="username"><a href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
-                                    <span class="description"><%= timeline[i].date.toLocaleTimeString()+' '+ timeline[i].date.getDate() +'-'+ timeline[i].date.getMonth() +'-'+ timeline[i].date.getFullYear()  %></span>
-                                </div>
-                            </div>
-
-                            <div class="box-body" style="display: block;">
-                                <p><%= timeline[i].content %>
-                                </p>
-                                <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k=0; k<timeline[i].image.length; k++){%>
-                                <img src="/../uploads/status/<%= timeline[i].image[k] %>" style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo">
-                                <div class="col-sm-12" style="padding-top: 10px;"></div>
-                                <%}}%>
-
-                                <% if(timeline[i].like.indexOf(user._id.toString()) === -1){ %>
-                                <button type="button" class="btn btn-success btn-xs like-UnlikeGroup" data-id="<%= timeline[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
-                                </button>
-                                <% }else { %>
-                                <button type="button" class="btn btn-success btn-xs like-UnlikeGroup" data-id="<%= timeline[i]._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
-                                </button>
-                                <% } %>
-
-                                <span class="pull-right text-muted"><span class="count-like"><%= timeline[i].like.length %></span>
-                            likes - <span class="count-comment"><%= timeline[i].comment.length %></span> comments</span>
-
-                            </div>
-                            <div class="box-footer box-comments" style="display: block;">
-                                <% if( timeline[i].comment.length>0){ for(var k=0 ; k< timeline[i].comment.length ; k++){%>
-                                <div class="box-comment">
-                                    <a href="/profile/<%= timeline[i].comment[k].id %>">
-                                        <img class="img-circle img-sm" src="<%= timeline[i].comment[k].image %>"
-                                             alt="User Image">
-                                        <div class="comment-text">
-                          <span class="username">
-                          <%= timeline[i].comment[k].name %>
-                              <span class="text-muted pull-right"><%= timeline[i].comment[k].date.toLocaleTimeString()+' '+ timeline[i].comment[k].date.getDate() +'-'+ timeline[i].comment[k].date.getMonth() +'-'+ timeline[i].comment[k].date.getFullYear()  %></span>
-                          </span>
-                                    </a>
-                                    <%= timeline[i].comment[k].content %>
-                                </div>
-                            </div>
-                            <% }}%>
-                        </div>
-                        <div class="box-footer" style="display: block;">
-                            <form action="/comment-status/group/<%= info._id %>/<%= timeline[i]._id %>" method="post">
-                                <img class="img-responsive img-circle img-sm"
-                                     src="<%= user.local.image %>" alt="Alt Text">
-                                <div class="img-push">
-                                    <input type="text" name="content_comment" class="form-control input-sm"
-                                           placeholder="Press enter to post comment" required>
-                                </div>
-                            </form>
-                        </div>
-                    </div><!--  end posts-->
-                    <%}} %>
-
-
-                </div>
+                    <ul id="results_upload" class="list-inline"></ul>
+                    <div class="box-footer box-form">
+                        <button type="submit" class="btn btn-warning pull-right">Post</button>
+                        <ul class="nav nav-pills">
+                            <li><a style="cursor: pointer"
+                                   onclick="document.getElementById('addImageStatus').click();"><i
+                                            class="fa fa-camera"></i></a></li>
+                            <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                            <input type="hidden" id="IdGroupMain" value="<%= info._id %>" name="IdGroupMain">
+                        </ul>
+                    </div>
+                </form>
             </div>
-        </div><!-- end left posts-->
+            <% if(newfeed.length > 0){ for(var i = 0;i < newfeed.length; i++){ %>
+            <!--   posts -->
+            <div class="box box-widget" id="status_<%= newfeed[i]._id %>" >
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
+                        <span class="username"><a
+                                    href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
+                        <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
+                    </div>
+                </div>
+
+                <div class="box-body" style="display: block;">
+                    <p><%= newfeed[i].content %>
+                    </p>
+                    <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k = 0; k < newfeed[i].image.length; k++){ %>
+                    <a href="/detail-status/<%= newfeed[i]._id %>"><img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;"
+                                                                        class="img-responsive show-in-modal" alt="photo"></a>
+                    <div class="col-sm-12" style="padding-top: 10px;"></div>
+                    <% }} %>
+
+                    <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
+                    <!--Share-->
+                    <!--</button>-->
+
+                    <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
+                    <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= newfeed[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
+                    </button>
+                    <% }else { %>
+                    <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= newfeed[i]._id %>" action="unlike" ><i class="fa fa-thumbs-o-down">UnLike</i>
+                    </button>
+                    <% } %>
+
+                    <span class="pull-right text-muted"><span class="count-like"><%= newfeed[i].like.length %></span>
+                            likes - <span class="count-comment"><%= newfeed[i].comment.length %></span> comments</span>
+                </div>
+
+                <div class="boxmain-comment" >
+                    <%if( newfeed[i].comment.length > 0){ var long_stt = newfeed[i].comment.length; var start = 0; %>
+                    <div class="box-footer box-comments" style="display: block;">
+                        <% if(long_stt>3){  %>
+                        <div class="readmore_comment">
+                            <a onclick="readmore_comment('<%= newfeed[i]._id %>')">Xem thêm các bình luận trước(<%= long_stt-3 %>)</a>
+                        </div>
+                        <% start = long_stt-3; }  %>
+                        <% for(var k = start ; k < long_stt ; k++){ %>
+                        <div class="box-comment" id="comment_<%= newfeed[i]._id %>_<%= newfeed[i].comment[k]._id %>" >
+                            <a href="/profile/<%= newfeed[i].comment[k].id %>">
+                                <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
+                                     alt="User Image"> </a>
+                            <div class="comment-text">
+                          <span class="username">
+                          <%= newfeed[i].comment[k].name %>
+                              <span class="text-muted pull-right"><%= newfeed[i].comment[k].date.toLocaleTimeString() + ' ' + newfeed[i].comment[k].date.getDate() + '-' + newfeed[i].comment[k].date.getMonth() + '-' + newfeed[i].comment[k].date.getFullYear() %></span>
+                              <% if(user._id.toString() === newfeed[i].comment[k].id.toString()){  %> <div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('<%= newfeed[i]._id %>','<%= newfeed[i].comment[k]._id %>')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('<%= newfeed[i]._id %>','<%= newfeed[i].comment[k]._id %>',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> <% } %>
+                          </span>
+                                <div class="content-comment"><%= newfeed[i].comment[k].content %></div>
+                            </div>
+                        </div>
+
+                        <% } %>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="box-footer" style="display: block;">
+                    <img class="img-responsive img-circle img-sm"
+                         src="<%= user.local.image %>" alt="Alt Text">
+                    <div class="img-push">
+                        <input type="text" name="content_comment" object_status= "<%= newfeed[i]._id %>" action="" class="form-control input-sm"
+                               placeholder="Press enter to post comment" required>
+                    </div>
+                </div>
+            </div><!--  end posts-->
+            <% }} %>
+
+            <div id="LoadMoreNewFeed">
+
+            </div>
+
+        </div>
     </div>
+
 </div><!-- end timeline posts-->
 </div>
 
+<input type="hidden" value="<%= info._id %>" name="id_group">
+<% include partical/list_friend.ejs %>
 <% include partical/footer.ejs %>

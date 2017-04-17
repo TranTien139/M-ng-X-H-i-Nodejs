@@ -246,7 +246,8 @@ function EditComment($id_status, $id_comment,$curr) {
 function readmore_comment($id) {
     $('.readmore_comment').hide();
     $.post('/readmore-comment/'+$id, {}, function (data) {
-        $('#status_'+$id+' .box-footer.box-comments').prepend(data);
+        var domain = 'http://localhost:8080/readmore-comment/'+$id;
+        $('#status_'+$id+' .box-footer.box-comments').prepend($('<div>').load(domain, function () { }));
     });
 }
 

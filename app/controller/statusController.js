@@ -26,6 +26,14 @@ function  getNewFeedMe(id,skip,callback) {
         });
 }
 
+function  getNewFeedGroup(id,skip,callback) {
+    Waste.find({"group_id":id})
+        .sort({date: -1}).skip(skip).limit(10)
+        .exec(function(err, allWastes){
+            callback(err,allWastes);
+        });
+}
+
 function  getStatusPost(id,callback) {
     Waste.findOne({"_id":id})
         .sort({date: -1})
@@ -46,3 +54,4 @@ module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
 module.exports.getUserPostStatus = getUserPostStatus;
+module.exports.getNewFeedGroup = getNewFeedGroup;

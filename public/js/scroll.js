@@ -5,10 +5,12 @@ $(document).ready(function() {
         if ($(document).height() - win.height() == win.scrollTop()) {
             $('#loading').show();
             page++;
+            var id_profile = $("input[name='id_profile']").val();
+            var id_group = $("input[name='id_group']").val();
 
             // Uncomment this AJAX call to test it
             $.post('/loadMoreNewFeed/', {'page':page}, function (data) {
-                var domain = 'http://localhost:8080/loadMoreNewFeedHTML?page='+page;
+                var domain = 'http://localhost:8080/loadMoreNewFeedHTML?page='+page+'&id_profile='+id_profile+'&id_group='+id_group;
                 $('#LoadMoreNewFeed').append($('<div>').load(domain, function () { }));
             });
 

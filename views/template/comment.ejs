@@ -1,0 +1,17 @@
+<% if(typeof comment!= 'undefined' && comment.length >3){
+    var k = comment.length;
+    comment.forEach(function (item) { if(k>3){ %>
+<div class="box-comment" id="comment_<%= id_status %>_<%= item._id %>" >
+    <a href="/profile/<%= item.id %>">
+        <img class="img-circle img-sm" src="<%= item.image  %>"
+             alt="User Image"> </a>
+    <div class="comment-text">
+                          <span class="username">
+                          <%= item.name %>
+                              <span class="text-muted pull-right"><%= item.date.toLocaleTimeString() + ' ' + item.date.getDate() + '-' + item.date.getMonth() + '-' + item.date.getFullYear() %></span>
+                              <% if(user._id.toString() === item.id.toString()){  %> <div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('<%= id_status %>','<%= item._id %>')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('<%= id_status %>','<%= item._id %>',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> <% } %>
+                          </span>
+        <div class="content-comment"><%= item.content %></div>
+    </div>
+</div>
+<% } k--;  }); } %>
