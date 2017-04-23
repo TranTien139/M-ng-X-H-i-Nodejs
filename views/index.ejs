@@ -19,20 +19,8 @@
                         <ul class="nav nav-pills nav-stacked">
                             <li class="active"><a href=""> <i
                                             class="fa fa-user"></i> News feed</a></li>
-                            <!--<li>-->
-                                <!--<a href="">-->
-                                    <!--<i class="fa fa-envelope"></i> Messages-->
-                                    <!--<span class="label label-info pull-right r-activity"></span>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                            <!--<li><a href=""> <i class="fa fa-calendar"></i>-->
-                                    <!--Events</a></li>-->
                             <li><a href="/photos/<%= user._id %>"> <i class="fa fa-image"></i> Photos</a>
                             </li>
-                            <!--<li><a href=""> <i class="fa fa-share"></i> Browse</a>-->
-                            <!--</li>-->
-                            <!--<li><a href=""> <i class="fa fa-floppy-o"></i>-->
-                                    <!--Saved</a></li>-->
                         </ul>
                     </div>
                 </div>
@@ -40,14 +28,6 @@
                 <div class="widget">
                     <div class="widget-body">
                         <ul class="nav nav-pills nav-stacked">
-                            <!--<li><a href=""> <i class="fa fa-globe"></i> Pages</a>-->
-                            <!--</li>-->
-                            <!--<li><a href=""> <i class="fa fa-gamepad"></i>-->
-                                    <!--Games</a></li>-->
-                            <!--<li><a href=""> <i class="fa fa-puzzle-piece"></i>-->
-                                    <!--Ads</a></li>-->
-                            <!--<li><a href=""> <i class="fa fa-home"></i>-->
-                                    <!--Markerplace</a></li>-->
                             <li><a href="/create-group"> <i class="fa fa-users"></i>Manage Group</a>
                             </li>
                         </ul>
@@ -96,11 +76,6 @@
                              class="img-responsive show-in-modal" alt="photo"></a>
                         <div class="col-sm-12" style="padding-top: 10px;"></div>
                         <% }} %>
-
-                        <!--<button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i>-->
-                        <!--Share-->
-                        <!--</button>-->
-
                         <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
                         <button type="button" class="btn btn-success btn-xs like-Unlike" data-id="<%= newfeed[i]._id %>" action="like" ><i class="fa fa-thumbs-o-up">Like</i>
                         </button>

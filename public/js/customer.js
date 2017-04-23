@@ -27,6 +27,7 @@ $(".like-Unlike").click(function (e) {
     }
 });
 
+
 $(".like-UnlikeGroup").click(function (e) {
     $id = $(this).attr('data-id');
     $action = $(this).attr('action');
@@ -69,10 +70,20 @@ function ReadAllMessage() {
     $('#content_allmessage').html('');
 }
 
+function ReadOneChat($chat){
+    $.post('/read-allmessage?chat='+$chat, {}, function (data) {
+    });
+}
+
 function ReadAllNotification(){
     $.post('/read-notification', {}, function (data) {
     });
     $('#content_notifycation').html('');
+}
+
+function ReadOneNotify($notify){
+    $.post('/read-notification?notify='+$notify, {}, function (data) {
+    });
 }
 
 $('.addfriend_unfriend').click(function (e) {

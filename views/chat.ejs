@@ -28,7 +28,7 @@
         <!--=========================================================-->
         <!-- selected chat -->
         <div class="col-md-8 bg-white ">
-            <div class="chat-message" style="max-height: 550px;overflow-y:auto ">
+            <div class="chat-message" style="max-height: 500px;overflow-y:auto ">
                 <ul class="chat" id="messages">
                     <% if(data_chat !=''){ for(var i=0; i<data_chat.length; i++){ %>
                     <li class="<% if(data_chat[i].id.toString() != user._id.toString()){ %> right <%}else{%> left <%}%> clearfix">

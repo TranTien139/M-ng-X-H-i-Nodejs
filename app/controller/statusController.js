@@ -12,15 +12,23 @@ function getNewFeed(id_user,follower,skip,callback) {
             }
         }
      requestedWastes.push({userId: id_user});
-        Waste.find({$or: requestedWastes})
+        Waste.find({$and: [{$or: requestedWastes},{ group_id : { $exists: false }}]})
             .sort({date: -1}).skip(skip).limit(10)
             .exec(function(err, allWastes){
                 callback(err,allWastes);
             });
 }
 function  getNewFeedMe(id,skip,callback) {
-    Waste.find({"userId":id})
+    Waste.find({$and: [{"userId":id},{group_id : {$exists: false}}]})
         .sort({date: -1}).skip(skip).limit(10)
+        .exec(function(err, allWastes){
+            callback(err,allWastes);
+        });
+}
+
+function  getNewFeedMeImage(id,skip,callback) {
+    Waste.find({$and: [{"userId":id},{group_id : {$exists: false}},{image : {$ne: [] }} ]})
+        .sort({date: -1}).skip(skip).limit(12)
         .exec(function(err, allWastes){
             callback(err,allWastes);
         });
@@ -55,3 +63,4 @@ module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
 module.exports.getUserPostStatus = getUserPostStatus;
 module.exports.getNewFeedGroup = getNewFeedGroup;
+module.exports.getNewFeedMeImage = getNewFeedMeImage;

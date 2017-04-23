@@ -181,7 +181,7 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member,0,function (err, data) {
+                NewFeed.getNewFeedMeImage(user_member,0,function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
@@ -558,8 +558,34 @@ module.exports = function (app, passport, server) {
 
     app.post("/read-allmessage", isLoggedIn, function (req, res) {
         var user = req.user;
-        user.message = [];
-        user.save();
+        var chat = req.query.chat;
+        if(typeof chat === 'undefined'){
+            user.message = [];
+            user.save()
+        }else {
+            var check =  user.message.filter(function (obj) {
+                return obj.id != chat;
+            });
+            user.message = check;
+            user.save();
+        };
+        res.end();
+    });
+
+    app.post('/read-notification', isLoggedIn, function (req, res) {
+        var user = req.user;
+        var notify = req.query.notify;
+        if(typeof notify === 'undefined'){
+            user.notify = [];
+            user.save();
+        }else {
+            var check =  user.notify.filter(function (obj) {
+                return obj.id_status != notify;
+            });
+            user.notify = check;
+            user.save();
+        }
+
         res.end();
     });
 
@@ -744,13 +770,6 @@ module.exports = function (app, passport, server) {
                 }
             });
         }
-    });
-
-    app.post('/read-notification', isLoggedIn, function (req, res) {
-        var user = req.user;
-        user.notify = [];
-        user.save();
-        res.end();
     });
 
     app.get('/detail-status/:id',isLoggedIn ,function (req, res) {
