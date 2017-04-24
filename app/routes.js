@@ -516,42 +516,46 @@ module.exports = function (app, passport, server) {
                 }
                 var currentdate = new Date();
                 var datetime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() +' '+ currentdate.getDate() + "-"+(currentdate.getMonth()+1) + "-" + currentdate.getFullYear();
-                data ='<div class="box-comment"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> </a> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span> </span> '+content+' </div> </div>';
+                var id_stt = "'"+id_status+"'";
+                var last  = data1.comment.pop();
+                var id_cmt = "'"+last._id+"'";
+                data ='<div class="box-comment" id="comment_'+id_status+'_'+last._id+'"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> </a> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span><div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('+id_stt+','+id_cmt+')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('+id_stt+','+id_cmt+',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> </span><div class="content-comment"> '+content+'</div> </div> </div>';
                 res.send(data);
             });
         });
     });
 
-    app.post("/post-like/:action", isLoggedIn, function (req, res) {
+    app.post("/post-like", isLoggedIn, function (req, res) {
         var id_status = req.body.id_article;
-        var action = req.params.action;
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
             if (err) throw  err;
-            if (action === 'like') {
                 if (data1.like.indexOf(user._id.toString()) === -1) {
                     data1.like.push(user._id.toString());
+                    NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
+                        if(user1._id.toString() != user._id.toString()) {
+                            var noti = {};
+                            noti.id = user._id;
+                            noti.name = user.local.name;
+                            noti.image = user.local.image;
+                            noti.id_status = id_status;
+                            noti.title = data1.content;
+                            noti.action = 'like';
+                            user1.notify.push(noti);
+                            user1.save();
+                        }
+                    });
+                    data1.save(function (err) {
+                        if (err) throw  err;
+                        res.end('like');
+                    });
+                }else {
+                    data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
+                    data1.save(function (err) {
+                        if (err) throw  err;
+                        res.end('unlike');
+                    });
                 }
-                NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
-                    if(user1._id.toString() != user._id.toString()) {
-                        var noti = {};
-                        noti.id = user._id;
-                        noti.name = user.local.name;
-                        noti.image = user.local.image;
-                        noti.id_status = id_status;
-                        noti.title = data1.content;
-                        noti.action = 'like';
-                        user1.notify.push(noti);
-                        user1.save();
-                    }
-                });
-            } else {
-                data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
-            }
-            data1.save(function (err) {
-                if (err) throw  err;
-                res.end();
-            });
         });
     });
 

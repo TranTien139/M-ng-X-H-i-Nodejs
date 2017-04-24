@@ -151,11 +151,11 @@
 
                             <% if(timeline[i].like.indexOf(user._id.toString()) === -1){ %>
                             <button type="button" class="btn btn-success btn-xs like-Unlike"
-                                    data-id="<%= timeline[i]._id %>" action="like"><i class="fa fa-thumbs-o-up">Like</i>
+                                     onclick="LikeUnlikeSatus('<%= timeline[i]._id %>')"   ><i class="fa fa-thumbs-o-up">Like</i>
                             </button>
                             <% }else { %>
                             <button type="button" class="btn btn-success btn-xs like-Unlike"
-                                    data-id="<%= timeline[i]._id %>" action="unlike"><i class="fa fa-thumbs-o-down">UnLike</i>
+                                    onclick="LikeUnlikeSatus('<%= timeline[i]._id %>')" ><i class="fa fa-thumbs-o-down">UnLike</i>
                             </button>
                             <% } %>
 
@@ -196,7 +196,7 @@
                             <img class="img-responsive img-circle img-sm"
                                  src="<%= user.local.image %>" alt="Alt Text">
                             <div class="img-push">
-                                <input type="text" name="content_comment" object_status= "<%= timeline[i]._id %>" action="" class="form-control input-sm"
+                                <input type="text" name="content_comment" onkeypress="handleEnterComment(event,'<%= timeline[i]._id %>')" action="" class="form-control input-sm"
                                        placeholder="Press enter to post comment" required>
                             </div>
                     </div>

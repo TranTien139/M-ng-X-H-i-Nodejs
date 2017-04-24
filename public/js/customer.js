@@ -4,53 +4,23 @@ $(document).ready(function () {
     });
 });
 
-$(".like-Unlike").click(function (e) {
-    $id = $(this).attr('data-id');
-    $action = $(this).attr('action');
-    if ($(this).attr('action') === 'like') {
-        $.post('/post-like/' + $action, {'id_article': $id}, function (data) {
 
-        });
-        $(this).attr('action', 'unlike');
-        $(this).html('<i class="fa fa-thumbs-o-down">Unlike</i>');
-        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) + 1;
-        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
-    }
-    else {
-        $.post('/post-like/' + $action, {'id_article': $id}, function (data) {
+function LikeUnlikeSatus($id) {
+    $.post('/post-like', {'id_article': $id}, function (data) {
+        if(data === 'like'){
+            $('#status_'+$id +' .like-Unlike').attr('action', 'unlike');
+            $('#status_'+$id +' .like-Unlike').html('<i class="fa fa-thumbs-o-down">Unlike</i>');
+            $val = parseInt($('#status_'+$id +' .like-Unlike').parent().find('.pull-right.text-muted').children('.count-like').text()) + 1;
+            $('#status_'+$id +' .like-Unlike').parent().find('.pull-right.text-muted').children('.count-like').text($val);
+        }else {
+            $('#status_'+$id +' .like-Unlike').attr('action', 'like');
+            $('#status_'+$id +' .like-Unlike').html('<i class="fa fa-thumbs-o-up">Like</i>');
+            $val = parseInt($('#status_'+$id +' .like-Unlike').parent().find('.pull-right.text-muted').children('.count-like').text()) - 1;
+            $('#status_'+$id +' .like-Unlike').parent().find('.pull-right.text-muted').children('.count-like').text($val);
+        }
+    });
+}
 
-        });
-        $(this).attr('action', 'like');
-        $(this).html('<i class="fa fa-thumbs-o-up">Like</i>');
-        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) - 1;
-        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
-    }
-});
-
-
-$(".like-UnlikeGroup").click(function (e) {
-    $id = $(this).attr('data-id');
-    $action = $(this).attr('action');
-    $id_group = $("#iddd_group").val();
-    if ($(this).attr('action') === 'like') {
-        $.post('/post-like-gr/' + $action, {'id_article': $id,'id_group':$id_group}, function (data) {
-
-        });
-        $(this).attr('action', 'unlike');
-        $(this).html('<i class="fa fa-thumbs-o-down">Unlike</i>');
-        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) + 1;
-        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
-    }
-    else {
-        $.post('/post-like-gr/' + $action, {'id_article': $id,'id_group': $id_group}, function (data) {
-
-        });
-        $(this).attr('action', 'like');
-        $(this).html('<i class="fa fa-thumbs-o-up">Like</i>');
-        $val = parseInt($(this).parent().find('.pull-right.text-muted').children('.count-like').text()) - 1;
-        $(this).parent().find('.pull-right.text-muted').children('.count-like').text($val);
-    }
-});
 
 function getAddFriend() {
     $.post('/get-list-addfriend/', {}, function (data) {
@@ -125,12 +95,13 @@ $('.join-group').click(function (e) {
     }
 });
 
-$('input[name="content_comment"]').on('keypress', function (e) {
-    if(e.which === 13){
-        if($.trim($(this).val()) != '') {
-            var id_status = $(this).attr('object_status');
-            var content = $.trim($(this).val());
-            var action = $(this).attr('action');
+
+function handleEnterComment(e,id_status){
+    var keycode = (e.keyCode ? e.keyCode : e.which);
+    if (keycode == '13') {
+        if($.trim($('#status_'+id_status+' input[name="content_comment"]').val()) != '') {
+            var content = $.trim($('#status_'+id_status+' input[name="content_comment"]').val());
+            var action = $('#status_'+id_status+' input[name="content_comment"]').attr('action');
             $.post('/post-comment/' + id_status, {'content_stt':content,'action':action}, function (data) {
                 if(action === '') {
                     if ($('#status_' + id_status + ' .box-footer.box-comments .box-comment').length === 0) {
@@ -143,11 +114,11 @@ $('input[name="content_comment"]').on('keypress', function (e) {
                     $('#comment_'+id_status+'_'+id_cmt[1]+ ' .content-comment').text(content);
                 }
             });
-            $(this).val('');
-            $(this).attr('action','');
+            $('#status_'+id_status+' input[name="content_comment"]').val('');
+            $('#status_'+id_status+' input[name="content_comment"]').attr('action','');
         }
     }
-});
+}
 
 // preview image
 function readURL(input) {
