@@ -213,7 +213,7 @@ module.exports = function (app, passport, server) {
 
     app.post('/update-profile/:id_member', isLoggedIn, function (req, res) {
         var user_member = req.params.id_member;
-
+        var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
                 fs.readFile(req.files.myAvatar.path, function (err, data) {
@@ -227,18 +227,20 @@ module.exports = function (app, passport, server) {
                         });
                     }
                 });
-
-                fs.readFile(req.files.myCover.path, function (err, data) {
-                    var imageName1 = req.files.myCover.name;
-                    if (!imageName1) {
-                        console.log("There was an error");
-                    } else {
-                        var newPath = __dirname + "/../public/uploads/cover/" + imageName1;
-                        fs.writeFile(newPath, data, function (err) {
-                            console.log('upload success');
-                        });
-                    }
-                });
+                if (req.files.myCover.name !== '') {
+                    var newname = 'cover_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
+                    fs.readFile(req.files.myCover.path, function (err, data) {
+                        var imageName1 = req.files.myCover.name;
+                        if (!imageName1) {
+                            console.log("There was an error");
+                        } else {
+                            var newPath = __dirname + "/../public/uploads/cover/" + newname;
+                            fs.writeFile(newPath, data, function (err) {
+                                console.log('upload success');
+                            });
+                        }
+                    });
+                }
 
                 var domain = 'http://localhost:8080';
                 if (req.files.myAvatar.name !== '') {
@@ -248,8 +250,7 @@ module.exports = function (app, passport, server) {
                     var ava = users.local.image;
                 }
                 if (req.files.myCover.name !== '') {
-                    var cover1 = req.files.myCover.name;
-                    var cover = domain + '/uploads/cover/' + cover1;
+                    var cover = domain + '/uploads/cover/' + newname;
                 } else {
                     var cover = users.local.cover;
                 }
@@ -370,18 +371,18 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         var list_image = [];
         if (req.files.addImageStatus.originalFilename !== '') {
+            var newname = 'img_'+user._id +'_'+NewFeed.getDateTime()+'.jpg';
             fs.readFile(req.files.addImageStatus.path, function (err, data) {
                 var imageName = req.files.addImageStatus.name;
                 if (!imageName) {
                     console.log("There was an error");
                 } else {
-                    var newPath = __dirname + "/../public/uploads/status/" + imageName;
+                    var newPath = __dirname + "/../public/uploads/status/" + newname;
                     fs.writeFile(newPath, data, function (err) {
-                        console.log('upload success');
                     });
                 }
             });
-            list_image.push(req.files.addImageStatus.name);
+            list_image.push(newname);
         }
         var id_group = req.body.IdGroupMain;
         var status = new Status();
@@ -661,20 +662,23 @@ module.exports = function (app, passport, server) {
         var description = req.body.description;
 
         var domain = 'http://localhost:8080';
-        fs.readFile(req.files.cover.path, function (err, data) {
-            var imageName1 = req.files.cover.name;
-            if (!imageName1) {
-                console.log("There was an error");
-            } else {
-                var newPath = __dirname + "/../public/uploads/covergroup/" + imageName1;
-                fs.writeFile(newPath, data, function (err) {
-                    console.log('upload success');
-                });
-            }
-        });
+        if(req.files.cover.name !== '') {
+            var newname = 'covergroup_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
+            fs.readFile(req.files.cover.path, function (err, data) {
+                var imageName1 = req.files.cover.name;
+                if (!imageName1) {
+                    console.log("There was an error");
+                } else {
+                    var newPath = __dirname + "/../public/uploads/covergroup/" + newname;
+                    fs.writeFile(newPath, data, function (err) {
+                        console.log('upload success');
+                    });
+                }
+            });
+        }
 
-        if (typeof  req.files.cover.name != 'undefined') {
-            var cover = domain + '/uploads/covergroup/' + req.files.cover.name;
+        if (typeof  req.files.cover.name != 'undefined' && req.files.cover.name !== '') {
+            var cover = domain + '/uploads/covergroup/' + newname;
         } else {
             var cover = '';
         }
