@@ -20,3 +20,9 @@ li{list-style: none;}
 .edit-delete-comment li{cursor: pointer;}
 .box-comment .comment-text:hover .edit-delete-comment{display: block;}
 a{cursor: pointer; }
+
+.del_status{
+    top: 10px;
+    position: absolute;
+    right: 15px;}
+.sub_delete_status{ display: none;   position: absolute;  right: 0px;}

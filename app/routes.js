@@ -61,9 +61,8 @@ module.exports = function (app, passport, server) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
-
         if (user.local.image === '') {
-            var domain = 'http://localhost:8080';
+            var domain = 'http://' + req.headers.host;
             fs.readFile('public/uploads/avatar/demo-avatar.png', function (err, data) {
                 if (err) throw err;
                 fs.writeFile('public/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg', data, function (err) {
@@ -242,7 +241,7 @@ module.exports = function (app, passport, server) {
                     });
                 }
 
-                var domain = 'http://localhost:8080';
+                var domain = 'http://' + req.headers.host;
                 if (req.files.myAvatar.name !== '') {
                     var ava1 = 'avatar_' + users._id.toString() + '.jpg';
                     var ava = domain + '/uploads/avatar/' + ava1;
@@ -661,7 +660,7 @@ module.exports = function (app, passport, server) {
         var name = req.body.name;
         var description = req.body.description;
 
-        var domain = 'http://localhost:8080';
+        var domain = 'http://' + req.headers.host;
         if(req.files.cover.name !== '') {
             var newname = 'covergroup_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
             fs.readFile(req.files.cover.path, function (err, data) {
@@ -857,6 +856,14 @@ module.exports = function (app, passport, server) {
                 });
             });
         }
+    });
+
+
+    app.post("/delete-status", isLoggedIn, function (req, res) {
+        var user = req.user;
+        var id_status = req.body.id_status;
+        NewFeed.DeleteStatus(id_status,user._id);
+        res.end();
     });
 
     // =====================================

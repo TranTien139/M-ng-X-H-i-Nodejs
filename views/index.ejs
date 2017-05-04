@@ -66,6 +66,11 @@
                                         href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
                             <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
                         </div>
+                        <% if(user._id.toString() === newfeed[i].userId ){ %>
+                        <div class="del_status" onclick="delete_status(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        <ul class="sub_delete_status"><li><a onclick="action_delete_status('<%= newfeed[i]._id %>')">delete</a></li></ul>
+                        </div>
+                        <% } %>
                     </div>
 
                     <div class="box-body" style="display: block;">

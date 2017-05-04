@@ -44,7 +44,7 @@ module.exports = function(passport) {
 				// if there is no user with that email
                 // create the user
                 var newUser            = new User();
-                var domain = 'http://localhost:8080';
+                var domain = 'http://' + req.headers.host;
                 // set the user's local credentials
                 newUser.local.email    = email;
                 newUser.local.password = newUser.generateHash(password); // use the generateHash function in our user model
@@ -120,7 +120,7 @@ module.exports = function(passport) {
                     } else {
                         // if there is no user found with that facebook id, create them
                         var newUser            = new User();
-                        var domain = 'http://localhost:8080';
+                        var domain = 'http://' + req.headers.host;
                         // set all of the facebook information in our user model
                         newUser.local.id_social    = profile.id; // set the users facebook id
                        // newUser.local.token = token; // we will save the token that facebook provides to the user

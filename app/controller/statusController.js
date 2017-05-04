@@ -83,6 +83,10 @@ function getDateTime() {
 
 }
 
+function DeleteStatus(id,id_user) {
+    Waste.remove({$and: [{'_id':id},{'userId':id_user}]});
+}
+
 module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
@@ -90,3 +94,4 @@ module.exports.getUserPostStatus = getUserPostStatus;
 module.exports.getNewFeedGroup = getNewFeedGroup;
 module.exports.getNewFeedMeImage = getNewFeedMeImage;
 module.exports.getDateTime = getDateTime;
+module.exports.DeleteStatus = DeleteStatus;

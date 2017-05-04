@@ -138,6 +138,11 @@
                                             href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
                                 <span class="description"><%= timeline[i].date.toLocaleTimeString() + ' ' + timeline[i].date.getDate() + '-' + timeline[i].date.getMonth() + '-' + timeline[i].date.getFullYear() %></span>
                             </div>
+                            <% if(user._id.toString() === timeline[i].userId ){ %>
+                            <div class="del_status" onclick="delete_status(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                <ul class="sub_delete_status"><li><a onclick="action_delete_status('<%= timeline[i]._id %>')">delete</a></li></ul>
+                            </div>
+                            <% } %>
                         </div>
 
                         <div class="box-body" style="display: block;">

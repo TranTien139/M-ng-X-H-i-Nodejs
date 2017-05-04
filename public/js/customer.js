@@ -233,3 +233,13 @@ function readmore_comment($id) {
     });
 }
 
+
+function delete_status(event) {
+    $(event).children('ul').toggle();
+}
+
+function action_delete_status($id) {
+    $.post('/delete-status', {'id_status':$id}, function (data) {
+
+    });
+}
