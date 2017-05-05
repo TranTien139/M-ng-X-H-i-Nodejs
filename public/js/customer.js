@@ -240,6 +240,8 @@ function delete_status(event) {
 
 function action_delete_status($id) {
     $.post('/delete-status', {'id_status':$id}, function (data) {
-
+        if(data === 'ok'){
+            $('#status_'+$id).remove();
+        }
     });
 }

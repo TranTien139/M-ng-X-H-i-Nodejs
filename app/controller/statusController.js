@@ -84,7 +84,8 @@ function getDateTime() {
 }
 
 function DeleteStatus(id,id_user) {
-    Waste.remove({$and: [{'_id':id},{'userId':id_user}]});
+    Waste.remove({$and: [{'_id':id},{'userId':id_user}]}).exec(function(err, allWastes){
+        });
 }
 
 module.exports.getNewFeedMe = getNewFeedMe;

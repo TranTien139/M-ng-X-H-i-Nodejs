@@ -7,9 +7,9 @@
         <% if(timeline.length > 0){  for(var i=0; i< timeline.length; i++){ if(timeline[i].image.length>0){ %>
         <div class="mix col-sm-3 page1 page4 margin30">
             <div class="item-img-wrap ">
-                <img src="/uploads/status/<%= timeline[i].image[0] %>" class="img-responsive" alt="workimg">
+             <img src="/uploads/status/<%= timeline[i].image[0] %>" class="img-responsive" alt="workimg">
                 <div class="item-img-overlay">
-                    <a href="javascript:void(0)" class="show-image">
+                    <a class="fancybox show-image" href="/uploads/status/<%= timeline[i].image[0] %>" data-fancybox-group="gallery" title="<%= timeline[i].content %>">
                         <span></span>
                     </a>
                 </div>

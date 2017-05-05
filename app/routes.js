@@ -120,7 +120,7 @@ module.exports = function (app, passport, server) {
                 });
 
             } else {
-                res.end();
+                res.render('404.ejs', {});
             }
         });
     });
@@ -143,9 +143,7 @@ module.exports = function (app, passport, server) {
                 });
 
             } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
+                res.render('404.ejs', {});
             }
         });
     });
@@ -168,9 +166,7 @@ module.exports = function (app, passport, server) {
                 });
 
             } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
+                res.render('404.ejs', {});
             }
         });
     });
@@ -196,9 +192,7 @@ module.exports = function (app, passport, server) {
                 });
 
             } else {
-                res.send(JSON.stringify(err), {
-                    'Content-Type': 'application/json'
-                }, 404);
+                res.render('404.ejs', {});
             }
         });
     });
@@ -282,7 +276,7 @@ module.exports = function (app, passport, server) {
                     user: req.user
                 });
             } else {
-                res.end();
+                res.render('404.ejs', {});
             }
         });
     });
@@ -407,10 +401,10 @@ module.exports = function (app, passport, server) {
         var user = req.user;
 
         Chat.findOne({$or: [{$and: [{'user.user1': user._id}, {'user.user2': id}]}, {$and: [{'user.user1': id}, {'user.user2': user._id}]}]}, function (err, chat_data) {
-            if (err) return done(err);
+            if (err){res.render('404.ejs', {});}
             if (chat_data) {
                 User.findOne({'_id': id}, function (err, users) {
-                    if (err) return done(err);
+                    if (err){res.render('404.ejs', {});}
                     res.render('chat.ejs', {
                         user: user,
                         chat_with: users,
@@ -419,7 +413,7 @@ module.exports = function (app, passport, server) {
                 });
             } else {
                 User.findOne({'_id': id}, function (err, users) {
-                    if (err) return done(err);
+                    if (err){res.render('404.ejs', {});}
                     res.render('chat.ejs', {
                         user: user,
                         chat_with: users,
@@ -621,7 +615,9 @@ module.exports = function (app, passport, server) {
             } else {
                 check = [];
             }
+            if (err){res.render('404.ejs', {});}
             NewFeed.getNewFeedGroup(id,0,function (err, data1) {
+                if (err){res.render('404.ejs', {});}
             res.render('group.ejs', {
                 user: user,
                 info: data,
@@ -863,7 +859,7 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         var id_status = req.body.id_status;
         NewFeed.DeleteStatus(id_status,user._id);
-        res.end();
+        res.send('ok');
     });
 
     // =====================================
