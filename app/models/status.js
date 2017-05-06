@@ -10,4 +10,6 @@ module.exports = mongoose.model('Status',{
     share: [],
     comment: [{id:String,email:String,image:String,name: String,content: String,date: {type: Date, default: Date.now},like: []}],
     group_id: String,
+    write_wall: {email:String,image:String,name: String},
+    id_write_wall:String
 });

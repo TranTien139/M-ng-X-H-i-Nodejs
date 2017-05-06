@@ -3,10 +3,26 @@
 <div class="box box-widget" id="status_<%= newfeed[i]._id %>" >
     <div class="box-header with-border">
         <div class="user-block">
+            <% if(newfeed[i].id_write_wall === undefined ){ %>
             <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
             <span class="username"><a
                         href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
             <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
+            <% }else{ %>
+            <ul class="list-inline">
+                <li>
+                    <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
+                    <span class="username"><a
+                                href="/profile/<%= newfeed[i].userId %>"><%= timeline[i].user.name %></a></span>
+                    <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
+                </li>
+                <li>
+                                        <span class="username" style="margin-left: 0px;    position: absolute; top: 10px;"><a
+                                                    href="/profile/<%= newfeed[i].id_write_wall %>"><%= newfeed[i].write_wall.name %></a></span>
+                    <span></span>
+                </li>
+            </ul>
+            <% } %>
         </div>
         <% if(user._id.toString() === newfeed[i].userId ){ %>
         <div class="del_status" onclick="delete_status(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i>

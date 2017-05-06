@@ -124,6 +124,7 @@
                                                     class="fa fa-camera"></i></a></li>
                                     <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                                 </ul>
+                                <input type="hidden" name="profile_other" value="<%= user_other._id %>">
                             </div>
                         </form>
                     </div>
@@ -132,11 +133,28 @@
                     <!--   posts -->
                     <div class="box box-widget" id="status_<%= timeline[i]._id %>">
                         <div class="box-header with-border">
+
                             <div class="user-block">
+                                <% if(timeline[i].id_write_wall === undefined ){ %>
                                 <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
                                 <span class="username"><a
                                             href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
                                 <span class="description"><%= timeline[i].date.toLocaleTimeString() + ' ' + timeline[i].date.getDate() + '-' + timeline[i].date.getMonth() + '-' + timeline[i].date.getFullYear() %></span>
+                                <% }else{ %>
+                                <ul class="list-inline">
+                                    <li>
+                                <img class="img-circle" src="<%= timeline[i].user.image %>" alt="User Image">
+                                <span class="username"><a
+                                            href="/profile/<%= timeline[i].userId %>"><%= timeline[i].user.name %></a></span>
+                                <span class="description"><%= timeline[i].date.toLocaleTimeString() + ' ' + timeline[i].date.getDate() + '-' + timeline[i].date.getMonth() + '-' + timeline[i].date.getFullYear() %></span>
+                                    </li>
+                                    <li>
+                                        <span class="username" style="margin-left: 0px;    position: absolute; top: 10px;"><a
+                                                    href="/profile/<%= timeline[i].id_write_wall %>"><%= timeline[i].write_wall.name %></a></span>
+                                        <span></span>
+                                    </li>
+                                </ul>
+                                <% } %>
                             </div>
                             <% if(user._id.toString() === timeline[i].userId ){ %>
                             <div class="del_status" onclick="delete_status(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i>

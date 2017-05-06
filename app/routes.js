@@ -73,9 +73,8 @@ module.exports = function (app, passport, server) {
             });
         }
 
-
         var j = user.followers;
-        var newfeed = NewFeed.getNewFeed(user._id, j,0,function (err, data) {
+        var newfeed = NewFeed.getNewFeed(user._id, j, 0, function (err, data) {
             User.aggregate({$sample: {size: 3}}, function (err, ls) {
                 res.render('index.ejs', {
                     user: user,
@@ -104,7 +103,7 @@ module.exports = function (app, passport, server) {
 
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMe(user_member,0,function (err, data) {
+                NewFeed.getNewFeedMe(user_member, 0, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
@@ -176,7 +175,7 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         User.findOne({"_id": user_member}, function (err, users) {
             if (!err) {
-                NewFeed.getNewFeedMeImage(user_member,0,function (err, data) {
+                NewFeed.getNewFeedMeImage(user_member, 0, function (err, data) {
                     var check = users.addfriend.indexOf(user._id.toString());
                     var isfriend = users.followers.filter(function (obj) {
                         return obj.userId === user._id.toString()
@@ -361,10 +360,11 @@ module.exports = function (app, passport, server) {
 
     app.post("/add-status", isLoggedIn, function (req, res) {
         var content = req.body.content_status;
+        var profile_other = req.body.profile_other;
         var user = req.user;
         var list_image = [];
         if (req.files.addImageStatus.originalFilename !== '') {
-            var newname = 'img_'+user._id +'_'+NewFeed.getDateTime()+'.jpg';
+            var newname = 'img_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
             fs.readFile(req.files.addImageStatus.path, function (err, data) {
                 var imageName = req.files.addImageStatus.name;
                 if (!imageName) {
@@ -377,22 +377,63 @@ module.exports = function (app, passport, server) {
             });
             list_image.push(newname);
         }
-        var id_group = req.body.IdGroupMain;
-        var status = new Status();
-        status.content = content;
-        status.like = [];
-        status.share = [];
-        status.comment = [];
-        status.user.name = user.local.name;
-        status.user.email = user.local.email;
-        status.user.image = user.local.image;
-        status.userId = user._id;
-        status.image = list_image;
-        status.group_id = id_group;
-        status.save(function (err) {
-            backURL = req.header('Referer') || '/';
-            res.redirect(backURL);
-        });
+
+        if (typeof profile_other != 'undefined' && user._id.toString() != profile_other) {
+            User.findOne({"_id": profile_other}, function (err, data) {
+                if (err) {
+                    backURL = req.header('Referer') || '/';
+                    res.redirect(backURL);
+                }
+                var write_wall = {};
+                write_wall.name = data.local.name;
+                write_wall.email = data.local.email;
+                write_wall.image = data.local.image;
+                var id_write_wall = data._id;
+
+                var id_group = req.body.IdGroupMain;
+                var status = new Status();
+                status.content = content;
+                status.like = [];
+                status.share = [];
+                status.comment = [];
+                status.user.name = user.local.name;
+                status.user.email = user.local.email;
+                status.user.image = user.local.image;
+                status.userId = user._id;
+                status.image = list_image;
+                status.group_id = id_group;
+                status.write_wall = write_wall;
+                status.id_write_wall = id_write_wall;
+                if (list_image.length > 0 || content.trim().length > 0) {
+                    status.save(function (err) {
+                    });
+                }
+                backURL = req.header('Referer') || '/';
+                res.redirect(backURL);
+            });
+        }else {
+            var id_group = req.body.IdGroupMain;
+            var status = new Status();
+            status.content = content;
+            status.like = [];
+            status.share = [];
+            status.comment = [];
+            status.user.name = user.local.name;
+            status.user.email = user.local.email;
+            status.user.image = user.local.image;
+            status.userId = user._id;
+            status.image = list_image;
+            status.group_id = id_group;
+            if (list_image.length > 0 || content.trim().length > 0) {
+                status.save(function (err) {
+                    backURL = req.header('Referer') || '/';
+                    res.redirect(backURL);
+                });
+            } else {
+                backURL = req.header('Referer') || '/';
+                res.redirect(backURL);
+            }
+        }
     });
 
     app.get('/chat', isLoggedIn, function (req, res) {
@@ -401,10 +442,14 @@ module.exports = function (app, passport, server) {
         var user = req.user;
 
         Chat.findOne({$or: [{$and: [{'user.user1': user._id}, {'user.user2': id}]}, {$and: [{'user.user1': id}, {'user.user2': user._id}]}]}, function (err, chat_data) {
-            if (err){res.render('404.ejs', {});}
+            if (err) {
+                res.render('404.ejs', {});
+            }
             if (chat_data) {
                 User.findOne({'_id': id}, function (err, users) {
-                    if (err){res.render('404.ejs', {});}
+                    if (err) {
+                        res.render('404.ejs', {});
+                    }
                     res.render('chat.ejs', {
                         user: user,
                         chat_with: users,
@@ -413,7 +458,9 @@ module.exports = function (app, passport, server) {
                 });
             } else {
                 User.findOne({'_id': id}, function (err, users) {
-                    if (err){res.render('404.ejs', {});}
+                    if (err) {
+                        res.render('404.ejs', {});
+                    }
                     res.render('chat.ejs', {
                         user: user,
                         chat_with: users,
@@ -482,12 +529,12 @@ module.exports = function (app, passport, server) {
             data.email = user.local.email;
             data.content = content;
             data.date = Date.now();
-            if(action === '') {
+            if (action === '') {
                 data1.comment.push(data);
 
-            }else {
+            } else {
                 var id_cmt = action.split('_');
-               var cmt = data1.comment.filter(function (obj) {
+                var cmt = data1.comment.filter(function (obj) {
                     return obj._id.toString() === id_cmt[1];
                 });
                 cmt[0].content = content;
@@ -495,9 +542,9 @@ module.exports = function (app, passport, server) {
             data1.save(function (err) {
                 if (err) throw  err;
             });
-            var data ='';
+            var data = '';
             NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
-                if(user1._id.toString() != user._id.toString()) {
+                if (user1._id.toString() != user._id.toString()) {
                     var noti = {};
                     noti.id = user._id;
                     noti.name = user.local.name;
@@ -509,11 +556,11 @@ module.exports = function (app, passport, server) {
                     user1.save();
                 }
                 var currentdate = new Date();
-                var datetime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() +' '+ currentdate.getDate() + "-"+(currentdate.getMonth()+1) + "-" + currentdate.getFullYear();
-                var id_stt = "'"+id_status+"'";
-                var last  = data1.comment.pop();
-                var id_cmt = "'"+last._id+"'";
-                data ='<div class="box-comment" id="comment_'+id_status+'_'+last._id+'"> <a href="/profile/'+user._id+'"><img class="img-circle img-sm" src="'+user.local.image+'"alt="User Image"> </a> <div class="comment-text"> <span class="username">'+user.local.name+'<span class="text-muted pull-right">'+datetime+'</span><div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('+id_stt+','+id_cmt+')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('+id_stt+','+id_cmt+',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> </span><div class="content-comment"> '+content+'</div> </div> </div>';
+                var datetime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ' ' + currentdate.getDate() + "-" + (currentdate.getMonth() + 1) + "-" + currentdate.getFullYear();
+                var id_stt = "'" + id_status + "'";
+                var last = data1.comment.pop();
+                var id_cmt = "'" + last._id + "'";
+                data = '<div class="box-comment" id="comment_' + id_status + '_' + last._id + '"> <a href="/profile/' + user._id + '"><img class="img-circle img-sm" src="' + user.local.image + '"alt="User Image"> </a> <div class="comment-text"> <span class="username">' + user.local.name + '<span class="text-muted pull-right">' + datetime + '</span><div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment(' + id_stt + ',' + id_cmt + ')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment(' + id_stt + ',' + id_cmt + ',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> </span><div class="content-comment"> ' + content + '</div> </div> </div>';
                 res.send(data);
             });
         });
@@ -524,32 +571,32 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
             if (err) throw  err;
-                if (data1.like.indexOf(user._id.toString()) === -1) {
-                    data1.like.push(user._id.toString());
-                    NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
-                        if(user1._id.toString() != user._id.toString()) {
-                            var noti = {};
-                            noti.id = user._id;
-                            noti.name = user.local.name;
-                            noti.image = user.local.image;
-                            noti.id_status = id_status;
-                            noti.title = data1.content;
-                            noti.action = 'like';
-                            user1.notify.push(noti);
-                            user1.save();
-                        }
-                    });
-                    data1.save(function (err) {
-                        if (err) throw  err;
-                        res.end('like');
-                    });
-                }else {
-                    data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
-                    data1.save(function (err) {
-                        if (err) throw  err;
-                        res.end('unlike');
-                    });
-                }
+            if (data1.like.indexOf(user._id.toString()) === -1) {
+                data1.like.push(user._id.toString());
+                NewFeed.getUserPostStatus(data1.userId, function (err, user1) {
+                    if (user1._id.toString() != user._id.toString()) {
+                        var noti = {};
+                        noti.id = user._id;
+                        noti.name = user.local.name;
+                        noti.image = user.local.image;
+                        noti.id_status = id_status;
+                        noti.title = data1.content;
+                        noti.action = 'like';
+                        user1.notify.push(noti);
+                        user1.save();
+                    }
+                });
+                data1.save(function (err) {
+                    if (err) throw  err;
+                    res.end('like');
+                });
+            } else {
+                data1.like.splice(data1.like.indexOf(user._id.toString()), 1);
+                data1.save(function (err) {
+                    if (err) throw  err;
+                    res.end('unlike');
+                });
+            }
         });
     });
 
@@ -557,27 +604,28 @@ module.exports = function (app, passport, server) {
     app.post("/read-allmessage", isLoggedIn, function (req, res) {
         var user = req.user;
         var chat = req.query.chat;
-        if(typeof chat === 'undefined'){
+        if (typeof chat === 'undefined') {
             user.message = [];
             user.save()
-        }else {
-            var check =  user.message.filter(function (obj) {
+        } else {
+            var check = user.message.filter(function (obj) {
                 return obj.id != chat;
             });
             user.message = check;
             user.save();
-        };
+        }
+        ;
         res.end();
     });
 
     app.post('/read-notification', isLoggedIn, function (req, res) {
         var user = req.user;
         var notify = req.query.notify;
-        if(typeof notify === 'undefined'){
+        if (typeof notify === 'undefined') {
             user.notify = [];
             user.save();
-        }else {
-            var check =  user.notify.filter(function (obj) {
+        } else {
+            var check = user.notify.filter(function (obj) {
                 return obj.id_status != notify;
             });
             user.notify = check;
@@ -596,7 +644,7 @@ module.exports = function (app, passport, server) {
             }, function (err, users) {
                 for (var i = 0; i < users.length; i++) {
                     fr_id = "'" + users[i]._id + "'";
-                    data = data + '<li style="width: 100%; height: 65px; margin-bottom: 10px;" id="fr_' + users[i]._id + '"><a href="/profile/'+users[i]._id+'"><div class="col-sm-3"><img src="' + users[i].local.image + '" style="width: 50px; height: 65px;"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></a></li>';
+                    data = data + '<li style="width: 100%; height: 65px; margin-bottom: 10px;" id="fr_' + users[i]._id + '"><a href="/profile/' + users[i]._id + '"><div class="col-sm-3"><img src="' + users[i].local.image + '" style="width: 50px; height: 65px;"></div><div class="col-sm-5">' + users[i].local.name + '</div><div class="col-sm-4"><button class="btn btn-success" style="padding-left: 10px;" onclick="javascript:ConfirmAddFriend(' + fr_id + ')">Đồng ý</button><button class="btn btn-danger">Huỷ</button></div></a></li>';
                 }
                 res.send(data);
             });
@@ -615,16 +663,20 @@ module.exports = function (app, passport, server) {
             } else {
                 check = [];
             }
-            if (err){res.render('404.ejs', {});}
-            NewFeed.getNewFeedGroup(id,0,function (err, data1) {
-                if (err){res.render('404.ejs', {});}
-            res.render('group.ejs', {
-                user: user,
-                info: data,
-                newfeed: data1,
-                check: check,
-                friend: user.followers,
-            });
+            if (err) {
+                res.render('404.ejs', {});
+            }
+            NewFeed.getNewFeedGroup(id, 0, function (err, data1) {
+                if (err) {
+                    res.render('404.ejs', {});
+                }
+                res.render('group.ejs', {
+                    user: user,
+                    info: data,
+                    newfeed: data1,
+                    check: check,
+                    friend: user.followers,
+                });
             });
         });
     });
@@ -657,7 +709,7 @@ module.exports = function (app, passport, server) {
         var description = req.body.description;
 
         var domain = 'http://' + req.headers.host;
-        if(req.files.cover.name !== '') {
+        if (req.files.cover.name !== '') {
             var newname = 'covergroup_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
             fs.readFile(req.files.cover.path, function (err, data) {
                 var imageName1 = req.files.cover.name;
@@ -775,10 +827,10 @@ module.exports = function (app, passport, server) {
         }
     });
 
-    app.get('/detail-status/:id',isLoggedIn ,function (req, res) {
+    app.get('/detail-status/:id', isLoggedIn, function (req, res) {
         var id = req.params.id;
         var user = req.user;
-        Status.findOne({'_id': id}, function (err,data) {
+        Status.findOne({'_id': id}, function (err, data) {
             res.render('detail-status.ejs', {
                 user: user,
                 detail: data
@@ -786,10 +838,10 @@ module.exports = function (app, passport, server) {
         });
     });
 
-    app.post('/delete-commentstatus',isLoggedIn, function (req, res) {
+    app.post('/delete-commentstatus', isLoggedIn, function (req, res) {
         var id_status = req.body.id_status;
         var id_comment = req.body.id_comment;
-        Status.findOne({'_id': id_status}, function (err,data) {
+        Status.findOne({'_id': id_status}, function (err, data) {
             var cmt = data.comment.filter(function (obj) {
                 return obj._id.toString() !== id_comment;
             });
@@ -807,7 +859,7 @@ module.exports = function (app, passport, server) {
         var id_status = req.params.id_status;
         var user = req.user;
         NewFeed.getStatusPost(id_status, function (err, data1) {
-            res.render('template/comment.ejs',{
+            res.render('template/comment.ejs', {
                 user: user,
                 comment: data1.comment,
                 id_status: id_status
@@ -823,28 +875,28 @@ module.exports = function (app, passport, server) {
         var user = req.user;
         var j = user.followers;
         var page = req.query.page;
-        if(page === null){
+        if (page === null) {
             var page = 0;
         }
-        var skip = page*10;
+        var skip = page * 10;
 
         var id_group = req.query.id_group;
         var id_profile = req.query.id_profile;
-        if(id_profile != 'undefined') {
+        if (id_profile != 'undefined') {
             NewFeed.getNewFeedMe(id_profile, skip, function (err, data) {
                 res.render('template/LoadMoreNewFeed.ejs', {
                     user: user,
                     newfeed: data,
                 });
             });
-        }else if(id_group != 'undefined'){
+        } else if (id_group != 'undefined') {
             NewFeed.getNewFeedGroup(id_group, skip, function (err, data) {
                 res.render('template/LoadMoreNewFeed.ejs', {
                     user: user,
                     newfeed: data,
                 });
             });
-        }else {
+        } else {
             NewFeed.getNewFeed(user._id, j, skip, function (err, data) {
                 res.render('template/LoadMoreNewFeed.ejs', {
                     user: user,
@@ -858,7 +910,7 @@ module.exports = function (app, passport, server) {
     app.post("/delete-status", isLoggedIn, function (req, res) {
         var user = req.user;
         var id_status = req.body.id_status;
-        NewFeed.DeleteStatus(id_status,user._id);
+        NewFeed.DeleteStatus(id_status, user._id);
         res.send('ok');
     });
 
