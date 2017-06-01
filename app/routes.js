@@ -7,6 +7,8 @@ var Chat = require('../app/models/chat.js');
 var mongoose = require('mongoose');
 var Group = require('../app/models/group.js');
 
+var domain = require('../config/domain.js');
+
 var path = require('path'),
     fs = require('fs');
 
@@ -62,7 +64,6 @@ module.exports = function (app, passport, server) {
     app.get('/home', isLoggedIn, function (req, res) {
         var user = req.user;
         if (user.local.image === '') {
-            var domain = 'http://' + req.headers.host;
             fs.readFile('public/uploads/avatar/demo-avatar.png', function (err, data) {
                 if (err) throw err;
                 fs.writeFile('public/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg', data, function (err) {
@@ -234,7 +235,6 @@ module.exports = function (app, passport, server) {
                     });
                 }
 
-                var domain = 'http://' + req.headers.host;
                 if (req.files.myAvatar.name !== '') {
                     var ava1 = 'avatar_' + users._id.toString() + '.jpg';
                     var ava = domain + '/uploads/avatar/' + ava1;
@@ -708,7 +708,6 @@ module.exports = function (app, passport, server) {
         var name = req.body.name;
         var description = req.body.description;
 
-        var domain = 'http://' + req.headers.host;
         if (req.files.cover.name !== '') {
             var newname = 'covergroup_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
             fs.readFile(req.files.cover.path, function (err, data) {

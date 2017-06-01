@@ -5,27 +5,47 @@
                 <div class="cover profile" ng-app="profileApp">
                     <div class="wrapper" ng-controller="profileController">
                         <div class="image">
+                            <% if(typeof user_other.local.cover === 'undefined' || user_other.local.cover === ''){ %>
+                            <img src="../uploads/cover/coverdefault.jpg" class="show-in-modal" alt="people">
+                            <% }else{ %>
                             <img src="<%= user_other.local.cover %>" class="show-in-modal" alt="people">
+                            <% } %>
                         </div>
                         <% if(user._id.toString().trim() != user_other._id.toString().trim()){ if(check === -1){ %>
-                        <% if(isfriend.length === 0){%>
-                        <button class="btn btn-success addfriend_unfriend" style="position: absolute; bottom: 10px; right: 20px;" id-me="<%= user._id.toString().trim() %>" id-other="<%= user_other._id.toString().trim() %>" action="send" >Add friend</button>
-                       <% }else {%>
-                        <button class="btn btn-success addfriend_unfriend" style="position: absolute; bottom: 10px; right: 20px;" id-me="<%= user._id.toString().trim() %>" id-other="<%= user_other._id.toString().trim() %>" action="unfriend" >Friend</button>
-                        <% } }else {%>
-                        <button class="btn btn-success addfriend_unfriend" style="position: absolute; bottom: 10px; right: 20px;" id-me="<%= user._id.toString().trim() %>" id-other="<%= user_other._id.toString().trim() %>" action="cancelsend" >Cancel send add friend</button>
-                        <% } }%>
+                        <% if(isfriend.length === 0){ %>
+                        <button class="btn btn-success addfriend_unfriend"
+                                style="position: absolute; bottom: 10px; right: 20px;"
+                                id-me="<%= user._id.toString().trim() %>"
+                                id-other="<%= user_other._id.toString().trim() %>" action="send">Add friend
+                        </button>
+                        <% }else { %>
+                        <button class="btn btn-success addfriend_unfriend"
+                                style="position: absolute; bottom: 10px; right: 20px;"
+                                id-me="<%= user._id.toString().trim() %>"
+                                id-other="<%= user_other._id.toString().trim() %>" action="unfriend">Friend
+                        </button>
+                        <% } }else { %>
+                        <button class="btn btn-success addfriend_unfriend"
+                                style="position: absolute; bottom: 10px; right: 20px;"
+                                id-me="<%= user._id.toString().trim() %>"
+                                id-other="<%= user_other._id.toString().trim() %>" action="cancelsend">Cancel send add
+                            friend
+                        </button>
+                        <% } } %>
 
                     </div>
                     <div class="cover-info">
                         <div class="avatar">
                             <img src="<%= user_other.local.image %>" alt="people">
                         </div>
-                        <div class="name"><a ><%= user_other.local.name %></a></div>
+                        <div class="name"><a><%= user_other.local.name %></a></div>
                         <ul class="cover-nav">
-                            <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i> Timeline</a></li>
-                            <li><a href="/friends/<%= user_other._id %>"><i class="fa fa-fw fa-users"></i> Friends</a></li>
-                            <li><a href="/photos/<%= user_other._id %>"><i class="fa fa-fw fa-image"></i> Photos</a></li>
+                            <li class="active"><a href="/profile/<%= user_other._id %>"><i class="fa fa-fw fa-bars"></i>
+                                    Timeline</a></li>
+                            <li><a href="/friends/<%= user_other._id %>"><i class="fa fa-fw fa-users"></i> Friends</a>
+                            </li>
+                            <li><a href="/photos/<%= user_other._id %>"><i class="fa fa-fw fa-image"></i> Photos</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
