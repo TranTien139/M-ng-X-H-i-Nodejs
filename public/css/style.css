@@ -28,5 +28,8 @@ a{cursor: pointer; }
 .sub_delete_status{ display: none;   position: absolute;  right: 0px;}
 .box.box-widget .box-body img{
     object-position: 50% 50%;
-    height: 100% !important;
     object-fit: cover;}
+
+.box.box-widget.wrap_detail .box-body img{
+height: 100% !important;
+}

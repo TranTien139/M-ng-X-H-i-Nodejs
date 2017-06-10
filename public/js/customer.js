@@ -176,6 +176,7 @@ $("#addImageGroup").change(function () {
 if (window.File && window.FileList && window.FileReader) {
     var filesInput = document.getElementById("addImageStatus");
 
+if(filesInput != null) {
     filesInput.addEventListener("change", function (event) {
 
         var files = event.target.files; //FileList object
@@ -206,6 +207,7 @@ if (window.File && window.FileList && window.FileReader) {
         }
 
     });
+}
 }
 
 $("#results_upload").on("click", ".remove_pict", function () {
@@ -245,3 +247,21 @@ function action_delete_status($id) {
         }
     });
 }
+
+$(document).ready(function () {
+    setInterval(function () {
+        $.post('/update-noti',{}, function (data) {
+            var result = JSON.parse(data);
+            if(result.mess.length >0){
+                $('#inbox').html('<span class="red">'+result.mess.length+'</span>');
+            }else {
+
+            }
+            if(result.chat.length >0){
+                $('#notifications').html('<span class="red">'+result.chat.length+'</span>');
+            }else {
+
+            }
+        });
+    },30000);
+});

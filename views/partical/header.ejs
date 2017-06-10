@@ -38,8 +38,8 @@
             <ul class="nav navbar-nav navbar-right">
                     <li><a href="/home">Home</a></li>
                     <li><a style="cursor: pointer;" data-toggle="modal" onclick="javascript:getAddFriend()" data-target="#message_modal" class="fa fa-users" alt="resquest"><%if(user.addfriend.length != 0){ %><span class="red"><%= user.addfriend.length %></span><% } %></a></li>
-                <li><a style="cursor: pointer;" data-toggle="modal" data-target="#chat_modal" class="fa fa-comments" alt="inbox"><%if(user.message.length != 0){ %><span class="red"><%= user.message.length %></span><%}%></a></li>
-                <li><a style="cursor: pointer;" data-toggle="modal" data-target="#notify_modal" class="fa fa-bell" alt="notifications"><%if(user.notify.length != 0){ %><span class="red"><%= user.notify.length %></span><%}%></a></li>
+                <li><a style="cursor: pointer;" data-toggle="modal" data-target="#chat_modal" class="fa fa-comments" alt="inbox" id="inbox"><%if(user.message.length != 0){ %><span class="red"><%= user.message.length %></span><%}%></a></li>
+                <li><a style="cursor: pointer;" data-toggle="modal" data-target="#notify_modal" class="fa fa-bell" alt="notifications" id="notifications" ><%if(user.notify.length != 0){ %><span class="red"><%= user.notify.length %></span><%}%></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
                         <ul class="dropdown-menu">

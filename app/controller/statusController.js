@@ -88,6 +88,12 @@ function DeleteStatus(id,id_user) {
         });
 }
 
+function CountUser(callback) {
+    UserPost.count({},function (err, count) {
+       callback(err,count);
+    });
+}
+
 module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
@@ -96,3 +102,4 @@ module.exports.getNewFeedGroup = getNewFeedGroup;
 module.exports.getNewFeedMeImage = getNewFeedMeImage;
 module.exports.getDateTime = getDateTime;
 module.exports.DeleteStatus = DeleteStatus;
+module.exports.CountUser = CountUser;

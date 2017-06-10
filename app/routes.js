@@ -913,6 +913,22 @@ module.exports = function (app, passport, server) {
         res.send('ok');
     });
 
+    app.get("/countuser",isLoggedIn, function (req, res) {
+         NewFeed.CountUser(function (err,num) {
+             console.log(num);
+             res.send('ok'+num);
+         });
+    });
+
+    app.post("/update-noti", isLoggedIn, function (req, res) {
+       var user = req.user;
+       var chat = user.notify;
+       var mess = user.message;
+       var data = {chat:chat, mess:mess}
+       data = JSON.stringify(data);
+       res.send(data);
+    });
+
     // =====================================
     // FACEBOOK ROUTES =====================
     // =====================================
