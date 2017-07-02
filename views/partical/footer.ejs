@@ -73,6 +73,10 @@
 <script type="text/javascript" src="/js/customer.js"></script>
 <script src="/js/angular.min.js"></script>
 
+<script src="/tinymce/tinymce.min.js"></script>
+<script>tinymce.init({ selector:'textarea[name="content_status"]',menubar:false,
+        statusbar: false,toolbar: false , plugins: "autoresize",autoresize_bottom_margin: 20 });</script>
+
 <script type="text/javascript">
     if (window.location.hash == '#_=_') {
         history.replaceState

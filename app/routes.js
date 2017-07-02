@@ -360,36 +360,59 @@ module.exports = function (app, passport, server) {
 
     app.post("/add-status", isLoggedIn, function (req, res) {
         var content = req.body.content_status;
-        var profile_other = req.body.profile_other;
-        var user = req.user;
-        var list_image = [];
-        if (req.files.addImageStatus.originalFilename !== '') {
-            var newname = 'img_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
-            fs.readFile(req.files.addImageStatus.path, function (err, data) {
-                var imageName = req.files.addImageStatus.name;
-                if (!imageName) {
-                    console.log("There was an error");
-                } else {
-                    var newPath = __dirname + "/../public/uploads/status/" + newname;
-                    fs.writeFile(newPath, data, function (err) {
-                    });
-                }
-            });
-            list_image.push(newname);
-        }
+        var cleanText = content.replace(/<\/?[^>]+(>|$)/g, "");
+            var profile_other = req.body.profile_other;
+            var user = req.user;
+            var list_image = [];
+            if (req.files.addImageStatus.originalFilename !== '') {
+                var newname = 'img_' + user._id + '_' + NewFeed.getDateTime() + '.jpg';
+                fs.readFile(req.files.addImageStatus.path, function (err, data) {
+                    var imageName = req.files.addImageStatus.name;
+                    if (!imageName) {
+                        console.log("There was an error");
+                    } else {
+                        var newPath = __dirname + "/../public/uploads/status/" + newname;
+                        fs.writeFile(newPath, data, function (err) {
+                        });
+                    }
+                });
+                list_image.push(newname);
+            }
 
-        if (typeof profile_other != 'undefined' && user._id.toString() != profile_other) {
-            User.findOne({"_id": profile_other}, function (err, data) {
-                if (err) {
+            if (typeof profile_other != 'undefined' && user._id.toString() != profile_other) {
+                User.findOne({"_id": profile_other}, function (err, data) {
+                    if (err) {
+                        backURL = req.header('Referer') || '/';
+                        res.redirect(backURL);
+                    }
+                    var write_wall = {};
+                    write_wall.name = data.local.name;
+                    write_wall.email = data.local.email;
+                    write_wall.image = data.local.image;
+                    var id_write_wall = data._id;
+
+                    var id_group = req.body.IdGroupMain;
+                    var status = new Status();
+                    status.content = content;
+                    status.like = [];
+                    status.share = [];
+                    status.comment = [];
+                    status.user.name = user.local.name;
+                    status.user.email = user.local.email;
+                    status.user.image = user.local.image;
+                    status.userId = user._id;
+                    status.image = list_image;
+                    status.group_id = id_group;
+                    status.write_wall = write_wall;
+                    status.id_write_wall = id_write_wall;
+                    if (list_image.length > 0 || content.trim().length > 0) {
+                        status.save(function (err) {
+                        });
+                    }
                     backURL = req.header('Referer') || '/';
                     res.redirect(backURL);
-                }
-                var write_wall = {};
-                write_wall.name = data.local.name;
-                write_wall.email = data.local.email;
-                write_wall.image = data.local.image;
-                var id_write_wall = data._id;
-
+                });
+            } else {
                 var id_group = req.body.IdGroupMain;
                 var status = new Status();
                 status.content = content;
@@ -402,38 +425,16 @@ module.exports = function (app, passport, server) {
                 status.userId = user._id;
                 status.image = list_image;
                 status.group_id = id_group;
-                status.write_wall = write_wall;
-                status.id_write_wall = id_write_wall;
                 if (list_image.length > 0 || content.trim().length > 0) {
                     status.save(function (err) {
+                        backURL = req.header('Referer') || '/';
+                        res.redirect(backURL);
                     });
-                }
-                backURL = req.header('Referer') || '/';
-                res.redirect(backURL);
-            });
-        }else {
-            var id_group = req.body.IdGroupMain;
-            var status = new Status();
-            status.content = content;
-            status.like = [];
-            status.share = [];
-            status.comment = [];
-            status.user.name = user.local.name;
-            status.user.email = user.local.email;
-            status.user.image = user.local.image;
-            status.userId = user._id;
-            status.image = list_image;
-            status.group_id = id_group;
-            if (list_image.length > 0 || content.trim().length > 0) {
-                status.save(function (err) {
+                } else {
                     backURL = req.header('Referer') || '/';
                     res.redirect(backURL);
-                });
-            } else {
-                backURL = req.header('Referer') || '/';
-                res.redirect(backURL);
+                }
             }
-        }
     });
 
     app.get('/chat', isLoggedIn, function (req, res) {

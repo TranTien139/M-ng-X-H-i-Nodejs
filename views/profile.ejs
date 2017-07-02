@@ -113,8 +113,7 @@
                     <div class="box profile-info n-border-top">
                         <form action="/add-status" method="POST" enctype="multipart/form-data">
                                     <textarea class="form-control input-lg p-text-area" rows="2"
-                                              placeholder="Whats in your mind today?" name="content_status"
-                                              required></textarea>
+                                              placeholder="Whats in your mind today?" name="content_status"></textarea>
                             <ul id="results_upload" class="list-inline"></ul>
                             <div class="box-footer box-form">
                                 <button type="submit" class="btn btn-warning pull-right">Post</button>
@@ -164,7 +163,7 @@
                         </div>
 
                         <div class="box-body" style="display: block;">
-                            <p><%= timeline[i].content %>
+                            <p><%- timeline[i].content %>
                             </p>
                             <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k = 0; k < timeline[i].image.length; k++){ %>
                             <a href="/detail-status/<%= timeline[i]._id %>"><img src="/../uploads/status/<%= timeline[i].image[k] %>"
