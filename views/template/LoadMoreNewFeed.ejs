@@ -32,8 +32,15 @@
     </div>
 
     <div class="box-body" style="display: block;">
-        <p><%- newfeed[i].content %>
-        </p>
+        <div><%- newfeed[i].content %>
+            <% if(typeof newfeed[i].hastag !== 'undefined' && newfeed[i].hastag.length>0){%>
+            <ul class="list-inline">
+                <% for(var h = 0; h<newfeed[i].hastag.length; h++){%>
+                <li><a href="/hastag/<%= newfeed[i].hastag[h] %>">#<%= newfeed[i].hastag[h] %></a></li>
+                <%}%>
+            </ul>
+            <%}%>
+        </div>
         <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k = 0; k < newfeed[i].image.length; k++){ %>
         <a href="/detail-status/<%= newfeed[i]._id %>"><img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;"
                                                             class="img-responsive show-in-modal" alt="photo"></a>

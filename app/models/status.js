@@ -8,6 +8,7 @@ module.exports = mongoose.model('Status',{
     date: {type: Date, default: Date.now},
     like: [],
     share: [],
+    hastag: [],
     comment: [{id:String,email:String,image:String,name: String,content: String,date: {type: Date, default: Date.now},like: []}],
     group_id: String,
     write_wall: {email:String,image:String,name: String},

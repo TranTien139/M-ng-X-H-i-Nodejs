@@ -115,14 +115,23 @@
                                     <textarea class="form-control input-lg p-text-area" rows="2"
                                               placeholder="Whats in your mind today?" name="content_status"></textarea>
                             <ul id="results_upload" class="list-inline"></ul>
+                            <div id="status-icon"></div>
+                            <div id="status-hastag">
+
+                            </div>
+                            <div id="status-tagfrined"></div>
+                            <div id="status-location"></div>
+
                             <div class="box-footer box-form">
                                 <button type="submit" class="btn btn-warning pull-right">Post</button>
                                 <ul class="nav nav-pills">
                                     <li><a style="cursor: pointer"
-                                           onclick="document.getElementById('addImageStatus').click();"><i
+                                           onclick="document.getElementById('addImageStatus').click();" title="add image"><i
                                                     class="fa fa-camera"></i></a></li>
-                                    <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                                    <li><a style="cursor: pointer" onclick="javascript:StatusHastag()" title="add hastag"><i
+                                                    class="fa fa-hashtag"></i></a></li>
                                 </ul>
+                                <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                                 <input type="hidden" name="profile_other" value="<%= user_other._id %>">
                             </div>
                         </form>
@@ -163,8 +172,8 @@
                         </div>
 
                         <div class="box-body" style="display: block;">
-                            <p><%- timeline[i].content %>
-                            </p>
+                            <div><%- timeline[i].content %>
+                            </div>
                             <% if(typeof timeline[i].image != 'undefined' && timeline[i].image.length > 0){ for(var k = 0; k < timeline[i].image.length; k++){ %>
                             <a href="/detail-status/<%= timeline[i]._id %>"><img src="/../uploads/status/<%= timeline[i].image[k] %>"
                                  style="width: 100%; height: 300px;" class="img-responsive show-in-modal" alt="photo"></a>

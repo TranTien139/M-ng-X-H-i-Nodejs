@@ -74,6 +74,8 @@
 }
 .cover.profile .wrapper .image img {
   width: 100%;
+  height: 250px;
+  object-fit: cover;
 }
 .cover.profile .cover-info {
   position: relative;

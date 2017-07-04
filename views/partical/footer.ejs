@@ -70,12 +70,21 @@
 <script src="/socket.io.js"></script>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="/tageditor/jquery.tag-editor.css">
+<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+
+<script type="text/javascript" src="/tageditor/jquery.tag-editor.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/tageditor/jquery.caret.min.js"></script>
+
 <script type="text/javascript" src="/js/customer.js"></script>
+
 <script src="/js/angular.min.js"></script>
 
 <script src="/tinymce/tinymce.min.js"></script>
 <script>tinymce.init({ selector:'textarea[name="content_status"]',menubar:false,
-        statusbar: false,toolbar: false , plugins: "autoresize",autoresize_bottom_margin: 20 });</script>
+        statusbar: false,toolbar: false , plugins: "autoresize",autoresize_bottom_margin: 10 });</script>
 
 <script type="text/javascript">
     if (window.location.hash == '#_=_') {
@@ -85,7 +94,6 @@
     }
 </script>
 
-<!--<script src="/js/customjs.js"></script>-->
 <script src="/main.js"></script>
 <script src="/js/chat.js"></script>
 <script src="/js/scroll.js"></script>

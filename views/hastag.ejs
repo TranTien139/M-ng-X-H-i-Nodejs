@@ -1,0 +1,160 @@
+<% include partical/header.ejs %>
+<!-- Begin page content -->
+<div class="container page-content ">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="profile-nav">
+                <div class="widget">
+                    <div class="widget-body">
+
+                        <div class="user-heading round">
+                            <a href="/profile/<%= user._id %>">
+                                <img src="<%= user.local.image %>" alt="">
+                            </a>
+                            <h1><%= user.local.name %></h1>
+                            <p><%= user.local.email %></p>
+                        </div>
+
+                        <ul class="nav nav-pills nav-stacked">
+                            <li class="active"><a href=""> <i
+                                            class="fa fa-user"></i> News feed</a></li>
+                            <li><a href="/photos/<%= user._id %>"> <i class="fa fa-image"></i> Photos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="/create-group"> <i class="fa fa-users"></i>Manage Group</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end left links -->
+
+        <!-- center posts -->
+        <div class="col-md-6">
+            <div class="row" ng-app="AppShowHide" ng-controller="ShowHideController">
+                <% if(newfeed.length > 0){ for(var i = 0;i < newfeed.length; i++){ %>
+                <!--   posts -->
+                <div class="box box-widget" id="status_<%= newfeed[i]._id %>" >
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <img class="img-circle" src="<%= newfeed[i].user.image %>" alt="User Image">
+                            <span class="username"><a
+                                        href="/profile/<%= newfeed[i].userId %>"><%= newfeed[i].user.name %></a></span>
+                            <span class="description"><%= newfeed[i].date.toLocaleTimeString() + ' ' + newfeed[i].date.getDate() + '-' + newfeed[i].date.getMonth() + '-' + newfeed[i].date.getFullYear() %></span>
+                        </div>
+                        <% if(user._id.toString() === newfeed[i].userId ){ %>
+                        <div class="del_status" onclick="delete_status(this)"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+                            <ul class="sub_delete_status"><li><a onclick="action_delete_status('<%= newfeed[i]._id %>')">delete</a></li></ul>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <div class="box-body" style="display: block;">
+                        <div><%- newfeed[i].content %>
+                            <% if(typeof newfeed[i].hastag !== 'undefined' && newfeed[i].hastag.length>0){%>
+                            <ul class="list-inline">
+                                <% for(var h = 0; h<newfeed[i].hastag.length; h++){%>
+                                <li><a href="/hastag/<%= newfeed[i].hastag[h] %>">#<%= newfeed[i].hastag[h] %></a></li>
+                                <%}%>
+                            </ul>
+                            <%}%>
+                        </div>
+                        <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k = 0; k < newfeed[i].image.length; k++){ %>
+                        <a href="/detail-status/<%= newfeed[i]._id %>"><img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;"
+                                                                            class="img-responsive show-in-modal" alt="photo"></a>
+                        <div class="col-sm-12" style="padding-top: 10px;"></div>
+                        <% }} %>
+                        <% if(newfeed[i].like.indexOf(user._id.toString()) === -1){ %>
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" onclick="LikeUnlikeSatus('<%= newfeed[i]._id %>')"><i class="fa fa-thumbs-o-up">Like</i>
+                        </button>
+                        <% }else { %>
+                        <button type="button" class="btn btn-success btn-xs like-Unlike" onclick="LikeUnlikeSatus('<%= newfeed[i]._id %>')" ><i class="fa fa-thumbs-o-down">UnLike</i>
+                        </button>
+                        <% } %>
+
+                        <span class="pull-right text-muted"><span class="count-like"><%= newfeed[i].like.length %></span>
+                            likes - <span class="count-comment"><%= newfeed[i].comment.length %></span> comments</span>
+                    </div>
+
+                    <div class="boxmain-comment" >
+                        <%if( newfeed[i].comment.length > 0){ var long_stt = newfeed[i].comment.length; var start = 0; %>
+                        <div class="box-footer box-comments" style="display: block;">
+                            <% if(long_stt>3){  %>
+                            <div class="readmore_comment">
+                                <a onclick="readmore_comment('<%= newfeed[i]._id %>')">Xem thêm các bình luận trước(<%= long_stt-3 %>)</a>
+                            </div>
+                            <% start = long_stt-3; }  %>
+                            <% for(var k = start ; k < long_stt ; k++){ %>
+                            <div class="box-comment" id="comment_<%= newfeed[i]._id %>_<%= newfeed[i].comment[k]._id %>" >
+                                <a href="/profile/<%= newfeed[i].comment[k].id %>">
+                                    <img class="img-circle img-sm" src="<%= newfeed[i].comment[k].image %>"
+                                         alt="User Image"> </a>
+                                <div class="comment-text">
+                          <span class="username">
+                          <%= newfeed[i].comment[k].name %>
+                              <span class="text-muted pull-right"><%= newfeed[i].comment[k].date.toLocaleTimeString() + ' ' + newfeed[i].comment[k].date.getDate() + '-' + newfeed[i].comment[k].date.getMonth() + '-' + newfeed[i].comment[k].date.getFullYear() %></span>
+                              <% if(user._id.toString() === newfeed[i].comment[k].id.toString()){  %> <div class="edit-delete-comment"><ul class="list-inline"><li title="delete comment" onclick="DeleteComment('<%= newfeed[i]._id %>','<%= newfeed[i].comment[k]._id %>')"><i class="fa fa-trash" aria-hidden="true"></i></li><li title="edit comment" onclick="EditComment('<%= newfeed[i]._id %>','<%= newfeed[i].comment[k]._id %>',this)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></li></ul></div> <% } %>
+                          </span>
+                                    <div class="content-comment"><%= newfeed[i].comment[k].content %></div>
+                                </div>
+                            </div>
+
+                            <% } %>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="box-footer" style="display: block;">
+                        <img class="img-responsive img-circle img-sm"
+                             src="<%= user.local.image %>" alt="Alt Text">
+                        <div class="img-push">
+                            <input type="text" name="content_comment" action="" onkeypress="handleEnterComment(event,'<%= newfeed[i]._id %>')" class="form-control input-sm"
+                                   placeholder="Press enter to post comment" required>
+                        </div>
+                    </div>
+                </div><!--  end posts-->
+                <% }} %>
+
+                <div id="LoadMoreNewFeed">
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- right posts -->
+        <div class="col-md-3">
+            <!-- Friends activity -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-caption">Friends activity</h3>
+                </div>
+                <div class="widget-body bordered-top bordered-sky">
+                    <div class="card">
+                        <div class="content">
+
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End Friends activity -->
+
+            <!-- People You May Know -->
+            <div class="widget">
+
+            </div><!-- End people yout may know -->
+        </div><!-- end right posts -->
+    </div>
+</div>
+
+<input type="hidden" id="id_send" name="id_send" value="<%= user._id %>">
+<input type="hidden" id="id_tag" name="id_tag" value="<%= tag %>">
+
+<% include partical/footer.ejs %>
+
+

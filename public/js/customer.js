@@ -197,7 +197,7 @@ if(filesInput != null) {
 
                 var div = document.createElement("li");
 
-                div.innerHTML = "<img class='thumbnail' width='80' height='80' src='" + picFile.result + "'" +
+                div.innerHTML = "<img class='thumbnail' style='margin-bottom: 0px;' width='100' height='100' src='" + picFile.result + "'" +
                     "title='" + picFile.name + "'/> <a style='cursor: pointer;'  onclick='removeHtml(this)' class='remove_pict'>X</a>";
                 output.insertBefore(div, null);
             });
@@ -265,6 +265,32 @@ $(document).ready(function () {
         });
     },30000);
 });
+
+
+function StatusHastag() {
+    $('#status-hastag').html('<textarea id="hero-demo" name="list_has_tag"></textarea>');
+    $('#hero-demo').tagEditor({
+        placeholder: 'Enter tags ...',
+        autocomplete: { source: googleSuggest, minLength: 3, delay: 250, html: true }
+    });
+}
+
+// var cache = {};
+function googleSuggest(request, response) {
+     var term = request.term;
+    // if (term in cache) { response(cache[term]); return; }
+    $.ajax({
+        url: '/suggest-hastag',
+        type: 'POST',
+        data: { format: 'json', q: term },
+        success: function(data) {
+            var suggestions = [];
+            suggestions = data;
+            // cache[term] = suggestions;
+            response(suggestions);
+        }
+    });
+}
 
 
 

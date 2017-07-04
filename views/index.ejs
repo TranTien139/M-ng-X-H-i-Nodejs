@@ -45,14 +45,29 @@
                                     <textarea class="form-control input-lg p-text-area"
                                               placeholder="Whats in your mind today?" name="content_status" ></textarea>
                         <ul id="results_upload" class="list-inline"></ul>
+                        <div id="status-icon"></div>
+                        <div id="status-hastag">
+
+                        </div>
+                        <div id="status-tagfrined"></div>
+                        <div id="status-location"></div>
                         <div class="box-footer box-form">
                             <button type="submit" class="btn btn-warning pull-right">Post</button>
                             <ul class="nav nav-pills">
                                 <li><a style="cursor: pointer"
-                                       onclick="document.getElementById('addImageStatus').click();"><i
+                                       onclick="document.getElementById('addImageStatus').click();" title="add iamge"><i
                                                 class="fa fa-camera"></i></a></li>
-                                <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                                <!--<li><a style="cursor: pointer" title="add icon"><i-->
+                                                <!--class="fa fa-meh-o"></i></a></li>-->
+                                <li><a style="cursor: pointer" onclick="javascript:StatusHastag()" title="add hastag"><i
+                                                class="fa fa-hashtag"></i></a></li>
+                                <!--<li><a style="cursor: pointer" title="tag friend"><i-->
+                                                <!--class="fa fa-users"></i></a></li>-->
+                                <!--<li><a style="cursor: pointer" title="add adress"><i-->
+                                                <!--class="fa fa-map-marker"></i></a></li>-->
                             </ul>
+                            <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
+                            <div class="box-list-icon"></div>
                         </div>
                     </form>
                 </div>
@@ -74,8 +89,15 @@
                     </div>
 
                     <div class="box-body" style="display: block;">
-                        <p><%- newfeed[i].content %>
-                        </p>
+                        <div><%- newfeed[i].content %>
+                            <% if(typeof newfeed[i].hastag !== 'undefined' && newfeed[i].hastag.length>0){%>
+                            <ul class="list-inline">
+                                <% for(var h = 0; h<newfeed[i].hastag.length; h++){%>
+                                    <li><a href="/hastag/<%= newfeed[i].hastag[h] %>">#<%= newfeed[i].hastag[h] %></a></li>
+                                <%}%>
+                            </ul>
+                            <%}%>
+                        </div>
                         <% if(typeof newfeed[i].image != 'undefined' && newfeed[i].image.length > 0){ for(var k = 0; k < newfeed[i].image.length; k++){ %>
                        <a href="/detail-status/<%= newfeed[i]._id %>"><img src="/uploads/status/<%= newfeed[i].image[k] %>" style="width: 100%; height: 300px;"
                              class="img-responsive show-in-modal" alt="photo"></a>
@@ -182,28 +204,28 @@
                 <div class="card">
                     <div class="content">
                         <ul class="list-unstyled team-members">
-                            <% if(random.length > 0){ random.forEach(function (randoms) { %>
-                            <li>
-                                <a href="/profile/<%= randoms._id %>">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <div class="avatar">
-                                            <img src="<%= randoms.local.image %>" alt="Circle Image"
-                                                 class="img-circle img-no-padding img-responsive">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                       <%= randoms.local.name %>
-                                    </div>
+                            <!--<% if(random.length > 0){ random.forEach(function (randoms) { %>-->
+                            <!--<li>-->
+                                <!--<a href="/profile/<%= randoms._id %>">-->
+                                <!--<div class="row">-->
+                                    <!--<div class="col-xs-3">-->
+                                        <!--<div class="avatar">-->
+                                            <!--<img src="<%= randoms.local.image %>" alt="Circle Image"-->
+                                                 <!--class="img-circle img-no-padding img-responsive">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-xs-6">-->
+                                       <!--<%= randoms.local.name %>-->
+                                    <!--</div>-->
 
-                                    <div class="col-xs-3 text-right">
-                                        <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
-                                        </btn>
-                                    </div>
-                                </div>
-                                </a>
-                            </li>
-                            <% }) } %>
+                                    <!--<div class="col-xs-3 text-right">-->
+                                        <!--<btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>-->
+                                        <!--</btn>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<% }) } %>-->
                         </ul>
                     </div>
                 </div>

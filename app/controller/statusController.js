@@ -3,6 +3,7 @@
  */
 var Waste = require('../../app/models/status.js');
 var UserPost = require('../../app/models/user.js');
+var Hastag = require('../../app/models/hastag.js');
 
 function getNewFeed(id_user,follower,skip,callback) {
         var requestedWastes = [];
@@ -94,6 +95,42 @@ function CountUser(callback) {
     });
 }
 
+function InsertHasTag(tag,id,callback) {
+    Hastag.findOne({'tag':tag }, function (err, data) {
+        if(data !== null){
+           var hastag = data.data;
+            hastag.push(id);
+            data.data = hastag;
+            data.save(function () {
+
+            });
+        }else {
+            var hastag = new Hastag();
+            hastag.tag = tag;
+            hastag.data = [id];
+            hastag.save(function () {
+
+            });
+        }
+    });
+}
+
+function GetHasTag(listtag,skip,callback) {
+    var arr = [];
+    if(listtag !== null && listtag.length>0){
+        for (var $i = 0;$i<listtag.length; $i++ ){
+            arr.push({_id :listtag[$i]});
+        }
+    }
+    if(arr.length>0){
+        Waste.find({$or :arr}).sort({date: -1}).skip(skip).limit(10).exec(function (err, data) {
+           callback(err,data);
+        });
+    }else {
+        callback(null,null);
+    }
+}
+
 module.exports.getNewFeedMe = getNewFeedMe;
 module.exports.getNewFeed = getNewFeed;
 module.exports.getStatusPost = getStatusPost;
@@ -103,3 +140,5 @@ module.exports.getNewFeedMeImage = getNewFeedMeImage;
 module.exports.getDateTime = getDateTime;
 module.exports.DeleteStatus = DeleteStatus;
 module.exports.CountUser = CountUser;
+module.exports.InsertHasTag = InsertHasTag;
+module.exports.GetHasTag = GetHasTag;

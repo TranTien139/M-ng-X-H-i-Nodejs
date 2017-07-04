@@ -19,8 +19,8 @@
                     </div>
 
                     <div class="box-body" style="display: block;">
-                        <p><%= detail.content %>
-                        </p>
+                        <div><%- detail.content %>
+                        </div>
                         <% if(typeof detail.image != 'undefined' && detail.image.length > 0){ for(var k = 0; k < detail.image.length; k++){ %>
                         <img src="/uploads/status/<%= detail.image[k] %>" style="width: 100%; height: 300px;"
                              class="img-responsive show-in-modal" alt="photo">

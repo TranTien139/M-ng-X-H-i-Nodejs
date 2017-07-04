@@ -6,6 +6,7 @@ var NewFeed = require('../app/controller/statusController.js');
 var Chat = require('../app/models/chat.js');
 var mongoose = require('mongoose');
 var Group = require('../app/models/group.js');
+var hastag  = require('../app/models/hastag.js');
 
 var domain = require('../config/domain.js');
 
@@ -359,6 +360,12 @@ module.exports = function (app, passport, server) {
     });
 
     app.post("/add-status", isLoggedIn, function (req, res) {
+
+        var list_has_tag = req.body.list_has_tag;
+        if(list_has_tag.trim() !== ''){
+            list_has_tag = list_has_tag.split(',');
+        }
+
         var content = req.body.content_status;
         var cleanText = content.replace(/<\/?[^>]+(>|$)/g, "");
             var profile_other = req.body.profile_other;
@@ -402,15 +409,29 @@ module.exports = function (app, passport, server) {
                     status.user.image = user.local.image;
                     status.userId = user._id;
                     status.image = list_image;
+                    if(list_has_tag.length > 0) {
+                        status.hastag = list_has_tag;
+                    }
                     status.group_id = id_group;
                     status.write_wall = write_wall;
                     status.id_write_wall = id_write_wall;
                     if (list_image.length > 0 || content.trim().length > 0) {
                         status.save(function (err) {
+                            if(list_has_tag.length > 0) {
+                                list_has_tag.forEach(function (item) {
+                                    NewFeed.InsertHasTag(item,status._id);
+                                });
+                                backURL = req.header('Referer') || '/';
+                                res.redirect(backURL);
+                            }else {
+                                backURL = req.header('Referer') || '/';
+                                res.redirect(backURL);
+                            }
                         });
+                    }else {
+                        backURL = req.header('Referer') || '/';
+                        res.redirect(backURL);
                     }
-                    backURL = req.header('Referer') || '/';
-                    res.redirect(backURL);
                 });
             } else {
                 var id_group = req.body.IdGroupMain;
@@ -424,11 +445,22 @@ module.exports = function (app, passport, server) {
                 status.user.image = user.local.image;
                 status.userId = user._id;
                 status.image = list_image;
+                if(list_has_tag.length > 0) {
+                    status.hastag = list_has_tag;
+                }
                 status.group_id = id_group;
                 if (list_image.length > 0 || content.trim().length > 0) {
                     status.save(function (err) {
-                        backURL = req.header('Referer') || '/';
-                        res.redirect(backURL);
+                        if(list_has_tag.length > 0) {
+                            list_has_tag.forEach(function (item) {
+                               NewFeed.InsertHasTag(item,status._id);
+                            });
+                            backURL = req.header('Referer') || '/';
+                            res.redirect(backURL);
+                        }else {
+                            backURL = req.header('Referer') || '/';
+                            res.redirect(backURL);
+                        }
                     });
                 } else {
                     backURL = req.header('Referer') || '/';
@@ -882,6 +914,8 @@ module.exports = function (app, passport, server) {
 
         var id_group = req.query.id_group;
         var id_profile = req.query.id_profile;
+        var id_tag = req.query.tag;
+
         if (id_profile != 'undefined') {
             NewFeed.getNewFeedMe(id_profile, skip, function (err, data) {
                 res.render('template/LoadMoreNewFeed.ejs', {
@@ -896,6 +930,8 @@ module.exports = function (app, passport, server) {
                     newfeed: data,
                 });
             });
+        }else if(id_tag !== 'undefined'){
+            res.end();
         } else {
             NewFeed.getNewFeed(user._id, j, skip, function (err, data) {
                 res.render('template/LoadMoreNewFeed.ejs', {
@@ -928,6 +964,53 @@ module.exports = function (app, passport, server) {
        var data = {chat:chat, mess:mess}
        data = JSON.stringify(data);
        res.send(data);
+    });
+
+
+    app.get('/hastag/:tag',isLoggedIn,function (req,res) {
+        var tag = req.params.tag;
+        if(typeof  tag !== 'undefined'){
+            hastag.findOne({'tag': tag}, function (err, data) {
+                if(data !== null){
+                    var list_art = data.data;
+                    NewFeed.GetHasTag(list_art, 0,function (err, result) {
+                        res.render('hastag.ejs',{
+                            newfeed: result,
+                            user: req.user,
+                            tag: tag
+                        });
+                    });
+                }else {
+                    backURL = req.header('Referer') || '/';
+                    res.redirect(backURL);
+                }
+            });
+        }else {
+            backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
+        }
+    });
+
+    app.post('/suggest-hastag', isLoggedIn, function (req,res) {
+       var sugg = req.body.q;
+       var list  = [];
+        var regex = new RegExp(sugg, 'i');
+        var query = hastag.find({"tag": regex}).limit(10);
+        query.exec(function (err, hastag) {
+            if (!err) {
+                if(hastag !== null){
+                    for(var i=0; i<hastag.length; i++){
+                        var s = hastag[i].tag.toLowerCase();
+                        list.push({label: s, value: s});
+                    }
+                    res.send(list);
+                }else {
+                    res.end(list);
+                }
+            } else {
+                res.end();
+            }
+        });
     });
 
     // =====================================
