@@ -41,7 +41,7 @@
                                 <small class="pull-right text-muted"><i class="fa fa-clock-o"></i><%=  data_chat[i].date.getDate() +'/'+ data_chat[i].date.getMonth() +'/'+ data_chat[i].date.getFullYear() +' '+ data_chat[i].date.toLocaleTimeString() %></small>
                             </div>
                             <p>
-                                <%= data_chat[i].content %>
+                                <%- data_chat[i].content.replace('<script>','').replace('</script>','') %>
                             </p>
                         </div>
                     </li>
@@ -52,11 +52,89 @@
             </div>
             <div class="chat-box_ bg-white">
                 <div class="input-group">
-                    <input class="form-control border no-shadow no-rounded" id="content_chat" name="content_chat" placeholder="Type your message here">
+                    <span style="position: absolute; left: 0px; top: 5px; z-index: 100;" id="tray-icon"><i class="fa fa-meh-o fa-2x"></i></span>
+                    <!--<input class="form-control border no-shadow no-rounded" id="content_chat" name="content_chat" style="margin-left: 25px;" placeholder="Type your message here">-->
+                    <div class="form-control" id="content_chat" style="margin-left: 25px;" contenteditable="true" placeholder="Type your message here">
+                    </div>
                     <span class="input-group-btn">
                 <button class="btn btn-success no-rounded" id="btnSendMessage" autocomplete="off" type="button">Send</button>
               </span>
                 </div><!-- /input-group -->
+
+                <div id="list_icon">
+                    <div style="position: absolute; bottom: 20px; display: none;" id="select-icon">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td><img src="/icon/1f60a.png"></td>
+                                <td><img src="/icon/1f60b.png"></td>
+                                <td><img src="/icon/1f60c.png"></td>
+                                <td><img src="/icon/1f60d.png"></td>
+                                <td><img src="/icon/1f60e.png"></td>
+                                <td><img src="/icon/1f60f.png"></td>
+                                <td><img src="/icon/1f61a.png"></td>
+                                <td><img src="/icon/1f61b.png"></td>
+                                <td><img src="/icon/1f61c.png"></td>
+                            </tr>
+                            <tr>
+                                <td><img src="/icon/1f61d.png"></td>
+                                <td><img src="/icon/1f61e.png"></td>
+                                <td><img src="/icon/1f61f.png"></td>
+                                <td><img src="/icon/1f62a.png"></td>
+                                <td><img src="/icon/1f62b.png"></td>
+                                <td><img src="/icon/1f62c.png"></td>
+                                <td><img src="/icon/1f62d.png"></td>
+                                <td><img src="/icon/1f62e.png"></td>
+                                <td><img src="/icon/1f62f.png"></td>
+                            </tr>
+                            <tr>
+                                <td><img src="/icon/1f600.png"></td>
+                                <td><img src="/icon/1f601.png"></td>
+                                <td><img src="/icon/1f602.png"></td>
+                                <td><img src="/icon/1f603.png"></td>
+                                <td><img src="/icon/1f604.png"></td>
+                                <td><img src="/icon/1f605.png"></td>
+                                <td><img src="/icon/1f606.png"></td>
+                                <td><img src="/icon/1f607.png"></td>
+                                <td><img src="/icon/1f636.png"></td>
+                            </tr>
+                            <tr>
+                                <td><img src="/icon/1f609.png"></td>
+                                <td><img src="/icon/1f610.png"></td>
+                                <td><img src="/icon/1f611.png"></td>
+                                <td><img src="/icon/1f612.png"></td>
+                                <td><img src="/icon/1f613.png"></td>
+                                <td><img src="/icon/1f614.png"></td>
+                                <td><img src="/icon/1f615.png"></td>
+                                <td><img src="/icon/1f616.png"></td>
+                                <td><img src="/icon/1f617.png"></td>
+                            </tr>
+                            <tr>
+                                <td><img src="/icon/1f618.png"></td>
+                                <td><img src="/icon/1f619.png"></td>
+                                <td><img src="/icon/1f620.png"></td>
+                                <td><img src="/icon/1f621.png"></td>
+                                <td><img src="/icon/1f622.png"></td>
+                                <td><img src="/icon/1f623.png"></td>
+                                <td><img src="/icon/1f624.png"></td>
+                                <td><img src="/icon/1f625.png"></td>
+                                <td><img src="/icon/1f626.png"></td>
+                            </tr>
+                            <tr>
+                                <td><img src="/icon/1f627.png"></td>
+                                <td><img src="/icon/1f628.png"></td>
+                                <td><img src="/icon/1f629.png"></td>
+                                <td><img src="/icon/1f630.png"></td>
+                                <td><img src="/icon/1f631.png"></td>
+                                <td><img src="/icon/1f642.png"></td>
+                                <td><img src="/icon/1f633.png"></td>
+                                <td><img src="/icon/263a.png"></td>
+                                <td><img src="/icon/1f635.png"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 <input type="hidden" id="id_send" name="id_send" value="<%= user._id %>">
                 <input type="hidden" id="image_send" name="image_send" value="<%= user.local.image %>">

@@ -292,5 +292,21 @@ function googleSuggest(request, response) {
     });
 }
 
+$(document).ready(function () {
+    $('#tray-icon').click(function () {
+        $('#select-icon').toggle();
+        var domain = 'http://localhost:8080/load-icon';
+        $('#list_icon').append($('<div>').load(domain, function () {
+        }));
+    });
+    $("#select-icon tr td").click(function () {
+        var icon = $(this).html();
+        var content = $("#content_chat").html();
+        $("#content_chat").html(content+icon);
+    });
+    $("#content_chat").click(function () {
+        $('#select-icon').hide();
+    });
+});
 
 

@@ -1026,12 +1026,6 @@ module.exports = function (app, passport, server) {
             failureRedirect: '/'
         }));
 
-    // route for logging out
-    app.get('/logout', function (req, res) {
-        req.logout();
-        res.redirect('/');
-    });
-
     var io = require('socket.io')(server);
     var nicknames = [];
 
