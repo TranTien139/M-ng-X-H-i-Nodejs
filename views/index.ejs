@@ -46,9 +46,7 @@
                                               placeholder="Whats in your mind today?" name="content_status" ></textarea>
                         <ul id="results_upload" class="list-inline"></ul>
                         <div id="status-icon"></div>
-                        <div id="status-hastag">
-
-                        </div>
+                        <div id="status-hastag"></div>
                         <div id="status-tagfrined"></div>
                         <div id="status-location"></div>
                         <div class="box-footer box-form">
@@ -57,8 +55,8 @@
                                 <li><a style="cursor: pointer"
                                        onclick="document.getElementById('addImageStatus').click();" title="add iamge"><i
                                                 class="fa fa-camera"></i></a></li>
-                                <!--<li><a style="cursor: pointer" title="add icon"><i-->
-                                                <!--class="fa fa-meh-o"></i></a></li>-->
+                                <li><a style="cursor: pointer" title="add icon" onclick="javascript:LoadIcon()"><i
+                                                class="fa fa-meh-o"></i></a></li>
                                 <li><a style="cursor: pointer" onclick="javascript:StatusHastag()" title="add hastag"><i
                                                 class="fa fa-hashtag"></i></a></li>
                                 <!--<li><a style="cursor: pointer" title="tag friend"><i-->
@@ -68,6 +66,7 @@
                             </ul>
                             <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                             <div class="box-list-icon"></div>
+                            <div id="list-icon-home" style="display: none;"></div>
                         </div>
                     </form>
                 </div>
@@ -163,74 +162,74 @@
     <!-- right posts -->
     <div class="col-md-3">
         <!-- Friends activity -->
-        <div class="widget">
-            <div class="widget-header">
-                <h3 class="widget-caption">Friends activity</h3>
-            </div>
-            <div class="widget-body bordered-top bordered-sky">
-                <div class="card">
-                    <div class="content">
-                        <!--<ul class="list-unstyled team-members">-->
+        <!--<div class="widget">-->
+            <!--<div class="widget-header">-->
+                <!--<h3 class="widget-caption">Friends activity</h3>-->
+            <!--</div>-->
+            <!--<div class="widget-body bordered-top bordered-sky">-->
+                <!--<div class="card">-->
+                    <!--<div class="content">-->
+                        <!--&lt;!&ndash;<ul class="list-unstyled team-members">&ndash;&gt;-->
 
-                            <!--<li>-->
-                                <!--<div class="row">-->
-                                    <!--<div class="col-xs-3">-->
-                                        <!--<div class="avatar">-->
-                                            <!--<img src="/uploads/avatar/demo-avatar.png" alt="img"-->
-                                                 <!--class="img-circle img-no-padding img-responsive">-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="col-xs-9">-->
-                                        <!--<b><a href="">Hillary Markston</a></b>-->
-                                        <!--shared a-->
-                                        <!--<b><a href="">publication</a></b>.-->
-                                        <!--<span class="timeago">5 min ago</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</li>-->
+                            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="col-xs-3">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="avatar">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<img src="/uploads/avatar/demo-avatar.png" alt="img"&ndash;&gt;-->
+                                                 <!--&lt;!&ndash;class="img-circle img-no-padding img-responsive">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="col-xs-9">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<b><a href="">Hillary Markston</a></b>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;shared a&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<b><a href="">publication</a></b>.&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span class="timeago">5 min ago</span>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
 
-                        <!--</ul>-->
-                    </div>
-                </div>
-            </div>
-        </div><!-- End Friends activity -->
+                        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <!-- People You May Know -->
-        <div class="widget">
-            <div class="widget-header">
-                <h3 class="widget-caption">People You May Know</h3>
-            </div>
-            <div class="widget-body bordered-top bordered-sky">
-                <div class="card">
-                    <div class="content">
-                        <ul class="list-unstyled team-members">
-                            <!--<% if(random.length > 0){ random.forEach(function (randoms) { %>-->
-                            <!--<li>-->
-                                <!--<a href="/profile/<%= randoms._id %>">-->
-                                <!--<div class="row">-->
-                                    <!--<div class="col-xs-3">-->
-                                        <!--<div class="avatar">-->
-                                            <!--<img src="<%= randoms.local.image %>" alt="Circle Image"-->
-                                                 <!--class="img-circle img-no-padding img-responsive">-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="col-xs-6">-->
-                                       <!--<%= randoms.local.name %>-->
-                                    <!--</div>-->
+        <!--<div class="widget">-->
+            <!--<div class="widget-header">-->
+                <!--<h3 class="widget-caption">People You May Know</h3>-->
+            <!--</div>-->
+            <!--<div class="widget-body bordered-top bordered-sky">-->
+                <!--<div class="card">-->
+                    <!--<div class="content">-->
+                        <!--<ul class="list-unstyled team-members">-->
+                            <!--&lt;!&ndash;<% if(random.length > 0){ random.forEach(function (randoms) { %>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<a href="/profile/<%= randoms._id %>">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="col-xs-3">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="avatar">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<img src="<%= randoms.local.image %>" alt="Circle Image"&ndash;&gt;-->
+                                                 <!--&lt;!&ndash;class="img-circle img-no-padding img-responsive">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="col-xs-6">&ndash;&gt;-->
+                                       <!--&lt;!&ndash;<%= randoms.local.name %>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
 
-                                    <!--<div class="col-xs-3 text-right">-->
-                                        <!--<btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>-->
-                                        <!--</btn>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                            <!--<% }) } %>-->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div><!-- End people yout may know -->
+                                    <!--&lt;!&ndash;<div class="col-xs-3 text-right">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</btn>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<% }) } %>&ndash;&gt;-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
     </div><!-- end right posts -->
 </div>
 </div>

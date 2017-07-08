@@ -309,4 +309,19 @@ $(document).ready(function () {
     });
 });
 
+function LoadIcon() {
+    $('#list-icon-home').toggle();
+    if($('#list-icon-home').html().trim() === "") {
+        $.post('/list-icon', {}, function (data) {
+            $('#list-icon-home').html(data);
+        });
+    }
+}
+function InsertIcon(img) {
+    var icon = '<img src="'+img+'">';
+    var html  = icon;
+    tinymce.activeEditor.execCommand('mceInsertContent', false, html);
+}
+
+
 

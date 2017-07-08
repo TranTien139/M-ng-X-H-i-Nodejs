@@ -128,11 +128,14 @@
                                     <li><a style="cursor: pointer"
                                            onclick="document.getElementById('addImageStatus').click();" title="add image"><i
                                                     class="fa fa-camera"></i></a></li>
+                                    <li><a style="cursor: pointer" title="add icon" onclick="javascript:LoadIcon()"><i
+                                                    class="fa fa-meh-o"></i></a></li>
                                     <li><a style="cursor: pointer" onclick="javascript:StatusHastag()" title="add hastag"><i
                                                     class="fa fa-hashtag"></i></a></li>
                                 </ul>
                                 <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                                 <input type="hidden" name="profile_other" value="<%= user_other._id %>">
+                                <div id="list-icon-home" style="display: none;"></div>
                             </div>
                         </form>
                     </div>

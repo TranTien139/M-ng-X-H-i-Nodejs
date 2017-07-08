@@ -362,7 +362,7 @@ module.exports = function (app, passport, server) {
     app.post("/add-status", isLoggedIn, function (req, res) {
 
         var list_has_tag = req.body.list_has_tag;
-        if(list_has_tag.trim() !== ''){
+        if(typeof list_has_tag !== 'undefined' && list_has_tag.trim() !== ''){
             list_has_tag = list_has_tag.split(',');
         }
 
@@ -415,9 +415,9 @@ module.exports = function (app, passport, server) {
                     status.group_id = id_group;
                     status.write_wall = write_wall;
                     status.id_write_wall = id_write_wall;
-                    if (list_image.length > 0 || content.trim().length > 0) {
+                    if (list_image.length > 0 || (typeof cleanText !== 'undefined' && cleanText.trim().length > 0)) {
                         status.save(function (err) {
-                            if(list_has_tag.length > 0) {
+                            if(typeof list_has_tag !== 'undefined' && list_has_tag.length > 0) {
                                 list_has_tag.forEach(function (item) {
                                     NewFeed.InsertHasTag(item,status._id);
                                 });
@@ -445,13 +445,13 @@ module.exports = function (app, passport, server) {
                 status.user.image = user.local.image;
                 status.userId = user._id;
                 status.image = list_image;
-                if(list_has_tag.length > 0) {
+                if(typeof list_has_tag !=='undefined' && list_has_tag.length > 0) {
                     status.hastag = list_has_tag;
                 }
                 status.group_id = id_group;
-                if (list_image.length > 0 || content.trim().length > 0) {
+                if (list_image.length > 0 || (typeof cleanText !== 'undefined' && cleanText.trim().length > 0)) {
                     status.save(function (err) {
-                        if(list_has_tag.length > 0) {
+                        if(typeof list_has_tag !== 'undefined' && list_has_tag.length > 0) {
                             list_has_tag.forEach(function (item) {
                                NewFeed.InsertHasTag(item,status._id);
                             });
@@ -952,7 +952,6 @@ module.exports = function (app, passport, server) {
 
     app.get("/countuser",isLoggedIn, function (req, res) {
          NewFeed.CountUser(function (err,num) {
-             console.log(num);
              res.send('ok'+num);
          });
     });
@@ -1011,6 +1010,11 @@ module.exports = function (app, passport, server) {
                 res.end();
             }
         });
+    });
+
+    app.post('/list-icon', isLoggedIn, function (req, res) {
+       res.render('template/tray_icon.ejs', {
+       });
     });
 
     // =====================================
