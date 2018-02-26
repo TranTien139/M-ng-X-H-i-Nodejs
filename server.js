@@ -1,17 +1,14 @@
 
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
 var bodyParser =    require("body-parser");
-var redis = require("redis");
 var server = require('http').createServer(app);
 
 var configDB = require('./config/database.js');
-
-//var redisClient = redis.createClient({host : 'localhost', port : 6379});
 
 mongoose.connect(configDB.url); // connect to our database
 

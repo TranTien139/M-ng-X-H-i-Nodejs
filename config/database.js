@@ -1,4 +1,4 @@
 // config/database.js
 module.exports = {
-	'url' : 'mongodb://localhost:27017/MangXaHoi'
+	'url' : 'mongodb://trantien:trantien#2018@ds249718.mlab.com:49718/trantien'
 };

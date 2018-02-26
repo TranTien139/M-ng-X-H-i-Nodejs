@@ -59,10 +59,6 @@
                                                 class="fa fa-meh-o"></i></a></li>
                                 <li><a style="cursor: pointer" onclick="javascript:StatusHastag()" title="add hastag"><i
                                                 class="fa fa-hashtag"></i></a></li>
-                                <!--<li><a style="cursor: pointer" title="tag friend"><i-->
-                                                <!--class="fa fa-users"></i></a></li>-->
-                                <!--<li><a style="cursor: pointer" title="add adress"><i-->
-                                                <!--class="fa fa-map-marker"></i></a></li>-->
                             </ul>
                             <input type="file" style="display: none" id="addImageStatus" name="addImageStatus">
                             <div class="box-list-icon"></div>
@@ -195,41 +191,41 @@
         <!--</div>-->
 
         <!-- People You May Know -->
-        <!--<div class="widget">-->
-            <!--<div class="widget-header">-->
-                <!--<h3 class="widget-caption">People You May Know</h3>-->
-            <!--</div>-->
-            <!--<div class="widget-body bordered-top bordered-sky">-->
-                <!--<div class="card">-->
-                    <!--<div class="content">-->
-                        <!--<ul class="list-unstyled team-members">-->
-                            <!--&lt;!&ndash;<% if(random.length > 0){ random.forEach(function (randoms) { %>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<a href="/profile/<%= randoms._id %>">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<div class="col-xs-3">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<div class="avatar">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<img src="<%= randoms.local.image %>" alt="Circle Image"&ndash;&gt;-->
-                                                 <!--&lt;!&ndash;class="img-circle img-no-padding img-responsive">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<div class="col-xs-6">&ndash;&gt;-->
-                                       <!--&lt;!&ndash;<%= randoms.local.name %>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <div class="widget">
+            <div class="widget-header">
+                <h3 class="widget-caption">People You May Know</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+                <div class="card">
+                    <div class="content">
+                        <ul class="list-unstyled team-members">
+                            <% if(random.length > 0){ random.forEach(function (randoms) { %>
+                            <li>
+                                <a href="/profile/<%= randoms._id %>">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <div class="avatar">
+                                            <img src="<%= randoms.local.image %>" alt="Circle Image"
+                                                 class="img-circle img-no-padding img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                       <%= randoms.local.name %>
+                                    </div>
 
-                                    <!--&lt;!&ndash;<div class="col-xs-3 text-right">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</btn>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</a>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<% }) } %>&ndash;&gt;-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
+                                    <div class="col-xs-3 text-right">
+                                        <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user-plus"></i>
+                                        </btn>
+                                    </div>
+                                </div>
+                                </a>
+                            </li>
+                            <% }) } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- end right posts -->
 </div>
 </div>

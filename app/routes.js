@@ -69,7 +69,7 @@ module.exports = function (app, passport, server) {
                 if (err) throw err;
                 fs.writeFile('public/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg', data, function (err) {
                     if (err) throw err;
-                    user.local.image = domain + '/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg';
+                    user.local.image = '/uploads/avatar/' + 'avatar_' + user._id.toString() + '.jpg';
                     user.save();
                 });
             });

@@ -295,7 +295,7 @@ function googleSuggest(request, response) {
 $(document).ready(function () {
     $('#tray-icon').click(function () {
         $('#select-icon').toggle();
-        var domain = 'http://localhost:8080/load-icon';
+        var domain = '/load-icon';
         $('#list_icon').append($('<div>').load(domain, function () {
         }));
     });
